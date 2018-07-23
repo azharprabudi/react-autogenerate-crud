@@ -6,6 +6,7 @@ import has from "lodash/has";
 import PropTypes from "prop-types";
 
 /* custom components */
+import BaseSearch from "./base-search";
 import BaseTable from "./base-table";
 
 class CRUDGeneration extends Component {
@@ -19,7 +20,11 @@ class CRUDGeneration extends Component {
         visible: false,
         message: ""
       },
-      search: {}
+      search: {},
+      table: {
+        sort: "asc",
+        orderBy: ""
+      }
     };
 
     this.limit = props.limit;
@@ -41,9 +46,6 @@ class CRUDGeneration extends Component {
 
       let { data } = await axios.get(get.url, configGetData);
 
-      /* create number in data */
-      data = data.map((item, index) => ({ ...item, no: Number(index + 1) }));
-
       this.setState({
         ...this.state,
         data,
@@ -57,15 +59,48 @@ class CRUDGeneration extends Component {
   setLoadingProms = (loading = false) =>
     new Promise(resolve => this.setState({ ...this.state, loading }, resolve));
 
+  /* set state table */
+  onChangeStateTable = (orderByNameColumn, sort) => {
+    this.setState({
+      ...this.state,
+      data: this.orderingData(orderByNameColumn, sort),
+      table: {
+        orderBy: orderByNameColumn,
+        sort
+      }
+    });
+  };
+
+  orderingData = (orderByNameColumn, sort) => {
+    /* sort depend on orderByNameColumn clicked */
+    return this.state.data.sort((curr, next) => {
+      if (/^[0-9]/g.test(curr[orderByNameColumn])) {
+        if (sort === "asc") {
+          return curr[orderByNameColumn] - next[orderByNameColumn];
+        }
+        return next[orderByNameColumn] - curr[orderByNameColumn];
+      } else {
+        if (sort === "asc") {
+          return curr[orderByNameColumn].localeCompare(next[orderByNameColumn]);
+        }
+        return next[orderByNameColumn].localeCompare(curr[orderByNameColumn]);
+      }
+    });
+  };
+
   render() {
     return (
       <Fragment>
+        <BaseSearch />
         <BaseTable
           data={this.state.data}
-          startAt={this.offset}
           loading={this.state.loading}
+          sort={this.state.table.sort}
+          orderBy={this.state.table.orderBy}
           tableOptions={this.props.tableOptions}
           loadingOptions={this.props.loadingOptions}
+          onChangeStateTable={this.onChangeStateTable}
+          useCheckbox={this.props.useCheckbox}
         />
       </Fragment>
     );
@@ -77,10 +112,12 @@ BaseTable.propTypes = {
   existingData: PropTypes.bool,
   fetchOptions: PropTypes.object,
   tableOptions: PropTypes.object,
-  loadingOptions: PropTypes.object
+  loadingOptions: PropTypes.object,
+  useCheckbox: PropTypes.bool
 };
 
 BaseTable.defaultProps = {
+  useCheckbox: false,
   existingData: false, // if want to use existing data, dont provide the fetch options
   fetchOptions: {
     get: {
@@ -105,6 +142,21 @@ BaseTable.defaultProps = {
         "{id}": "id"
       }
     }
+  },
+  tableOptions: {
+    btnAddNew: true,
+    btnEdit: true,
+    columns: [
+      {
+        title: "",
+        objName: "",
+        type: "" // number, text, image, rupiah, longtext
+      }
+    ]
+  },
+  loadingOptions: {
+    color: "primary",
+    size: 30
   }
 };
 

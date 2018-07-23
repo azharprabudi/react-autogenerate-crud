@@ -23,7 +23,8 @@ class Index extends Component {
             },
             {
               title: "Deskripsi",
-              objName: "body"
+              objName: "body",
+              canBeSort: true
             }
           ]
         }}
