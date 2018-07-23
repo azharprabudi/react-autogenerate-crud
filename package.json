@@ -1,0 +1,39 @@
+{
+  "name": "react-autogenerate-crud",
+  "version": "1.0.0",
+  "description": "An automatic generation crud for react, i hope this usefully for the backend development when it used react as a ui framework",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --config webpack.config.js --mode development",
+    "build": "webpack --config webpack.config.js --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/azharprabudi/react-autogenerate-crud.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/azharprabudi/react-autogenerate-crud/issues"
+  },
+  "homepage": "https://github.com/azharprabudi/react-autogenerate-crud#readme",
+  "dependencies": {
+    "@material-ui/core": "^1.4.1",
+    "@material-ui/icons": "^2.0.0",
+    "lodash": "^4.17.10",
+    "prop-types": "^15.6.2",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "html-webpack-plugin": "^3.2.0",
+    "webpack": "^4.16.1",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.5"
+  }
+}
