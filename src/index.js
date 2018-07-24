@@ -13,7 +13,7 @@ class Index extends Component {
         }}
         fetchOptions={{
           view: {
-            url: "https://jsonplaceholder.typicode.com/posts",
+            url: "https://jsonplaceholder.typicode.com/photos",
             method: "get",
             query: {
               limit: "_limit",
@@ -22,12 +22,10 @@ class Index extends Component {
             }
           },
           delete: {
-            url: "https://jsonplaceholder.typicode.com/posts/{id}",
+            url: "https://jsonplaceholder.typicode.com/photos/{id}",
             bulk: false,
             method: "delete",
-            replaceUrl: {
-              "{id}": "id"
-            }
+            replaceUrl: "{id}"
           }
         }}
         tableOptions={{
@@ -37,12 +35,14 @@ class Index extends Component {
             {
               title: "Judul",
               objName: "title",
-              canBeSort: true
+              canBeSort: true,
+              type: "text"
             },
             {
-              title: "Deskripsi",
-              objName: "body",
-              canBeSort: true
+              title: "Gambar",
+              objName: "url",
+              canBeSort: true,
+              type: "image"
             }
           ]
         }}

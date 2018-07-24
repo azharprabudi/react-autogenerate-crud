@@ -121,7 +121,7 @@ class CRUDGeneration extends Component {
     this.setState({
       ...this.state,
       snackbarInfo: {
-        type: "error",
+        ...this.state.snackbarInfo,
         message: "",
         visible: false
       }
@@ -222,6 +222,64 @@ class CRUDGeneration extends Component {
     }
   };
 
+  /* submit to delete data */
+  doDeleteCheckItem = async () => {
+    try {
+      await this.setLoadingProms(true);
+
+      const { delete: dlt } = this.props.fetchOptions;
+      const dltConfig = dlt.hasOwnProperty("config") ? dlt.config : {};
+      if (dlt.hasOwnProperty("bulk") && dlt.bulk) {
+        // axios.patch or put (url, data, config);
+        const result = await axios[dlt.method](
+          dlt.url,
+          this.state.listChecked,
+          dltConfig
+        );
+      } else {
+        for (let i = 0; i < this.state.listChecked.length; i++) {
+          let newUrl = dlt.url;
+          // replace the url link
+          if (dlt.hasOwnProperty("replaceUrl")) {
+            newUrl = newUrl.replace(dlt.replaceUrl, this.state.listChecked[i]);
+          }
+          // axios.delete(url, config);
+          await axios[dlt.method](newUrl, dltConfig);
+        }
+      }
+      this.setState(
+        {
+          ...this.state,
+          loading: false,
+          listChecked: [],
+          checkAllList: false,
+          dialog: {
+            ...this.state.dialog,
+            alert: {
+              visible: false
+            }
+          },
+          snackbarInfo: {
+            type: "success",
+            message: "Success Delete Your Data",
+            visible: true
+          }
+        },
+        () => setTimeout(this.resetSnackbarInfo, 3000)
+      );
+    } catch (e) {
+      this.setState({
+        ...this.state,
+        loading: false,
+        snackbarInfo: {
+          visible: true,
+          type: "error",
+          message: isArray(e) ? JSON.stringify(e) : e.toString()
+        }
+      });
+    }
+  };
+
   render() {
     const { classes, classNames } = this.props;
     return (
@@ -269,7 +327,7 @@ CRUDGeneration.propTypes = {
   fetchOptions: PropTypes.object,
   tableOptions: PropTypes.object,
   loadingOptions: PropTypes.object,
-  checkboxOptions: PropTypes.object,
+  checkbox: PropTypes.bool,
   /* required only */
   title: PropTypes.string.isRequired
 };

@@ -44,12 +44,12 @@ class BaseTableHeader extends Component {
                     onClick={this.onClickSortLabel(itemColumn.objName)}
                   >
                     <Typography variant={"subheading"}>
-                      {itemColumn.title.toUpperCase()}
+                      <b>{itemColumn.title.toUpperCase()}</b>
                     </Typography>
                   </TableSortLabel>
                 ) : (
                   <Typography variant={"subheading"}>
-                    {itemColumn.title.toUpperCase()}
+                    <b>{itemColumn.title.toUpperCase()}</b>
                   </Typography>
                 )}
               </TableCell>

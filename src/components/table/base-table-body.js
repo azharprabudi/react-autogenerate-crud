@@ -6,14 +6,34 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import Typography from "@material-ui/core/Typography";
 import Checkbox from "@material-ui/core/Checkbox";
+import { withStyles } from "@material-ui/core/styles";
 
 /* etc modules */
+import has from "lodash/has";
 import PropTypes from "prop-types";
 import uniqueId from "lodash/uniqueId";
+
+const styles = theme => ({
+  img: {
+    maxWidth: 150,
+    maxHeight: 150
+  }
+});
 
 class BaseTableBody extends Component {
   onClickCheckbox = id => () => {
     this.props.onClickCheckbox(id);
+  };
+
+  renderItemBody = (value, type) => {
+    switch (type.toLowerCase()) {
+      case "image":
+        return (
+          <img src={value} alt={value} className={this.props.classes.img} />
+        );
+      default:
+        return <Typography>{value}</Typography>;
+    }
   };
 
   render() {
@@ -42,7 +62,10 @@ class BaseTableBody extends Component {
               )}
               {columns.map(itemColumn => (
                 <TableCell key={itemBody[itemColumn.objName]}>
-                  <Typography>{itemBody[itemColumn.objName]}</Typography>
+                  {this.renderItemBody(
+                    itemBody[itemColumn.objName],
+                    itemColumn.type
+                  )}
                 </TableCell>
               ))}
             </TableRow>
@@ -66,4 +89,4 @@ BaseTableBody.defaultProps = {
   onClickCheckbox: () => {}
 };
 
-export default BaseTableBody;
+export default withStyles(styles)(BaseTableBody);

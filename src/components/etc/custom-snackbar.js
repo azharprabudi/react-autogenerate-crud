@@ -10,6 +10,8 @@ import ErrorIcon from "@material-ui/icons/Error";
 import InfoIcon from "@material-ui/icons/Info";
 import WarningIcon from "@material-ui/icons/Warning";
 import CloseIcon from "@material-ui/icons/Close";
+import green from "@material-ui/core/colors/green";
+import amber from "@material-ui/core/colors/amber";
 
 /* etc modules */
 import classNames from "classnames";
@@ -23,8 +25,17 @@ const iconDependOnType = {
 };
 
 const styles = theme => ({
+  success: {
+    backgroundColor: green[600]
+  },
   error: {
     backgroundColor: theme.palette.error.dark
+  },
+  info: {
+    backgroundColor: theme.palette.primary.dark
+  },
+  warning: {
+    backgroundColor: amber[700]
   },
   icon: {
     fontSize: 20
@@ -55,12 +66,7 @@ class CustomSnackbar extends PureComponent {
     } = this.props;
     const Icon = iconDependOnType[type];
     return (
-      <SnackBar
-        anchorOrigin={anchorOrigin}
-        open={visible}
-        autoHideDuration={3000}
-        onClose={onClose}
-      >
+      <SnackBar open={visible} onClose={onClose} anchorOrigin={anchorOrigin}>
         <SnackbarContent
           className={classNames(classes[type], classes.margin)}
           aria-describedby="client-snackbar"
