@@ -10,7 +10,7 @@ If you want this library, npm module is comming soon :)
     </code>
 </pre>
 
-Example code if you want to use this library like these :
+<b>Example code if you want to use this library like these :</b>
 
 <pre>
     <code>
@@ -46,6 +46,7 @@ Example code if you want to use this library like these :
         <tr>
             <td>No</td>
             <td>Props Name</td>
+            <td>Type</td>
             <td>Default</td>
             <td>Required</td>
             <td>Description</td>
@@ -55,23 +56,52 @@ Example code if you want to use this library like these :
         <tr>
             <td>1</td>
             <td>useCheckbox</td>
+            <td>boolean</td> 
             <td>false</td>
-            <td>none</td>
+            <td>NO</td>
             <td>if the value you set to true, the checkbox button will show in the table, so you can delete the multiple data in view, and just passing the url for delete data
             </td>
         </tr>
         <tr>
             <td>2</td>
             <td>existingData</td>
+            <td>boolean</td>
             <td>false</td>
-            <td>none</td>
+            <td>NO</td>
             <td>If you have a existing data from another store, and you dont want to the table fetch new data, you can set the value to true, and passing the data in propsName data</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>fetchOptions</td>
+            <td>boolean</td>
+            <td>{}</td>
+            <td>YES</td>
+            <td>
+            This very usefully for the component know, how to fetch the data from. The example object like this :
+            <pre>
+            <code>
+            {
+                get: { url: "", config: {}, method: 'get' },
+                add: { url: "", config: {}, method: 'post' },
+                edit: { url: "", config: {}, replaceUrlParameter: { "{id}": "id" } },
+                delete: { url: "", config: {}, replaceUrlParameter: { "{id}": "id" } }
+            }
+            </code>
+            </pre>
+            Attribute config at the top, you can check from this link : https://github.com/axios/axios. And for attribute replaceUrlParameter, this used whenever you have a link EDIT like this: http://apisaya.com/api/v1/user/1, Number one at that link is the userid, you can so if you want link like that, you just throw it into  edit fetchOptions like this :
+            <pre>
+                <code>
+                    edit: { url: "http://apisaya.com/api/v1/user/{userId}", config: {}, replaceUrlParameter: { "{userId}": "id" } }
+                    the "id" must be the real object name, depend on data get from the api
+                </code>
+            </pre>
+            </td>
         </tr>
     </tbody>
 </table>
 
-This is still development, and there is a screenshot for you for this project :) 
+<b>This is still development, and there is a screenshot for you for this project :)</b>
 
 <img src="https://image.ibb.co/dCJH68/screen_shot.png" alt="screenshot library" />
 
-Thank to read this documentation :)
+<b>Thank to read this documentation :)</b>
