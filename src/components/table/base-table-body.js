@@ -12,21 +12,32 @@ import PropTypes from "prop-types";
 import uniqueId from "lodash/uniqueId";
 
 class BaseTableBody extends Component {
-  onClickCheckbox = () => () => {
-    alert(1);
-    this.props.onClickCheckbox();
+  onClickCheckbox = id => () => {
+    this.props.onClickCheckbox(id);
   };
 
   render() {
-    const { data, columns, useCheckbox } = this.props;
+    const {
+      data,
+      columns,
+      checkbox,
+      checkboxObjName,
+      listChecked
+    } = this.props;
     return (
       <TableBody component="tbody">
         {data.map(itemBody => {
           return (
             <TableRow key={uniqueId(itemBody.objName)} hover>
-              {useCheckbox && (
+              {checkbox && (
                 <TableCell padding={"checkbox"}>
-                  <Checkbox checked={true} onClick={this.onClickCheckbox()} />
+                  <Checkbox
+                    checked={
+                      listChecked.indexOf(itemBody[checkboxObjName]) > -1
+                    }
+                    color={"primary"}
+                    onClick={this.onClickCheckbox(itemBody[checkboxObjName])}
+                  />
                 </TableCell>
               )}
               {columns.map(itemColumn => (
@@ -45,8 +56,10 @@ class BaseTableBody extends Component {
 BaseTableBody.propTypes = {
   data: PropTypes.array.isRequired,
   columns: PropTypes.array.isRequired,
-  useCheckbox: PropTypes.bool.isRequired,
-  onClickCheckbox: PropTypes.func
+  checkbox: PropTypes.bool.isRequired,
+  listChecked: PropTypes.array.isRequired,
+  onClickCheckbox: PropTypes.func.isRequired,
+  checkboxObjName: PropTypes.string.isRequired
 };
 
 BaseTableBody.defaultProps = {

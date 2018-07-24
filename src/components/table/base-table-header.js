@@ -20,14 +20,18 @@ class BaseTableHeader extends Component {
   };
 
   render() {
-    const { sort, orderBy, columns, useCheckbox } = this.props;
+    const { sort, orderBy, columns, checkbox } = this.props;
     return (
       <Fragment>
         <TableHead component="thead">
           <TableRow>
-            {useCheckbox && (
+            {checkbox && (
               <TableCell padding={"checkbox"}>
-                <Checkbox checked={true} onClick={() => alert(1)} />
+                <Checkbox
+                  checked={this.props.checkAllList}
+                  onClick={this.props.onCheckAllItem}
+                  color={"primary"}
+                />
               </TableCell>
             )}
             {columns.map(itemColumn => (
@@ -61,8 +65,10 @@ BaseTableHeader.propTypes = {
   sort: PropTypes.string.isRequired,
   orderBy: PropTypes.string.isRequired,
   columns: PropTypes.array.isRequired,
-  onChangeOrderBy: PropTypes.func.isRequired,
-  useCheckbox: PropTypes.bool.isRequired
+  checkbox: PropTypes.bool.isRequired,
+  checkAllList: PropTypes.bool.isRequired,
+  onCheckAllItem: PropTypes.func.isRequired,
+  onChangeOrderBy: PropTypes.func.isRequired
 };
 
 export default BaseTableHeader;

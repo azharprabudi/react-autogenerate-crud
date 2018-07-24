@@ -45,9 +45,9 @@ class BaseTable extends PureComponent {
       classes,
       orderBy,
       loading,
-      useCheckbox,
       tableOptions,
-      loadingOptions
+      loadingOptions,
+      checkboxOptions
     } = this.props;
     return (
       <Paper>
@@ -59,14 +59,19 @@ class BaseTable extends PureComponent {
             sort={sort}
             title={title}
             orderBy={orderBy}
-            useCheckbox={useCheckbox}
             columns={tableOptions.columns}
+            checkbox={checkboxOptions.enable}
             onChangeOrderBy={this.onChangeOrderBy}
+            checkAllList={this.props.checkAllList}
+            onCheckAllItem={this.props.onCheckAllItem}
           />
           <BaseTableBody
             data={data}
-            useCheckbox={useCheckbox}
             columns={tableOptions.columns}
+            checkbox={checkboxOptions.enable}
+            checkboxObjName={checkboxOptions.objName}
+            listChecked={this.props.listChecked}
+            onClickCheckbox={this.props.onClickCheckbox}
           />
         </Table>
         {loading === true && (
@@ -90,9 +95,13 @@ BaseTable.propTypes = {
   classes: PropTypes.object.isRequired,
   orderBy: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
-  useCheckbox: PropTypes.bool.isRequired,
   tableOptions: PropTypes.object.isRequired,
-  loadingOptions: PropTypes.object.isRequired
+  checkboxOptions: PropTypes.object.isRequired,
+  loadingOptions: PropTypes.object.isRequired,
+  listChecked: PropTypes.array.isRequired,
+  onClickCheckbox: PropTypes.func.isRequired,
+  checkAllList: PropTypes.bool.isRequired,
+  onCheckAllItem: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(BaseTable);

@@ -3,8 +3,9 @@ import React, { Component, Fragment } from "react";
 /* etc modules */
 import axios from "axios";
 import has from "lodash/has";
-import isArray from "lodash/isArray";
+import omit from "lodash/omit";
 import PropTypes from "prop-types";
+import isArray from "lodash/isArray";
 
 /* custom components */
 import BaseTable from "./base-table";
@@ -15,6 +16,7 @@ class CRUDGeneration extends Component {
   constructor(props) {
     super(props);
 
+    /* this state spread to the children */
     this.state = {
       data: [],
       loading: false,
@@ -27,7 +29,9 @@ class CRUDGeneration extends Component {
       table: {
         sort: "asc",
         orderBy: ""
-      }
+      },
+      listChecked: [],
+      checkAllList: false
     };
 
     this.page = 1;
@@ -41,6 +45,7 @@ class CRUDGeneration extends Component {
     }
   }
 
+  /* create url link, if the user want to refresh or search value, or do limitation */
   getUrlLink = obj => {
     let url = obj.url;
 
@@ -143,6 +148,37 @@ class CRUDGeneration extends Component {
     });
   };
 
+  /* setState checked item */
+  onClickCheckbox = id => {
+    let { listChecked } = this.state;
+
+    if (listChecked.indexOf(id) > -1) {
+      listChecked = listChecked.filter(item => item !== id);
+    } else {
+      listChecked = [...listChecked, id];
+    }
+
+    this.setState({
+      ...this.state,
+      listChecked
+    });
+  };
+
+  onCheckAllItem = () => {
+    let { checkAllList, listChecked, data } = this.state;
+    if (!checkAllList === true) {
+      listChecked = data.map(item => item[this.props.checkboxOptions.objName]);
+    } else {
+      listChecked = [];
+    }
+
+    this.setState({
+      ...this.state,
+      listChecked,
+      checkAllList: !checkAllList
+    });
+  };
+
   render() {
     const { classes, classNames } = this.props;
     return (
@@ -154,10 +190,14 @@ class CRUDGeneration extends Component {
           loading={this.state.loading}
           sort={this.state.table.sort}
           orderBy={this.state.table.orderBy}
+          listChecked={this.state.listChecked}
+          onClickCheckbox={this.onClickCheckbox}
           tableOptions={this.props.tableOptions}
           loadingOptions={this.props.loadingOptions}
           onChangeStateTable={this.onChangeStateTable}
-          useCheckbox={this.props.useCheckbox}
+          checkboxOptions={this.props.checkboxOptions}
+          checkAllList={this.state.checkAllList}
+          onCheckAllItem={this.onCheckAllItem}
         />
         <CustomSnackbar
           visible={this.state.snackbarInfo.visible}
@@ -177,15 +217,19 @@ CRUDGeneration.propTypes = {
   fetchOptions: PropTypes.object,
   tableOptions: PropTypes.object,
   loadingOptions: PropTypes.object,
+  checkboxOptions: PropTypes.object,
   /* required only */
   title: PropTypes.string.isRequired
 };
 
 CRUDGeneration.defaultProps = {
   limit: 10,
-  useCheckbox: false,
   fetchOptions: {},
   tableOptions: {},
+  checkboxOptions: {
+    enabled: false,
+    objName: ""
+  },
   loadingOptions: {
     color: "primary",
     size: 30
