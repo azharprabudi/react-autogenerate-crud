@@ -1,6 +1,50 @@
-# React Auto Generate CRUD
+## React Auto Generate CRUD ##
 
-This library specially, we made for our backend development to reduce time to make crud using react. Thanks so much for PT. Solusi Informasi Digital, to give us more time to make this library until working well.
+Specially thanks for our team, there are :
+
+1. Hartanto Boy
+2. Boby Harmoko
+3. And me
+
+To keep it up this project, for purpose to decrease the development time when using react in backend. Almost in backend, there are some CRUD module and could it be take a long time to make CRUD, CRUD, CRUD again. And i hope this library helpfull for other people same like us :).
+
+<b>Currently there are avaiable feature for this project :</b>
+<table>
+    <thead>
+        <tr>
+            <td>Module</td>
+            <td>Feature</td>
+            <td>Status</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td rowspan="4">View</td>
+            <td>Generate Automatic</td>
+            <td><img src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+        </tr>
+        <tr>
+            <td>Title Table</td>
+            <td><img src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+        </tr>
+        <tr>
+            <td>Checkbox</td>
+            <td><img src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+        </tr>
+        <tr>
+            <td>Fetch Data From Server</td>
+            <td><img src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+        </tr>
+        <tr>
+            <td>Sorting Column</td>
+            <td><img src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+        </tr>
+        <tr>
+            <td>Pagination</td>
+            <td><img src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+        </tr>
+    </tbody>
+</table>
 
 <b>Some information for you</b>
 
