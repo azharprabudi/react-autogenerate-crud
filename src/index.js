@@ -13,7 +13,7 @@ class Index extends Component {
         }}
         fetchOptions={{
           view: {
-            url: "https://jsonplaceholder.typicode.com/photos",
+            url: "https://jsonplaceholder.typicode.com/users",
             method: "get",
             query: {
               limit: "_limit",
@@ -22,7 +22,7 @@ class Index extends Component {
             }
           },
           delete: {
-            url: "https://jsonplaceholder.typicode.com/photos/{id}",
+            url: "https://jsonplaceholder.typicode.com/users/{id}",
             bulk: false,
             method: "delete",
             replaceUrl: "{id}"
@@ -33,16 +33,22 @@ class Index extends Component {
           btnEdit: true,
           columns: [
             {
-              title: "Judul",
-              objName: "title",
+              title: "Name",
+              objName: "name",
               canBeSort: true,
               type: "text"
             },
             {
-              title: "Gambar",
-              objName: "url",
+              title: "Username",
+              objName: "username",
               canBeSort: true,
-              type: "image"
+              type: "text"
+            },
+            {
+              title: "Email",
+              objName: "email",
+              canBeSort: true,
+              type: "text"
             }
           ]
         }}

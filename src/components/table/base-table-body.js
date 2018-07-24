@@ -7,9 +7,9 @@ import TableCell from "@material-ui/core/TableCell";
 import Typography from "@material-ui/core/Typography";
 import Checkbox from "@material-ui/core/Checkbox";
 import { withStyles } from "@material-ui/core/styles";
+import moment from "moment";
 
 /* etc modules */
-import has from "lodash/has";
 import PropTypes from "prop-types";
 import uniqueId from "lodash/uniqueId";
 
@@ -31,6 +31,18 @@ class BaseTableBody extends Component {
         return (
           <img src={value} alt={value} className={this.props.classes.img} />
         );
+      case "date":
+        return <Typography>{moment(value).format("YYYY-MM-D")}</Typography>;
+      case "time":
+        return <Typography>{moment(value).format("H:mm:ss")}</Typography>;
+      case "datetime":
+        return (
+          <Typography>{moment(value).format("YYYY-MM-D, H:mm:ss")}</Typography>
+        );
+      case "longtext":
+        return <Typography>{`${value.substr(0, 50)}...`}</Typography>;
+      case "nominal":
+        return <Typography>{value.toLocaleString()}</Typography>;
       default:
         return <Typography>{value}</Typography>;
     }
