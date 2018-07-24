@@ -21,27 +21,27 @@ To keep it up this project, for purpose to decrease the development time when us
         <tr>
             <td rowspan="9">View</td>
             <td>Generate Automatic Table With Data</td>
-            <td><img style="margin-left: 20px; width: 20px; height: 20px;" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
             <td>Title Table</td>
-            <td><img style="margin-left: 20px; width: 20px; height: 20px;" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
             <td>Checkbox</td>
-            <td><img style="margin-left: 20px; width: 20px; height: 20px;" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
             <td>Fetch Data From Server</td>
-            <td><img style="margin-left: 20px; width: 20px; height: 20px;" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
             <td>Sorting Column</td>
-            <td><img style="margin-left: 20px; width: 20px; height: 20px;" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
             <td>Pagination</td>
-            <td><img style="margin-left: 20px; width: 20px; height: 20px;" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
             <td>Button Add New / Edit</td>
@@ -80,35 +80,18 @@ To keep it up this project, for purpose to decrease the development time when us
         <tr>
             <td rowspan="2">Delete</td>
             <td>Delete bulk</td>
-            <td><img style="margin-left: 20px; width: 20px; height: 20px;" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
             <td>Delete single</td>
-            <td><img style="margin-left: 20px; width: 20px; height: 20px;" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
     </tbody>
 </table>
 
-<b>Some information for you</b>
+<b>This project still ongoing, but if you want to try you can clone this repo, and just npm install it in the directory project or if you want to check the example code visit this <a href="/src/index.js">link</a></b>
 
-<pre>
-    <code>
-If you want this library, npm module is comming soon :)
-    </code>
-</pre>
-
-<b>Example code if you want to use this library like these :</b>
-
-<pre>
-    <code>
-<BaseTable
-existingData={false}
-fetchOptions={fetchOptionsConfig}
-tableOptions={tableOptionsConfig}
-/>
-    </code>
-</pre>
-
+## See the complete documentation below
 <table>
     <thead>
         <tr>
