@@ -19,29 +19,72 @@ To keep it up this project, for purpose to decrease the development time when us
     </thead>
     <tbody>
         <tr>
-            <td rowspan="4">View</td>
-            <td>Generate Automatic</td>
-            <td><img src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+            <td rowspan="9">View</td>
+            <td>Generate Automatic Table With Data</td>
+            <td><img style="margin-left: 20px; width: 20px; height: 20px;" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
             <td>Title Table</td>
-            <td><img src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+            <td><img style="margin-left: 20px; width: 20px; height: 20px;" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
             <td>Checkbox</td>
-            <td><img src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+            <td><img style="margin-left: 20px; width: 20px; height: 20px;" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
             <td>Fetch Data From Server</td>
-            <td><img src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+            <td><img style="margin-left: 20px; width: 20px; height: 20px;" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
             <td>Sorting Column</td>
-            <td><img src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+            <td><img style="margin-left: 20px; width: 20px; height: 20px;" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
             <td>Pagination</td>
-            <td><img src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+            <td><img style="margin-left: 20px; width: 20px; height: 20px;" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+        </tr>
+        <tr>
+            <td>Button Add New / Edit</td>
+            <td>Not Yet</td>
+        </tr>
+        <tr>
+            <td>Add Custom Button Before Table</td>
+            <td>Not Yet</td>
+        </tr>
+        <tr>
+            <td>Add Custom Button In Table Body</td>
+            <td>Not Yet</td>
+        </tr>
+        <tr>
+            <td rowspan="2">Add / Edit</td>
+            <td>Generate Form Add / Edit</td>
+            <td>Not Yet</td>
+        </tr>
+        <tr>
+            <td>Submit Data To Server</td>
+            <td>Not Yet</td>
+        </tr>
+        <tr>
+            <td rowspan="3">Search</td>
+            <td>Generate Form Search</td>
+            <td>Not Yet</td>
+        </tr>
+        <tr>
+            <td>Fetch Data Depend On Search</td>
+            <td>Not Yet</td>
+        </tr>
+        <tr>
+            <td>Clear Search</td>
+            <td>Not Yet</td>
+        </tr>
+        <tr>
+            <td rowspan="2">Delete</td>
+            <td>Delete bulk</td>
+            <td><img style="margin-left: 20px; width: 20px; height: 20px;" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+        </tr>
+        <tr>
+            <td>Delete single</td>
+            <td><img style="margin-left: 20px; width: 20px; height: 20px;" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
     </tbody>
 </table>
