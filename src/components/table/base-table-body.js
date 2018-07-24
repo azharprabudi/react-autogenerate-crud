@@ -25,6 +25,18 @@ class BaseTableBody extends Component {
     this.props.onClickCheckbox(id);
   };
 
+  getValueItemBody = (rawData, attrName) => {
+    let attrSplit = attrName.split(".");
+    if (attrSplit.length > 1) {
+      let newRawData = rawData;
+      for (let i = 0; i < attrSplit.length; i++) {
+        newRawData = newRawData[attrSplit[i]];
+      }
+      return newRawData;
+    }
+    return rawData[attrName];
+  };
+
   renderItemBody = (value, type) => {
     switch (type.toLowerCase()) {
       case "image":
@@ -75,7 +87,7 @@ class BaseTableBody extends Component {
               {columns.map(itemColumn => (
                 <TableCell key={itemBody[itemColumn.objName]}>
                   {this.renderItemBody(
-                    itemBody[itemColumn.objName],
+                    this.getValueItemBody(itemBody, itemColumn.objName),
                     itemColumn.type
                   )}
                 </TableCell>

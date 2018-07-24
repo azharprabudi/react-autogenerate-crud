@@ -49,6 +49,18 @@ class Index extends Component {
               objName: "email",
               canBeSort: true,
               type: "text"
+            },
+            {
+              title: "Alamat",
+              objName: "address.street",
+              canBeSort: true,
+              type: "text"
+            },
+            {
+              title: "Lang",
+              objName: "address.geo.lng",
+              canBeSort: true,
+              type: "text"
             }
           ]
         }}
