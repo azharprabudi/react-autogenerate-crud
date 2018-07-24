@@ -8,8 +8,14 @@ class Index extends Component {
       <BaseTable
         existingData={false}
         fetchOptions={{
-          get: {
-            url: "https://jsonplaceholder.typicode.com/posts/"
+          view: {
+            url: "https://jsonplaceholder.typicode.com/posts",
+            method: "get",
+            query: {
+              limit: "_limit",
+              page: "_page",
+              search: {}
+            }
           }
         }}
         tableOptions={{

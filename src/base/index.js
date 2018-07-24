@@ -3,11 +3,13 @@ import React, { Component, Fragment } from "react";
 /* etc modules */
 import axios from "axios";
 import has from "lodash/has";
+import isArray from "lodash/isArray";
 import PropTypes from "prop-types";
 
 /* custom components */
 import BaseSearch from "./base-search";
 import BaseTable from "./base-table";
+import CustomSnackbar from "./components/custom-snackbar";
 
 class CRUDGeneration extends Component {
   constructor(props) {
@@ -16,9 +18,10 @@ class CRUDGeneration extends Component {
     this.state = {
       data: props.existingData ? props.data : [],
       loading: false,
-      error: {
-        visible: false,
-        message: ""
+      snackbarInfo: {
+        type: "error",
+        message: "",
+        visible: false
       },
       search: {},
       table: {
@@ -27,37 +30,89 @@ class CRUDGeneration extends Component {
       }
     };
 
-    this.limit = props.limit;
+    this.page = 1;
     this.offset = 0;
+    this.limit = props.limit;
   }
 
   componentDidMount() {
-    const { existingData, fetchOptions } = this.props;
-    if (!existingData && fetchOptions.get.url !== "") {
+    if (!this.props.existingData) {
       this.getDataFromServer();
     }
   }
 
+  getUrlLink = obj => {
+    let url = obj.url;
+
+    if (has(obj, "query")) {
+      url = `${obj.url}?`;
+      if (has(obj.query, "limit")) {
+        url += `&${obj.query.limit}=${this.limit}`;
+      }
+
+      if (has(obj.query, "offset")) {
+        url += `&${obj.query.offset}=${this.offset};`;
+      }
+
+      if (has(obj.query, "page")) {
+        url += `&${obj.query.page}=${this.page};`;
+      }
+
+      // search
+      // if (has(obj.query, 'page'))
+    }
+
+    return url;
+  };
+
   getDataFromServer = async () => {
     try {
-      const { get } = this.props.fetchOptions;
-      let configGetData = has(get, "config") ? get.config : {};
+      const { view } = this.props.fetchOptions;
+      const { search } = this.state;
+
+      /* required data when get data from server */
+      let configGetData = has(view, "config") ? view.config : {};
+      let methodGetData = has(view, "method")
+        ? view.method.toLowerCase()
+        : "get";
+      let url = has(view, "url") ? this.getUrlLink(view) : "";
+
+      /* start fetching data */
       await this.setLoadingProms(true);
+      let { data } = await axios[methodGetData](url, configGetData);
 
-      let { data } = await axios.get(get.url, configGetData);
-
+      /* finish fetch data and set data into state */
       this.setState({
         ...this.state,
         data,
         loading: false
       });
     } catch (e) {
-      await this.setLoadingProms();
+      this.setState({
+        ...this.state,
+        loading: false,
+        snackbarInfo: {
+          type: "error",
+          message: isArray(e) ? JSON.stringify(e) : e.toString(),
+          visible: true
+        }
+      });
     }
   };
 
   setLoadingProms = (loading = false) =>
     new Promise(resolve => this.setState({ ...this.state, loading }, resolve));
+
+  resetSnackbarInfo = () => {
+    this.setState({
+      ...this.state,
+      snackbarInfo: {
+        type: "error",
+        message: "",
+        visible: false
+      }
+    });
+  };
 
   /* set state table */
   onChangeStateTable = (orderByNameColumn, sort) => {
@@ -89,6 +144,7 @@ class CRUDGeneration extends Component {
   };
 
   render() {
+    const { classes, classNames } = this.props;
     return (
       <Fragment>
         <BaseSearch />
@@ -102,6 +158,12 @@ class CRUDGeneration extends Component {
           onChangeStateTable={this.onChangeStateTable}
           useCheckbox={this.props.useCheckbox}
         />
+        <CustomSnackbar
+          visible={this.state.snackbarInfo.visible}
+          type={this.state.snackbarInfo.type}
+          message={this.state.snackbarInfo.message}
+          onClickSnackbar={this.resetSnackbarInfo}
+        />
       </Fragment>
     );
   }
@@ -109,40 +171,19 @@ class CRUDGeneration extends Component {
 
 BaseTable.propTypes = {
   data: PropTypes.array,
+  limit: PropTypes.number,
+  useCheckbox: PropTypes.bool,
   existingData: PropTypes.bool,
   fetchOptions: PropTypes.object,
   tableOptions: PropTypes.object,
-  loadingOptions: PropTypes.object,
-  useCheckbox: PropTypes.bool
+  loadingOptions: PropTypes.object
 };
 
 BaseTable.defaultProps = {
+  limit: 10,
   useCheckbox: false,
-  existingData: false, // if want to use existing data, dont provide the fetch options
-  fetchOptions: {
-    get: {
-      url: "", // this is the url from where the data want to get
-      config: {} // the config you can see from the config axios at here https://github.com/axios/axios
-    },
-    add: {
-      url: "", // this is the url from where the data want to add
-      config: {} // the config you can see from the config axios at here https://github.com/axios/axios
-    },
-    edit: {
-      url: "", // this is the url from where the data want to edit
-      config: {}, // the config you can see from the config axios at here https://github.com/axios/axios
-      replaceUrlParameter: {
-        "{id}": "id"
-      }
-    },
-    delete: {
-      url: "", // this is the url from where the data want to delete
-      config: {}, // the config you can see from the config axios at here https://github.com/axios/axios
-      replaceUrlParameter: {
-        "{id}": "id"
-      }
-    }
-  },
+  existingData: false,
+  fetchOptions: {},
   tableOptions: {
     btnAddNew: true,
     btnEdit: true,

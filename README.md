@@ -37,7 +37,7 @@ tableOptions={{ btnAddNew: true, btnEdit: true, columns: [{ title: "Judul", objN
         <tr>
             <td>1</td>
             <td>useCheckbox</td>
-            <td>boolean</td> 
+            <td>Boolean</td> 
             <td>false</td>
             <td>NO</td>
             <td>if the value you set to true, the checkbox button will show in the table, so you can delete the multiple data in view, and just passing the url for delete data
@@ -46,7 +46,7 @@ tableOptions={{ btnAddNew: true, btnEdit: true, columns: [{ title: "Judul", objN
         <tr>
             <td>2</td>
             <td>existingData</td>
-            <td>boolean</td>
+            <td>Boolean</td>
             <td>false</td>
             <td>NO</td>
             <td>If you have a existing data from another store, and you dont want to the table fetch new data, you can set the value to true, and passing the data in propsName data</td>
@@ -54,8 +54,8 @@ tableOptions={{ btnAddNew: true, btnEdit: true, columns: [{ title: "Judul", objN
         <tr>
             <td>3</td>
             <td>fetchOptions</td>
-            <td>boolean</td>
-            <td>{}</td>
+            <td>Object</td>
+            <td>none</td>
             <td>YES</td>
             <td>
             This very usefully for the component know, how to fetch the data from. The example object like this :
