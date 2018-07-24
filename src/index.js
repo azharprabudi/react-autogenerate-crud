@@ -30,8 +30,10 @@ class Index extends Component {
           }
         }}
         tableOptions={{
-          btnAddNew: true,
           btnEdit: true,
+          btnAddNew: true,
+          btnHeaderTable: [],
+          btnCustomAction: [],
           columns: [
             {
               title: "Name",
