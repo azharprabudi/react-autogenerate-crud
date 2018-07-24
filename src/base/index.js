@@ -11,6 +11,7 @@ import isArray from "lodash/isArray";
 import BaseTable from "./base-table";
 import BaseSearch from "./base-search";
 import CustomSnackbar from "../components/etc/custom-snackbar";
+import AlertDialog from "../components/etc/alert-dialog";
 
 class CRUDGeneration extends Component {
   constructor(props) {
@@ -29,6 +30,14 @@ class CRUDGeneration extends Component {
       table: {
         sort: "asc",
         orderBy: ""
+      },
+      dialog: {
+        form: {
+          visible: false
+        },
+        alert: {
+          visible: false
+        }
       },
       listChecked: [],
       checkAllList: false
@@ -179,6 +188,40 @@ class CRUDGeneration extends Component {
     });
   };
 
+  /* when user delete data, show alert dialog */
+  onClickDelete = () => {
+    this.setState({
+      ...this.state,
+      dialog: {
+        ...this.state.dialog,
+        alert: {
+          visible: true
+        }
+      }
+    });
+  };
+
+  /* alert dialog */
+  onDialogClose = (dialogName, action) => () => {
+    if (this.state.dialog[dialogName].visible === true) {
+      this.setState({
+        ...this.state,
+        dialog: {
+          ...this.state.dialog,
+          [dialogName]: {
+            visible: false
+          }
+        }
+      });
+    }
+
+    if (dialogName === "alert" && action === "submit") {
+      this.doDeleteCheckItem();
+    } else if (dialogName === "form" && action == "submit") {
+      this.doSubmitForm();
+    }
+  };
+
   render() {
     const { classes, classNames } = this.props;
     return (
@@ -198,12 +241,21 @@ class CRUDGeneration extends Component {
           checkboxOptions={this.props.checkboxOptions}
           checkAllList={this.state.checkAllList}
           onCheckAllItem={this.onCheckAllItem}
+          onClickDelete={this.onClickDelete}
         />
         <CustomSnackbar
           visible={this.state.snackbarInfo.visible}
           type={this.state.snackbarInfo.type}
           message={this.state.snackbarInfo.message}
           onClickSnackbar={this.resetSnackbarInfo}
+        />
+        <AlertDialog
+          title={"Confirmation"}
+          message={"Are you sure to delete this data ?"}
+          visible={this.state.dialog.alert.visible}
+          onClose={this.onDialogClose("alert", "close")}
+          onAggree={this.onDialogClose("alert", "submit")}
+          onDisaggree={this.onDialogClose("alert", "close")}
         />
       </Fragment>
     );

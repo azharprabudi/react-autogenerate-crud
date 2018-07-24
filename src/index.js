@@ -20,6 +20,14 @@ class Index extends Component {
               page: "_page",
               search: {}
             }
+          },
+          delete: {
+            url: "https://jsonplaceholder.typicode.com/posts/{id}",
+            bulk: false,
+            method: "delete",
+            replaceUrl: {
+              "{id}": "id"
+            }
           }
         }}
         tableOptions={{

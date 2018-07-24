@@ -7,9 +7,13 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
+import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 /* etc modules */
 import PropTypes from "prop-types";
+import classNames from "classnames";
 
 /* my modules */
 import BaseTableHeader from "../components/table/base-table-header";
@@ -20,6 +24,35 @@ const styles = theme => ({
     position: "absolute",
     left: "48%",
     top: 120
+  },
+  table: {
+    minWidth: 1020
+  },
+  tableWrapper: {
+    overflowX: "auto"
+  },
+  root: {
+    paddingRight: theme.spacing.unit
+  },
+  highlight: {
+    backgroundColor: theme.palette.primary.dark,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5
+  },
+  spacer: {
+    flex: "1 1 100%"
+  },
+  actions: {
+    color: theme.palette.text.secondary
+  },
+  title: {
+    flex: "0 0 auto"
+  },
+  titleHightlight: {
+    color: "white"
+  },
+  iconDelete: {
+    color: "white"
   }
 });
 
@@ -49,31 +82,58 @@ class BaseTable extends PureComponent {
       loadingOptions,
       checkboxOptions
     } = this.props;
+    const isCheckItem = this.props.listChecked.length > 0;
     return (
       <Paper>
-        <Toolbar>
-          <Typography variant="title">{title}</Typography>
+        <Toolbar
+          className={classNames(classes.root, {
+            [classes.highlight]: isCheckItem
+          })}
+        >
+          <div className={classes.title}>
+            <Typography
+              variant="title"
+              className={isCheckItem ? classes.titleHightlight : ""}
+            >
+              <b>{title}</b>
+            </Typography>
+          </div>
+          <div className={classes.spacer} />
+          <div className={classes.actions}>
+            {isCheckItem && (
+              <Tooltip title="Delete">
+                <IconButton aria-label="Delete">
+                  <DeleteIcon
+                    className={classes.iconDelete}
+                    onClick={this.props.onClickDelete}
+                  />
+                </IconButton>
+              </Tooltip>
+            )}
+          </div>
         </Toolbar>
-        <Table component="table">
-          <BaseTableHeader
-            sort={sort}
-            title={title}
-            orderBy={orderBy}
-            columns={tableOptions.columns}
-            checkbox={checkboxOptions.enable}
-            onChangeOrderBy={this.onChangeOrderBy}
-            checkAllList={this.props.checkAllList}
-            onCheckAllItem={this.props.onCheckAllItem}
-          />
-          <BaseTableBody
-            data={data}
-            columns={tableOptions.columns}
-            checkbox={checkboxOptions.enable}
-            checkboxObjName={checkboxOptions.objName}
-            listChecked={this.props.listChecked}
-            onClickCheckbox={this.props.onClickCheckbox}
-          />
-        </Table>
+        <div className={classes.tableWrapper}>
+          <Table component="table" className={classes.table}>
+            <BaseTableHeader
+              sort={sort}
+              title={title}
+              orderBy={orderBy}
+              columns={tableOptions.columns}
+              checkbox={checkboxOptions.enable}
+              onChangeOrderBy={this.onChangeOrderBy}
+              checkAllList={this.props.checkAllList}
+              onCheckAllItem={this.props.onCheckAllItem}
+            />
+            <BaseTableBody
+              data={data}
+              columns={tableOptions.columns}
+              checkbox={checkboxOptions.enable}
+              checkboxObjName={checkboxOptions.objName}
+              listChecked={this.props.listChecked}
+              onClickCheckbox={this.props.onClickCheckbox}
+            />
+          </Table>
+        </div>
         {loading === true && (
           <div className={classes.loading}>
             <CircularProgress
@@ -101,7 +161,8 @@ BaseTable.propTypes = {
   listChecked: PropTypes.array.isRequired,
   onClickCheckbox: PropTypes.func.isRequired,
   checkAllList: PropTypes.bool.isRequired,
-  onCheckAllItem: PropTypes.func.isRequired
+  onCheckAllItem: PropTypes.func.isRequired,
+  onClickDelete: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(BaseTable);
