@@ -3,14 +3,9 @@ import React, { PureComponent, Fragment } from "react";
 /* material ui */
 import { withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableFooter from "@material-ui/core/TableFooter";
-import TableRow from "@material-ui/core/TableRow";
-import TableCell from "@material-ui/core/TableCell";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 
 /* etc modules */
@@ -20,6 +15,7 @@ import PropTypes from "prop-types";
 
 /* my modules */
 import BaseTableHeader from "./components/table-header";
+import BaseTableBody from "./components/table-body";
 
 const styles = theme => ({
   loading: {
@@ -52,10 +48,14 @@ class BaseTable extends PureComponent {
       loadingOptions,
       sort,
       orderBy,
-      loading
+      loading,
+      title
     } = this.props;
     return (
       <Paper>
+        <Toolbar>
+          <Typography variant="title">{title}</Typography>
+        </Toolbar>
         <Table component="table">
           <BaseTableHeader
             sort={sort}
@@ -63,20 +63,9 @@ class BaseTable extends PureComponent {
             useCheckbox={useCheckbox}
             onChangeOrderBy={this.onChangeOrderBy}
             columns={tableOptions.columns}
+            title={title}
           />
-          <TableBody component="tbody">
-            {data.map(bodyItem => {
-              return (
-                <TableRow key={uniqueId(bodyItem.objName)} hover>
-                  {tableOptions.columns.map(headItem => (
-                    <TableCell key={bodyItem[headItem.objName]}>
-                      {bodyItem[headItem.objName]}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              );
-            })}
-          </TableBody>
+          <BaseTableBody />
         </Table>
         {loading === true && (
           <div className={classes.loading}>

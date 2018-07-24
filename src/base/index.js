@@ -149,6 +149,7 @@ class CRUDGeneration extends Component {
       <Fragment>
         <BaseSearch />
         <BaseTable
+          title={this.props.title}
           data={this.state.data}
           loading={this.state.loading}
           sort={this.state.table.sort}
@@ -176,7 +177,9 @@ BaseTable.propTypes = {
   existingData: PropTypes.bool,
   fetchOptions: PropTypes.object,
   tableOptions: PropTypes.object,
-  loadingOptions: PropTypes.object
+  loadingOptions: PropTypes.object,
+  /* required only */
+  title: PropTypes.string.isRequired
 };
 
 BaseTable.defaultProps = {

@@ -6,6 +6,7 @@ class Index extends Component {
   render() {
     return (
       <BaseTable
+        title={"Daftar Pegawai"}
         existingData={false}
         fetchOptions={{
           view: {
