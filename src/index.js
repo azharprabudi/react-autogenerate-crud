@@ -7,6 +7,7 @@ class Index extends Component {
     return (
       <BaseTable
         title={"Daftar Pegawai"}
+        limit={5}
         checkboxOptions={{
           enable: true,
           objName: "id"

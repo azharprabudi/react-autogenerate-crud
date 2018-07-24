@@ -84,14 +84,17 @@ class BaseTableBody extends Component {
                   />
                 </TableCell>
               )}
-              {columns.map(itemColumn => (
-                <TableCell key={itemBody[itemColumn.objName]}>
-                  {this.renderItemBody(
-                    this.getValueItemBody(itemBody, itemColumn.objName),
-                    itemColumn.type
-                  )}
-                </TableCell>
-              ))}
+              {columns.map(itemColumn => {
+                const realValue = this.getValueItemBody(
+                  itemBody,
+                  itemColumn.objName
+                );
+                return (
+                  <TableCell key={realValue}>
+                    {this.renderItemBody(realValue, itemColumn.type)}
+                  </TableCell>
+                );
+              })}
             </TableRow>
           );
         })}

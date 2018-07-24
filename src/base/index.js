@@ -66,9 +66,7 @@ class CRUDGeneration extends Component {
 
       if (has(obj.query, "offset")) {
         url += `&${obj.query.offset}=${this.offset};`;
-      }
-
-      if (has(obj.query, "page")) {
+      } else if (has(obj.query, "page")) {
         url += `&${obj.query.page}=${this.page};`;
       }
 
@@ -280,16 +278,32 @@ class CRUDGeneration extends Component {
     }
   };
 
+  /* pagination */
+  onChangePage = (e, toValue) => {
+    if (toValue > this.page - 1) {
+      this.page += 1;
+      this.offset += this.limit;
+    } else {
+      this.page -= 1;
+      this.offset -= this.limit;
+    }
+
+    this.getDataFromServer();
+  };
+
   render() {
     const { classes, classNames } = this.props;
     return (
       <Fragment>
-        <BaseSearch />
+        {/* <BaseSearch /> */}
         <BaseTable
+          page={this.page}
           title={this.props.title}
+          limit={this.props.limit}
           data={this.state.data}
           loading={this.state.loading}
           sort={this.state.table.sort}
+          onChangePage={this.onChangePage}
           orderBy={this.state.table.orderBy}
           listChecked={this.state.listChecked}
           onClickCheckbox={this.onClickCheckbox}

@@ -10,6 +10,7 @@ import Paper from "@material-ui/core/Paper";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
+import TablePagination from "@material-ui/core/TablePagination";
 
 /* etc modules */
 import PropTypes from "prop-types";
@@ -134,6 +135,21 @@ class BaseTable extends PureComponent {
             />
           </Table>
         </div>
+        <TablePagination
+          page={this.props.page - 1}
+          component="div"
+          backIconButtonProps={{
+            "aria-label": "Previous Page"
+          }}
+          nextIconButtonProps={{
+            "aria-label": "Next Page"
+          }}
+          onChangePage={this.props.onChangePage}
+          rowsPerPageOptions={[]}
+          rowsPerPage={this.props.limit}
+          count={99999999999999999999999999999999}
+          labelDisplayedRows={({ from, to, count }) => `${from} - ${to}`}
+        />
         {loading === true && (
           <div className={classes.loading}>
             <CircularProgress
@@ -149,12 +165,15 @@ class BaseTable extends PureComponent {
 
 BaseTable.propTypes = {
   /* required */
+  page: PropTypes.number.isRequired,
+  limit: PropTypes.number.isRequired,
   sort: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
   title: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
   orderBy: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
+  onChangePage: PropTypes.func.isRequired,
   tableOptions: PropTypes.object.isRequired,
   checkboxOptions: PropTypes.object.isRequired,
   loadingOptions: PropTypes.object.isRequired,
