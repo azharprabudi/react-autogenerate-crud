@@ -86,3 +86,4 @@ the "id" must be the real object name, depend on data get from the api
 <img src="https://image.ibb.co/dCJH68/screen_shot.png" alt="screenshot library" />
 
 <b>Thank to read this documentation :)</b>
+<a href="/documentation/test.md">test</a>

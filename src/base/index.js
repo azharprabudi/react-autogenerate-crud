@@ -7,9 +7,9 @@ import isArray from "lodash/isArray";
 import PropTypes from "prop-types";
 
 /* custom components */
-import BaseSearch from "./base-search";
 import BaseTable from "./base-table";
-import CustomSnackbar from "./components/custom-snackbar";
+import BaseSearch from "./base-search";
+import CustomSnackbar from "../components/etc/custom-snackbar";
 
 class CRUDGeneration extends Component {
   constructor(props) {
@@ -170,7 +170,7 @@ class CRUDGeneration extends Component {
   }
 }
 
-BaseTable.propTypes = {
+CRUDGeneration.propTypes = {
   data: PropTypes.array,
   limit: PropTypes.number,
   useCheckbox: PropTypes.bool,
@@ -182,7 +182,7 @@ BaseTable.propTypes = {
   title: PropTypes.string.isRequired
 };
 
-BaseTable.defaultProps = {
+CRUDGeneration.defaultProps = {
   limit: 10,
   useCheckbox: false,
   existingData: false,
