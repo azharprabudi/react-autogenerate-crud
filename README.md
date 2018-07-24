@@ -16,8 +16,8 @@ If you want this library, npm module is comming soon :)
     <code>
 <BaseTable
 existingData={false}
-fetchOptions={{ get: { url: "https://jsonplaceholder.typicode.com/posts/" } }}
-tableOptions={{ btnAddNew: true, btnEdit: true, columns: [{ title: "Judul", objName: "title", canBeSort: true}, { title: "Deskripsi", objName: "body", canBeSort: true }]}}
+fetchOptions={fetchOptionsConfig}
+tableOptions={tableOptionsConfig}
 />
     </code>
 </pre>
@@ -36,15 +36,31 @@ tableOptions={{ btnAddNew: true, btnEdit: true, columns: [{ title: "Judul", objN
     <tbody>
         <tr>
             <td>1</td>
+            <td>title</td>
+            <td>String</td> 
+            <td>none</td>
+            <td>YES</td>
+            <td>Title will show at the top of the table</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>limit</td>
+            <td>Number</td> 
+            <td>10</td>
+            <td>NO</td>
+            <td>Limitation of fetching data from url view in fetchOptions</td>
+        </tr>
+        <tr>
+            <td>3</td>
             <td>useCheckbox</td>
             <td>Boolean</td> 
             <td>false</td>
             <td>NO</td>
-            <td>if the value you set to true, the checkbox button will show in the table, so you can delete the multiple data in view, and just passing the url for delete data
+            <td>if the value equal to true, the checkbox button will show in the table, so you can delete multiple data in view, and just passing the url for delete data in fetchOptions
             </td>
         </tr>
         <tr>
-            <td>2</td>
+            <td>4</td>
             <td>existingData</td>
             <td>Boolean</td>
             <td>false</td>
@@ -52,31 +68,36 @@ tableOptions={{ btnAddNew: true, btnEdit: true, columns: [{ title: "Judul", objN
             <td>If you have a existing data from another store, and you dont want to the table fetch new data, you can set the value to true, and passing the data in propsName data</td>
         </tr>
         <tr>
-            <td>3</td>
+            <td>5</td>
             <td>fetchOptions</td>
             <td>Object</td>
             <td>none</td>
             <td>YES</td>
-            <td>
-            This very usefully for the component know, how to fetch the data from. The example object like this :
-            <pre>
-            <code>
-{
-    get: { url: "", config: {}, method: 'get' },
-    add: { url: "", config: {}, method: 'post' },
-    edit: { url: "", config: {}, replaceUrlParameter: { "{id}": "id" } },
-    delete: { url: "", config: {}, replaceUrlParameter: { "{id}": "id" } }
-}
-            </code>
-            </pre>
-            Attribute config at the top, you can check from this link : https://github.com/axios/axios. And for attribute replaceUrlParameter, this used whenever you have a link EDIT like this: http://apisaya.com/api/v1/user/1, Number one at that link is the userid, you can so if you want link like that, you just throw it into  edit fetchOptions like this :
-            <pre>
-                <code>
-edit: { url: "http://apisaya.com/api/v1/user/{userId}", config: {}, replaceUrlParameter: { "{userId}": "id" } }
-the "id" must be the real object name, depend on data get from the api
-                </code>
-            </pre>
-            </td>
+            <td>Read full documentation about fetchOptions <a href="/documentation/fetchOptions.md">Here</a></td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>tableOptions</td>
+            <td>Object</td>
+            <td>none</td>
+            <td>YES</td>
+            <td>Read full documentation about tableOptions <a href="/documentation/tableOptions.md">Here</a></td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td>formOptions</td>
+            <td>Object</td>
+            <td>none</td>
+            <td>YES</td>
+            <td>Read full documentation about formOptions <a href="/documentation/formOptions.md">Here</a></td>
+        </tr>
+        <tr>
+            <td>8</td>
+            <td>loadingOptions</td>
+            <td>Object</td>
+            <td>none</td>
+            <td>YES</td>
+            <td>Read full documentation about loadingOptions <a href="/documentation/loadingOptions.md">Here</a></td>
         </tr>
     </tbody>
 </table>
@@ -86,4 +107,3 @@ the "id" must be the real object name, depend on data get from the api
 <img src="https://image.ibb.co/dCJH68/screen_shot.png" alt="screenshot library" />
 
 <b>Thank to read this documentation :)</b>
-<a href="/documentation/test.md">test</a>
