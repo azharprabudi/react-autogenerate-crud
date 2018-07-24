@@ -7,7 +7,7 @@ class Index extends Component {
     return (
       <BaseTable
         title={"Daftar Pegawai"}
-        existingData={false}
+        useCheckbox={true}
         fetchOptions={{
           view: {
             url: "https://jsonplaceholder.typicode.com/posts",

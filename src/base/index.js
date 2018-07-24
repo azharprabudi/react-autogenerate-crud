@@ -16,7 +16,7 @@ class CRUDGeneration extends Component {
     super(props);
 
     this.state = {
-      data: props.existingData ? props.data : [],
+      data: [],
       loading: false,
       snackbarInfo: {
         type: "error",
@@ -171,7 +171,6 @@ class CRUDGeneration extends Component {
 }
 
 CRUDGeneration.propTypes = {
-  data: PropTypes.array,
   limit: PropTypes.number,
   useCheckbox: PropTypes.bool,
   existingData: PropTypes.bool,
@@ -185,19 +184,8 @@ CRUDGeneration.propTypes = {
 CRUDGeneration.defaultProps = {
   limit: 10,
   useCheckbox: false,
-  existingData: false,
   fetchOptions: {},
-  tableOptions: {
-    btnAddNew: true,
-    btnEdit: true,
-    columns: [
-      {
-        title: "",
-        objName: "",
-        type: "" // number, text, image, rupiah, longtext
-      }
-    ]
-  },
+  tableOptions: {},
   loadingOptions: {
     color: "primary",
     size: 30

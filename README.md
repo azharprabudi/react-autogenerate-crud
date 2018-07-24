@@ -61,14 +61,6 @@ tableOptions={tableOptionsConfig}
         </tr>
         <tr>
             <td>4</td>
-            <td>existingData</td>
-            <td>Boolean</td>
-            <td>false</td>
-            <td>NO</td>
-            <td>If you have a existing data from another store, and you dont want to the table fetch new data, you can set the value to true, and passing the data in propsName data</td>
-        </tr>
-        <tr>
-            <td>5</td>
             <td>fetchOptions</td>
             <td>Object</td>
             <td>none</td>
@@ -76,7 +68,7 @@ tableOptions={tableOptionsConfig}
             <td>Read full documentation about fetchOptions <a href="/documentation/fetchOptions.md">Here</a></td>
         </tr>
         <tr>
-            <td>6</td>
+            <td>5</td>
             <td>tableOptions</td>
             <td>Object</td>
             <td>none</td>
@@ -84,7 +76,7 @@ tableOptions={tableOptionsConfig}
             <td>Read full documentation about tableOptions <a href="/documentation/tableOptions.md">Here</a></td>
         </tr>
         <tr>
-            <td>7</td>
+            <td>6</td>
             <td>formOptions</td>
             <td>Object</td>
             <td>none</td>
@@ -92,7 +84,7 @@ tableOptions={tableOptionsConfig}
             <td>Read full documentation about formOptions <a href="/documentation/formOptions.md">Here</a></td>
         </tr>
         <tr>
-            <td>8</td>
+            <td>7</td>
             <td>loadingOptions</td>
             <td>Object</td>
             <td>none</td>

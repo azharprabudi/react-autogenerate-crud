@@ -9,13 +9,11 @@ import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 
 /* etc modules */
-import uniqueId from "lodash/uniqueId";
-import isEqual from "lodash/isEqual";
 import PropTypes from "prop-types";
 
 /* my modules */
-import BaseTableHeader from "./components/table-header";
-import BaseTableBody from "./components/table-body";
+import BaseTableHeader from "../components/table/base-table-header";
+import BaseTableBody from "../components/table/base-table-body";
 
 const styles = theme => ({
   loading: {
@@ -41,15 +39,15 @@ class BaseTable extends PureComponent {
 
   render() {
     const {
-      data,
-      classes,
-      useCheckbox,
-      tableOptions,
-      loadingOptions,
       sort,
+      data,
+      title,
+      classes,
       orderBy,
       loading,
-      title
+      useCheckbox,
+      tableOptions,
+      loadingOptions
     } = this.props;
     return (
       <Paper>
@@ -59,13 +57,17 @@ class BaseTable extends PureComponent {
         <Table component="table">
           <BaseTableHeader
             sort={sort}
+            title={title}
             orderBy={orderBy}
             useCheckbox={useCheckbox}
-            onChangeOrderBy={this.onChangeOrderBy}
             columns={tableOptions.columns}
-            title={title}
+            onChangeOrderBy={this.onChangeOrderBy}
           />
-          <BaseTableBody />
+          <BaseTableBody
+            data={data}
+            useCheckbox={useCheckbox}
+            columns={tableOptions.columns}
+          />
         </Table>
         {loading === true && (
           <div className={classes.loading}>
@@ -81,10 +83,16 @@ class BaseTable extends PureComponent {
 }
 
 BaseTable.propTypes = {
+  /* required */
+  sort: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
+  title: PropTypes.string.isRequired,
+  classes: PropTypes.object.isRequired,
+  orderBy: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
+  useCheckbox: PropTypes.bool.isRequired,
   tableOptions: PropTypes.object.isRequired,
-  useCheckbox: PropTypes.bool.isRequired
+  loadingOptions: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(BaseTable);

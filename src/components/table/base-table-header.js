@@ -6,6 +6,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Typography from "@material-ui/core/Typography";
+import Checkbox from "@material-ui/core/Checkbox";
 
 /* etc modules */
 import has from "lodash/has";
@@ -19,26 +20,32 @@ class BaseTableHeader extends Component {
   };
 
   render() {
-    const { sort, orderBy, columns } = this.props;
+    const { sort, orderBy, columns, useCheckbox } = this.props;
     return (
       <Fragment>
         <TableHead component="thead">
           <TableRow>
-            {columns.map(headItem => (
-              <TableCell key={headItem.title}>
-                {has(headItem, "canBeSort") && headItem.canBeSort === true ? (
+            {useCheckbox && (
+              <TableCell padding={"checkbox"}>
+                <Checkbox checked={true} onClick={() => alert(1)} />
+              </TableCell>
+            )}
+            {columns.map(itemColumn => (
+              <TableCell key={itemColumn.title}>
+                {has(itemColumn, "canBeSort") &&
+                itemColumn.canBeSort === true ? (
                   <TableSortLabel
-                    active={orderBy === headItem.objName}
                     direction={sort}
-                    onClick={this.onClickSortLabel(headItem.objName)}
+                    active={orderBy === itemColumn.objName}
+                    onClick={this.onClickSortLabel(itemColumn.objName)}
                   >
                     <Typography variant={"subheading"}>
-                      {headItem.title}
+                      {itemColumn.title}
                     </Typography>
                   </TableSortLabel>
                 ) : (
                   <Typography variant={"subheading"}>
-                    {headItem.title}
+                    {itemColumn.title}
                   </Typography>
                 )}
               </TableCell>
@@ -54,7 +61,8 @@ BaseTableHeader.propTypes = {
   sort: PropTypes.string.isRequired,
   orderBy: PropTypes.string.isRequired,
   columns: PropTypes.array.isRequired,
-  onChangeOrderBy: PropTypes.func.isRequired
+  onChangeOrderBy: PropTypes.func.isRequired,
+  useCheckbox: PropTypes.bool.isRequired
 };
 
 export default BaseTableHeader;
