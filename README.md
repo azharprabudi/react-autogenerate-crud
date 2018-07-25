@@ -1,14 +1,18 @@
 ## React Auto Generate CRUD ##
 
-Specially thanks for our team, there are :
+<b>Specially thanks for our team, there are :</b>
 
 1. Hartanto Boy
 2. Boby Harmoko
 3. And me
 
+
 To keep it up this project, for purpose to decrease the development time when using react in backend. Almost in backend, there are some CRUD module and could it be take a long time to make CRUD, CRUD, CRUD again. And i hope this library helpfull for other people same like us :).
 
-<b>Currently there are avaiable feature for this project :</b>
+<b>This project currently using <a href="https://material-ui.com/">material-ui</a>, i am not consider to using another framework css, cause i think this one is good enough</b>
+
+
+<b>There are avaiable feature for this project :</b>
 <table>
     <thead>
         <tr>
@@ -19,8 +23,12 @@ To keep it up this project, for purpose to decrease the development time when us
     </thead>
     <tbody>
         <tr>
-            <td rowspan="9">View</td>
+            <td rowspan="10">View</td>
             <td>Generate Table</td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+        </tr>
+        <tr>
+            <td>Fetching Data For Table</td>
             <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
@@ -40,24 +48,20 @@ To keep it up this project, for purpose to decrease the development time when us
             <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
-            <td>Fetching Data For Table</td>
-            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
-        </tr>
-        <tr>
             <td>Pagination</td>
             <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
-            <td>Change Limitation</td>
+            <td>Change Row Limit</td>
             <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
             <td>Button At Top Table</td>
-            <td>Not Yet</td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
             <td>Button At Body Table Each Row</td>
-            <td>Not Yet</td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
             <td rowspan="2">Form Add / Edit</td>
@@ -93,7 +97,7 @@ To keep it up this project, for purpose to decrease the development time when us
     </tbody>
 </table>
 
-<b>This project still ongoing, but if you want to try you can clone this repo, and just npm install it in the directory project, or if you want to check the example code visit this <a href="/src/index.js">link</a></b>
+<b>This project still ongoing, but if you want to try you can clone this repo, and just npm install it in your directory project, or if you want to check the example code visit this <a href="/src/index.js">link</a></b>
 
 ## See the complete documentation below
 <table>
@@ -120,18 +124,17 @@ To keep it up this project, for purpose to decrease the development time when us
             <td>2</td>
             <td>limit</td>
             <td>Number</td> 
-            <td>10</td>
+            <td>10 (Number of [5, 10, 15, 25, 50, 100])</td>
             <td>NO</td>
-            <td>Limitation of fetching data from url view in fetchOptions</td>
+            <td>Initial limit for the table</td>
         </tr>
         <tr>
             <td>3</td>
-            <td>useCheckbox</td>
-            <td>Boolean</td> 
-            <td>false</td>
-            <td>NO</td>
-            <td>if the value equal to true, the checkbox button will show in the table, so you can delete multiple data in view, and just passing the url for delete data in fetchOptions
-            </td>
+            <td>checkboxOpitions</td>
+            <td>Object</td> 
+            <td>{}</td>
+            <td>YES</td>
+            <td>Read full documentation about checkboxOpitions <a href="/documentation/checkboxOpitions.md">Here</a></td>
         </tr>
         <tr>
             <td>4</td>
@@ -159,6 +162,14 @@ To keep it up this project, for purpose to decrease the development time when us
         </tr>
         <tr>
             <td>7</td>
+            <td>searchOptions</td>
+            <td>Object</td>
+            <td>none</td>
+            <td>YES</td>
+            <td>Read full documentation about searchOptions <a href="/documentation/searchOptions.md">Here</a></td>
+        </tr>
+        <tr>
+            <td>8</td>
             <td>loadingOptions</td>
             <td>Object</td>
             <td>none</td>
@@ -167,3 +178,5 @@ To keep it up this project, for purpose to decrease the development time when us
         </tr>
     </tbody>
 </table>
+
+## Give us your star for this project :) ##
