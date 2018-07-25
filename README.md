@@ -132,8 +132,17 @@ To keep it up this project, for purpose to decrease the development time when us
             <td>3</td>
             <td>checkboxOpitions</td>
             <td>Object</td> 
-            <td>{}</td>
-            <td>YES</td>
+            <td>
+                <pre>
+                    <code>
+{
+    enable: false,
+    objName: ""
+}
+                    </code>
+                </pre>
+            </td>
+            <td>NO</td>
             <td>Read full documentation about checkboxOpitions <a href="/documentation/checkboxOpitions.md">Here</a></td>
         </tr>
         <tr>
@@ -172,8 +181,17 @@ To keep it up this project, for purpose to decrease the development time when us
             <td>8</td>
             <td>loadingOptions</td>
             <td>Object</td>
-            <td>none</td>
-            <td>YES</td>
+            <td>
+                <pre>
+                    <code>
+{
+    color: "primary",
+    size: 30
+}
+                    </code>
+                </pre>
+            </td>
+            <td>NO</td>
             <td>Read full documentation about loadingOptions <a href="/documentation/loadingOptions.md">Here</a></td>
         </tr>
     </tbody>
