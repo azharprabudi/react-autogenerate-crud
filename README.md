@@ -143,7 +143,7 @@ To keep it up this project, for purpose to decrease the development time when us
                 </pre>
             </td>
             <td>NO</td>
-            <td>Read full documentation about checkboxOpitions <a href="/documentation/checkboxOpitions.md">Here</a></td>
+            <td>Read full documentation about checkboxOpitions <a href="/documentation/checkboxOptions.md">Here</a></td>
         </tr>
         <tr>
             <td>4</td>
