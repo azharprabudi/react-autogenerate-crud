@@ -7,12 +7,23 @@ import TableCell from "@material-ui/core/TableCell";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Typography from "@material-ui/core/Typography";
 import Checkbox from "@material-ui/core/Checkbox";
+import { withStyles } from "@material-ui/core/styles";
 
 /* etc modules */
 import has from "lodash/has";
 import PropTypes from "prop-types";
 
 /* my modules */
+import Colors from "../../constants/colors";
+
+const styles = theme => ({
+  header: {
+    backgroundColor: Colors.semiWhite
+  },
+  checkbox: {
+    color: Colors.red
+  }
+});
 
 class BaseTableHeader extends Component {
   onClickSortLabel = orderByNameColumn => () => {
@@ -20,17 +31,17 @@ class BaseTableHeader extends Component {
   };
 
   render() {
-    const { sort, orderBy, columns, checkbox } = this.props;
+    const { sort, orderBy, columns, checkbox, classes } = this.props;
     return (
       <Fragment>
         <TableHead component="thead">
-          <TableRow>
+          <TableRow className={classes.header}>
             {checkbox && (
               <TableCell padding={"checkbox"}>
                 <Checkbox
                   checked={this.props.checkAllList}
                   onClick={this.props.onCheckAllItem}
-                  color={"primary"}
+                  className={classes.checkbox}
                 />
               </TableCell>
             )}
@@ -54,6 +65,11 @@ class BaseTableHeader extends Component {
                 )}
               </TableCell>
             ))}
+            {this.props.useAdditionalButton && (
+              <TableCell>
+                <Typography>#</Typography>
+              </TableCell>
+            )}
           </TableRow>
         </TableHead>
       </Fragment>
@@ -68,7 +84,8 @@ BaseTableHeader.propTypes = {
   checkbox: PropTypes.bool.isRequired,
   checkAllList: PropTypes.bool.isRequired,
   onCheckAllItem: PropTypes.func.isRequired,
-  onChangeOrderBy: PropTypes.func.isRequired
+  onChangeOrderBy: PropTypes.func.isRequired,
+  useAdditionalButton: PropTypes.bool.isRequired
 };
 
-export default BaseTableHeader;
+export default withStyles(styles)(BaseTableHeader);

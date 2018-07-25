@@ -20,7 +20,7 @@ To keep it up this project, for purpose to decrease the development time when us
     <tbody>
         <tr>
             <td rowspan="9">View</td>
-            <td>Generate Automatic Table With Data</td>
+            <td>Generate Table</td>
             <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
@@ -28,15 +28,19 @@ To keep it up this project, for purpose to decrease the development time when us
             <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
-            <td>Checkbox</td>
-            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
-        </tr>
-        <tr>
-            <td>Fetch Data From Server</td>
-            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
-        </tr>
-        <tr>
             <td>Sorting Column</td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+        </tr>
+        <tr>
+            <td>Checkbox All Item</td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+        </tr>
+        <tr>
+            <td>Checkbox Multiple Item</td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+        </tr>
+        <tr>
+            <td>Fetching Data For Table</td>
             <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
@@ -44,24 +48,24 @@ To keep it up this project, for purpose to decrease the development time when us
             <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
-            <td>Button Add New / Edit</td>
+            <td>Change Limitation</td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+        </tr>
+        <tr>
+            <td>Button At Top Table</td>
             <td>Not Yet</td>
         </tr>
         <tr>
-            <td>Add Custom Button Before Table</td>
+            <td>Button At Body Table Each Row</td>
             <td>Not Yet</td>
         </tr>
         <tr>
-            <td>Add Custom Button In Table Body</td>
+            <td rowspan="2">Form Add / Edit</td>
+            <td>Generate Form</td>
             <td>Not Yet</td>
         </tr>
         <tr>
-            <td rowspan="2">Add / Edit</td>
-            <td>Generate Form Add / Edit</td>
-            <td>Not Yet</td>
-        </tr>
-        <tr>
-            <td>Submit Data To Server</td>
+            <td>Submit Data Add And Edit</td>
             <td>Not Yet</td>
         </tr>
         <tr>
@@ -83,7 +87,7 @@ To keep it up this project, for purpose to decrease the development time when us
             <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
-            <td>Delete single</td>
+            <td>Delete each row item</td>
             <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
     </tbody>

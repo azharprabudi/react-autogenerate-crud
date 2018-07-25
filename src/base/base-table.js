@@ -4,17 +4,14 @@ import React, { PureComponent, Fragment } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
-import Tooltip from "@material-ui/core/Tooltip";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
 import TablePagination from "@material-ui/core/TablePagination";
+import Button from "@material-ui/core/Button";
 
 /* etc modules */
 import PropTypes from "prop-types";
 import classNames from "classnames";
+import has from "lodash/has";
 
 /* my modules */
 import BaseTableHeader from "../components/table/base-table-header";
@@ -22,6 +19,7 @@ import BaseTableBody from "../components/table/base-table-body";
 
 /* custom config */
 import TableConf from "../constants/table-conf";
+import Colors from "../constants/colors";
 
 const styles = theme => ({
   loading: {
@@ -35,32 +33,83 @@ const styles = theme => ({
   tableWrapper: {
     overflowX: "auto"
   },
-  root: {
-    paddingRight: theme.spacing.unit
+  buttonWrapper: {
+    marginTop: 10,
+    marginBottom: 10,
+    flexDirection: "column"
   },
-  highlight: {
-    backgroundColor: theme.palette.primary.dark,
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5
+  button: {
+    marginRight: 5
   },
-  spacer: {
-    flex: "1 1 100%"
-  },
-  actions: {
-    color: theme.palette.text.secondary
-  },
-  title: {
-    flex: "0 0 auto"
-  },
-  titleHightlight: {
+  buttonAddNew: {
+    backgroundColor: Colors.blue,
     color: "white"
   },
-  iconDelete: {
+  buttonDelete: {
+    backgroundColor: Colors.red,
     color: "white"
+  },
+  wrapper: {
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#f3f3f3",
+    borderStyle: "solid"
   }
 });
 
 class BaseTable extends PureComponent {
+  constructor(props) {
+    super(props);
+
+    /* this additional button added from user configuration at parent component */
+    const additionalButton = has(props.tableOptions, "buttonTopTable")
+      ? { ...props.tableOptions.buttonTopTable }
+      : {};
+
+    this.button = {
+      addNew: {
+        label: "Add New",
+        class: props.classes.buttonAddNew,
+        onClick: () => alert(1),
+        size: "medium",
+        variant: "contained",
+        style: {}
+      },
+      delete: {
+        label: "Delete",
+        class: props.classes.buttonDelete,
+        onClick: props.onClickDelete,
+        size: "medium",
+        variant: "contained",
+        style: {}
+      },
+      ...additionalButton
+    };
+  }
+
+  renderButton() {
+    let buttons = [];
+    for (let [index, item] of Object.entries(this.button)) {
+      if (Object.keys(item).length > 0) {
+        buttons = [
+          ...buttons,
+          <Button
+            key={item.label}
+            size={item.size}
+            style={item.style}
+            variant={item.variant}
+            onClick={item.onClick}
+            className={classNames(this.props.classes.button, item.class)}
+          >
+            {item.label}
+          </Button>
+        ];
+      }
+    }
+
+    return buttons;
+  }
+
   onChangeOrderBy = orderByNameColumn => {
     let { sort, orderBy } = this.props;
 
@@ -71,14 +120,13 @@ class BaseTable extends PureComponent {
       sort = "asc";
     }
 
-    this.props.onChangeStateTable(orderByNameColumn, sort);
+    this.props.onOrderingColumnTable(orderByNameColumn, sort);
   };
 
   render() {
     const {
       sort,
       data,
-      title,
       classes,
       orderBy,
       loading,
@@ -86,83 +134,61 @@ class BaseTable extends PureComponent {
       loadingOptions,
       checkboxOptions
     } = this.props;
-    const isCheckItem = this.props.listChecked.length > 0;
     return (
-      <Paper>
-        <Toolbar
-          className={classNames(classes.root, {
-            [classes.highlight]: isCheckItem
-          })}
-        >
-          <div className={classes.title}>
-            <Typography
-              variant="title"
-              className={isCheckItem ? classes.titleHightlight : ""}
-            >
-              <b>{title}</b>
-            </Typography>
+      <Fragment>
+        <div className={classes.buttonWrapper}>{this.renderButton()}</div>
+        <Paper>
+          <div className={classes.tableWrapper}>
+            <Table component="table" className={classes.table}>
+              <BaseTableHeader
+                sort={sort}
+                orderBy={orderBy}
+                columns={tableOptions.columns}
+                checkbox={checkboxOptions.enable}
+                onChangeOrderBy={this.onChangeOrderBy}
+                checkAllList={this.props.checkAllList}
+                onCheckAllItem={this.props.onCheckAllItem}
+                useAdditionalButton={
+                  this.props.tableOptions.additionalButtons.enable
+                }
+              />
+              <BaseTableBody
+                data={data}
+                columns={tableOptions.columns}
+                checkbox={checkboxOptions.enable}
+                checkboxObjName={checkboxOptions.objName}
+                listChecked={this.props.listChecked}
+                onClickCheckbox={this.props.onClickCheckbox}
+                additionalButtons={this.props.tableOptions.additionalButtons}
+              />
+            </Table>
           </div>
-          <div className={classes.spacer} />
-          <div className={classes.actions}>
-            {isCheckItem && (
-              <Tooltip title="Delete">
-                <IconButton aria-label="Delete">
-                  <DeleteIcon
-                    className={classes.iconDelete}
-                    onClick={this.props.onClickDelete}
-                  />
-                </IconButton>
-              </Tooltip>
-            )}
-          </div>
-        </Toolbar>
-        <div className={classes.tableWrapper}>
-          <Table component="table" className={classes.table}>
-            <BaseTableHeader
-              sort={sort}
-              title={title}
-              orderBy={orderBy}
-              columns={tableOptions.columns}
-              checkbox={checkboxOptions.enable}
-              onChangeOrderBy={this.onChangeOrderBy}
-              checkAllList={this.props.checkAllList}
-              onCheckAllItem={this.props.onCheckAllItem}
-            />
-            <BaseTableBody
-              data={data}
-              columns={tableOptions.columns}
-              checkbox={checkboxOptions.enable}
-              checkboxObjName={checkboxOptions.objName}
-              listChecked={this.props.listChecked}
-              onClickCheckbox={this.props.onClickCheckbox}
-            />
-          </Table>
-        </div>
-        <TablePagination
-          page={this.props.page - 1}
-          component="div"
-          backIconButtonProps={{
-            "aria-label": "Previous Page"
-          }}
-          nextIconButtonProps={{
-            "aria-label": "Next Page"
-          }}
-          rowsPerPage={this.props.limit}
-          onChangePage={this.props.onChangePage}
-          rowsPerPageOptions={TableConf.limitValue}
-          onChangeRowsPerPage={this.props.onChangeRowsPerPage}
-          count={99999999999999999999999999999999}
-          labelDisplayedRows={({ from, to, count }) => `${from} - ${to}`}
-        />
-        {loading === true && (
-          <div className={classes.loading}>
-            <CircularProgress
-              color={loadingOptions.color}
-              size={loadingOptions.size}
-            />
-          </div>
-        )}
-      </Paper>
+          {loading === true && (
+            <div className={classes.loading}>
+              <CircularProgress
+                color={loadingOptions.color}
+                size={loadingOptions.size}
+              />
+            </div>
+          )}
+          <TablePagination
+            page={this.props.page - 1}
+            component="div"
+            backIconButtonProps={{
+              "aria-label": "Previous Page"
+            }}
+            nextIconButtonProps={{
+              "aria-label": "Next Page"
+            }}
+            rowsPerPage={this.props.limit}
+            onChangePage={this.props.onChangePage}
+            rowsPerPageOptions={TableConf.limitValue}
+            onChangeRowsPerPage={this.props.onChangeRowsPerPage}
+            count={99999999999999999999999999999999}
+            labelDisplayedRows={({ from, to, count }) => `${from} - ${to}`}
+          />
+        </Paper>
+      </Fragment>
     );
   }
 }
@@ -173,7 +199,6 @@ BaseTable.propTypes = {
   limit: PropTypes.number.isRequired,
   sort: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
-  title: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
   orderBy: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
@@ -186,7 +211,8 @@ BaseTable.propTypes = {
   checkAllList: PropTypes.bool.isRequired,
   onCheckAllItem: PropTypes.func.isRequired,
   onClickDelete: PropTypes.func.isRequired,
-  onChangeRowsPerPage: PropTypes.func.isRequired
+  onChangeRowsPerPage: PropTypes.func.isRequired,
+  onOrderingColumnTable: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(BaseTable);

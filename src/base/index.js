@@ -41,7 +41,10 @@ class CRUDGeneration extends Component {
           visible: false
         },
         alert: {
-          visible: false
+          visible: false,
+          title: "",
+          message: "",
+          type: ""
         }
       },
       listChecked: [],
@@ -155,11 +158,12 @@ class CRUDGeneration extends Component {
   };
 
   /* set state table */
-  onChangeStateTable = (orderByNameColumn, sort) => {
+  onOrderingColumnTable = (orderByNameColumn, sort) => {
     this.setState({
       ...this.state,
       data: this.orderingData(orderByNameColumn, sort),
       table: {
+        ...this.state.table,
         orderBy: orderByNameColumn,
         sort
       }
@@ -217,27 +221,44 @@ class CRUDGeneration extends Component {
   /* when user delete data, show alert dialog */
   onClickDelete = () => {
     const { delete: dlt } = this.props.fetchOptions;
+    let configDialog = { visible: true, title: "", message: "" };
+
     if (
-      dlt.hasOwnProperty("bulk") &&
-      dlt.bulk.hasOwnProperty("enable") &&
-      dlt.bulk.enable === true &&
-      dlt.bulk.hasOwnProperty("url") &&
-      dlt.bulk.url !== ""
+      has(dlt, "bulk") &&
+      has(dlt.bulk, "enable") &&
+      dlt.bulk.enable === true
     ) {
-      this.setState({
-        ...this.state,
-        dialog: {
-          ...this.state.dialog,
-          alert: {
-            visible: true
-          }
-        }
-      });
+      configDialog = {
+        ...configDialog,
+        title: "Confirmation",
+        message: "Are you sure to delete this data",
+        type: "confirmation"
+      };
     } else {
-      alert(
-        "Please fill the url bulk, method bulk, and set enable bulk to true at the configuration component"
-      );
+      configDialog = {
+        ...configDialog,
+        title: "Failed",
+        message: "Please fill the configuration bulk delete options",
+        type: "alert"
+      };
     }
+
+    if (this.state.listChecked.length < 1) {
+      configDialog = {
+        ...configDialog,
+        title: "Failed",
+        message: "No item checked",
+        type: "alert"
+      };
+    }
+
+    this.setState({
+      ...this.state,
+      dialog: {
+        ...this.state.dialog,
+        alert: configDialog
+      }
+    });
   };
 
   /* alert dialog */
@@ -248,6 +269,7 @@ class CRUDGeneration extends Component {
         dialog: {
           ...this.state.dialog,
           [dialogName]: {
+            ...this.state.dialog[dialogName],
             visible: false
           }
         }
@@ -357,8 +379,8 @@ class CRUDGeneration extends Component {
           onClickDelete={this.onClickDelete}
           onCheckAllItem={this.onCheckAllItem}
           onClickCheckbox={this.onClickCheckbox}
-          onChangeStateTable={this.onChangeStateTable}
           onChangeRowsPerPage={this.onChangeRowsPerPage}
+          onOrderingColumnTable={this.onOrderingColumnTable}
         />
         <CustomSnackbar
           visible={this.state.snackbarInfo.visible}
@@ -367,8 +389,9 @@ class CRUDGeneration extends Component {
           onClickSnackbar={this.resetSnackbarInfo}
         />
         <AlertDialog
-          title={"Confirmation"}
-          message={"Are you sure to delete this data ?"}
+          type={this.state.dialog.alert.type}
+          title={this.state.dialog.alert.title}
+          message={this.state.dialog.alert.message}
           visible={this.state.dialog.alert.visible}
           onClose={this.onDialogClose("alert", "close")}
           onAggree={this.onDialogClose("alert", "submit")}

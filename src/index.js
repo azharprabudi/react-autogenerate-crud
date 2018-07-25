@@ -34,10 +34,17 @@ class Index extends Component {
           }
         }}
         tableOptions={{
-          btnEdit: true,
-          btnAddNew: true,
-          btnHeaderTable: [],
-          btnCustomAction: [],
+          buttonTopTable: {
+            addNew: {},
+            delete: {}
+          },
+          additionalButtons: {
+            enable: true,
+            replaceUrl: {
+              "{id}": "id"
+            },
+            button: {}
+          },
           columns: [
             {
               title: "Name",

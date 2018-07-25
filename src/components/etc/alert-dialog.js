@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent, Fragment } from "react";
 
 /* material ui */
 import Button from "@material-ui/core/Button";
@@ -18,7 +18,8 @@ class AlertDialog extends PureComponent {
         open={this.props.visible}
         onClose={this.props.onDialogclose}
         fullScreen={this.props.fullScreen}
-        aria-labelledby="responsive-dialog-title"
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle id="responsive-dialog-title">
           {this.props.title}
@@ -27,12 +28,20 @@ class AlertDialog extends PureComponent {
           <DialogContentText>{this.props.message}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.props.onDisaggree} color="primary">
-            Tidak
-          </Button>
-          <Button onClick={this.props.onAggree} color="primary" autoFocus>
-            Ya
-          </Button>
+          {this.props.type == "confirmation" ? (
+            <Fragment>
+              <Button onClick={this.props.onDisaggree} color="primary">
+                No
+              </Button>
+              <Button onClick={this.props.onAggree} color="primary" autoFocus>
+                Yes
+              </Button>
+            </Fragment>
+          ) : (
+            <Button onClick={this.props.onDisaggree} color="primary" autoFocus>
+              Ok
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     );
@@ -47,7 +56,8 @@ AlertDialog.propTypes = {
   message: PropTypes.string.isRequired,
   visible: PropTypes.bool.isRequired,
   onAggree: PropTypes.func.isRequired,
-  onDisaggree: PropTypes.func.isRequired
+  onDisaggree: PropTypes.func.isRequired,
+  type: PropTypes.oneOf(["", "alert", "confirmation"]).isRequired
 };
 
 AlertDialog.defaultProps = {
