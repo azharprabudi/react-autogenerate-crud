@@ -7,7 +7,7 @@ class Index extends Component {
     return (
       <BaseTable
         title={"Daftar Pegawai"}
-        limit={5}
+        limit={10}
         checkboxOptions={{
           enable: true,
           objName: "id"
@@ -24,7 +24,11 @@ class Index extends Component {
           },
           delete: {
             url: "https://jsonplaceholder.typicode.com/users/{id}",
-            bulk: false,
+            bulk: {
+              enable: true,
+              url: "https://jsonplaceholder.typicode.com/users/{id}",
+              method: "get"
+            },
             method: "delete",
             replaceUrl: "{id}"
           }

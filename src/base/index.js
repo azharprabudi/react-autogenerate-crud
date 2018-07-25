@@ -3,7 +3,6 @@ import React, { Component, Fragment } from "react";
 /* etc modules */
 import axios from "axios";
 import has from "lodash/has";
-import omit from "lodash/omit";
 import PropTypes from "prop-types";
 import isArray from "lodash/isArray";
 
@@ -12,6 +11,9 @@ import BaseTable from "./base-table";
 import BaseSearch from "./base-search";
 import CustomSnackbar from "../components/etc/custom-snackbar";
 import AlertDialog from "../components/etc/alert-dialog";
+
+/* custom configuration */
+import TableConf from "../constants/table-conf";
 
 class CRUDGeneration extends Component {
   constructor(props) {
@@ -29,7 +31,10 @@ class CRUDGeneration extends Component {
       search: {},
       table: {
         sort: "asc",
-        orderBy: ""
+        orderBy: "",
+        page: 1,
+        offset: 0,
+        limit: props.limit
       },
       dialog: {
         form: {
@@ -42,10 +47,6 @@ class CRUDGeneration extends Component {
       listChecked: [],
       checkAllList: false
     };
-
-    this.page = 1;
-    this.offset = 0;
-    this.limit = props.limit;
   }
 
   componentDidMount() {
@@ -55,19 +56,19 @@ class CRUDGeneration extends Component {
   }
 
   /* create url link, if the user want to refresh or search value, or do limitation */
-  getUrlLink = obj => {
+  getUrlLink = (obj, limit, offset, page) => {
     let url = obj.url;
 
     if (has(obj, "query")) {
       url = `${obj.url}?`;
       if (has(obj.query, "limit")) {
-        url += `&${obj.query.limit}=${this.limit}`;
+        url += `&${obj.query.limit}=${limit}`;
       }
 
       if (has(obj.query, "offset")) {
-        url += `&${obj.query.offset}=${this.offset};`;
+        url += `&${obj.query.offset}=${offset};`;
       } else if (has(obj.query, "page")) {
-        url += `&${obj.query.page}=${this.page};`;
+        url += `&${obj.query.page}=${page};`;
       }
 
       // search
@@ -77,17 +78,32 @@ class CRUDGeneration extends Component {
     return url;
   };
 
-  getDataFromServer = async () => {
+  getDataFromServer = async (limit = null, offset = null, page = null) => {
     try {
+      const { search, table } = this.state;
       const { view } = this.props.fetchOptions;
-      const { search } = this.state;
+
+      /* if the parameter null, set to the current value at state */
+      if (limit === null) {
+        limit = table.limit;
+      }
+
+      if (offset === null) {
+        offset = table.offset;
+      }
+
+      if (page === null) {
+        page = table.page;
+      }
 
       /* required data when get data from server */
       let configGetData = has(view, "config") ? view.config : {};
       let methodGetData = has(view, "method")
         ? view.method.toLowerCase()
         : "get";
-      let url = has(view, "url") ? this.getUrlLink(view) : "";
+      let url = has(view, "url")
+        ? this.getUrlLink(view, limit, offset, page)
+        : "";
 
       /* start fetching data */
       await this.setLoadingProms(true);
@@ -97,6 +113,12 @@ class CRUDGeneration extends Component {
       this.setState({
         ...this.state,
         data,
+        table: {
+          ...this.state.table,
+          limit,
+          offset,
+          page
+        },
         loading: false
       });
     } catch (e) {
@@ -107,6 +129,12 @@ class CRUDGeneration extends Component {
           type: "error",
           message: isArray(e) ? JSON.stringify(e) : e.toString(),
           visible: true
+        },
+        table: {
+          ...this.state.table,
+          limit,
+          offset,
+          page
         }
       });
     }
@@ -188,15 +216,28 @@ class CRUDGeneration extends Component {
 
   /* when user delete data, show alert dialog */
   onClickDelete = () => {
-    this.setState({
-      ...this.state,
-      dialog: {
-        ...this.state.dialog,
-        alert: {
-          visible: true
+    const { delete: dlt } = this.props.fetchOptions;
+    if (
+      dlt.hasOwnProperty("bulk") &&
+      dlt.bulk.hasOwnProperty("enable") &&
+      dlt.bulk.enable === true &&
+      dlt.bulk.hasOwnProperty("url") &&
+      dlt.bulk.url !== ""
+    ) {
+      this.setState({
+        ...this.state,
+        dialog: {
+          ...this.state.dialog,
+          alert: {
+            visible: true
+          }
         }
-      }
-    });
+      });
+    } else {
+      alert(
+        "Please fill the url bulk, method bulk, and set enable bulk to true at the configuration component"
+      );
+    }
   };
 
   /* alert dialog */
@@ -223,28 +264,25 @@ class CRUDGeneration extends Component {
   /* submit to delete data */
   doDeleteCheckItem = async () => {
     try {
-      await this.setLoadingProms(true);
-
       const { delete: dlt } = this.props.fetchOptions;
       const dltConfig = dlt.hasOwnProperty("config") ? dlt.config : {};
-      if (dlt.hasOwnProperty("bulk") && dlt.bulk) {
-        // axios.patch or put (url, data, config);
-        const result = await axios[dlt.method](
-          dlt.url,
-          this.state.listChecked,
-          dltConfig
+      await this.setLoadingProms(true);
+
+      let { listChecked } = this.state;
+      if (typeof this.props.callbackBeforeBulkDelete !== "undefined") {
+        listChecked = this.props.callbackBeforeBulkDelete(
+          listChecked,
+          this.state.data
         );
-      } else {
-        for (let i = 0; i < this.state.listChecked.length; i++) {
-          let newUrl = dlt.url;
-          // replace the url link
-          if (dlt.hasOwnProperty("replaceUrl")) {
-            newUrl = newUrl.replace(dlt.replaceUrl, this.state.listChecked[i]);
-          }
-          // axios.delete(url, config);
-          await axios[dlt.method](newUrl, dltConfig);
-        }
       }
+
+      // axios.patch or put (url, data, config);
+      const result = await axios[dlt.bulk.method](
+        dlt.bulk.url,
+        listChecked,
+        dltConfig
+      );
+
       this.setState(
         {
           ...this.state,
@@ -280,15 +318,21 @@ class CRUDGeneration extends Component {
 
   /* pagination */
   onChangePage = (e, toValue) => {
-    if (toValue > this.page - 1) {
-      this.page += 1;
-      this.offset += this.limit;
+    let { page, offset, limit } = this.state.table;
+    if (toValue > page - 1) {
+      page += 1;
+      offset += limit;
     } else {
-      this.page -= 1;
-      this.offset -= this.limit;
+      page -= 1;
+      offset -= limit;
     }
 
-    this.getDataFromServer();
+    this.getDataFromServer(null, offset, page);
+  };
+
+  /* limitatation */
+  onChangeRowsPerPage = event => {
+    this.getDataFromServer(event.target.value);
   };
 
   render() {
@@ -297,23 +341,24 @@ class CRUDGeneration extends Component {
       <Fragment>
         {/* <BaseSearch /> */}
         <BaseTable
-          page={this.page}
           title={this.props.title}
-          limit={this.props.limit}
           data={this.state.data}
           loading={this.state.loading}
           sort={this.state.table.sort}
-          onChangePage={this.onChangePage}
+          page={this.state.table.page}
+          limit={this.state.table.limit}
           orderBy={this.state.table.orderBy}
           listChecked={this.state.listChecked}
-          onClickCheckbox={this.onClickCheckbox}
+          checkAllList={this.state.checkAllList}
           tableOptions={this.props.tableOptions}
           loadingOptions={this.props.loadingOptions}
-          onChangeStateTable={this.onChangeStateTable}
           checkboxOptions={this.props.checkboxOptions}
-          checkAllList={this.state.checkAllList}
-          onCheckAllItem={this.onCheckAllItem}
+          onChangePage={this.onChangePage}
           onClickDelete={this.onClickDelete}
+          onCheckAllItem={this.onCheckAllItem}
+          onClickCheckbox={this.onClickCheckbox}
+          onChangeStateTable={this.onChangeStateTable}
+          onChangeRowsPerPage={this.onChangeRowsPerPage}
         />
         <CustomSnackbar
           visible={this.state.snackbarInfo.visible}
@@ -335,13 +380,14 @@ class CRUDGeneration extends Component {
 }
 
 CRUDGeneration.propTypes = {
-  limit: PropTypes.number,
+  limit: PropTypes.oneOf(TableConf.limitValue).isRequired,
   useCheckbox: PropTypes.bool,
   existingData: PropTypes.bool,
   fetchOptions: PropTypes.object,
   tableOptions: PropTypes.object,
   loadingOptions: PropTypes.object,
   checkbox: PropTypes.bool,
+  callbackBeforeBulkDelete: PropTypes.func,
   /* required only */
   title: PropTypes.string.isRequired
 };

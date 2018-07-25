@@ -89,7 +89,7 @@ To keep it up this project, for purpose to decrease the development time when us
     </tbody>
 </table>
 
-<b>This project still ongoing, but if you want to try you can clone this repo, and just npm install it in the directory project or if you want to check the example code visit this <a href="/src/index.js">link</a></b>
+<b>This project still ongoing, but if you want to try you can clone this repo, and just npm install it in the directory project, or if you want to check the example code visit this <a href="/src/index.js">link</a></b>
 
 ## See the complete documentation below
 <table>
@@ -163,9 +163,3 @@ To keep it up this project, for purpose to decrease the development time when us
         </tr>
     </tbody>
 </table>
-
-<b>This is still development, and there is a screenshot for you for this project :)</b>
-
-<img src="https://image.ibb.co/dCJH68/screen_shot.png" alt="screenshot library" />
-
-<b>Thank to read this documentation :)</b>

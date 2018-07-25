@@ -20,6 +20,9 @@ import classNames from "classnames";
 import BaseTableHeader from "../components/table/base-table-header";
 import BaseTableBody from "../components/table/base-table-body";
 
+/* custom config */
+import TableConf from "../constants/table-conf";
+
 const styles = theme => ({
   loading: {
     position: "absolute",
@@ -144,9 +147,10 @@ class BaseTable extends PureComponent {
           nextIconButtonProps={{
             "aria-label": "Next Page"
           }}
-          onChangePage={this.props.onChangePage}
-          rowsPerPageOptions={[]}
           rowsPerPage={this.props.limit}
+          onChangePage={this.props.onChangePage}
+          rowsPerPageOptions={TableConf.limitValue}
+          onChangeRowsPerPage={this.props.onChangeRowsPerPage}
           count={99999999999999999999999999999999}
           labelDisplayedRows={({ from, to, count }) => `${from} - ${to}`}
         />
@@ -181,7 +185,8 @@ BaseTable.propTypes = {
   onClickCheckbox: PropTypes.func.isRequired,
   checkAllList: PropTypes.bool.isRequired,
   onCheckAllItem: PropTypes.func.isRequired,
-  onClickDelete: PropTypes.func.isRequired
+  onClickDelete: PropTypes.func.isRequired,
+  onChangeRowsPerPage: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(BaseTable);
