@@ -152,9 +152,25 @@ class BaseTableBody extends Component {
     }
   };
 
-  renderAdditionalButtons = item => {
+  renderAdditionalButtons = rowData => {
     let buttons = [];
     for (let [index, item] of Object.entries(this.buttons)) {
+      /* if there any configuration to change the url to be the real data */
+      let href = "";
+      if (
+        item.type === "link" &&
+        has(this.props.additionalButtons, "replaceUrl") &&
+        Object.keys(this.props.additionalButtons.replaceUrl).length > 0
+      ) {
+        href = item.href;
+        for (let [indexReplaceUrl, itemReplaceUrl] of Object.entries(
+          this.props.additionalButtons.replaceUrl
+        )) {
+          href = href.replace(indexReplaceUrl, rowData[itemReplaceUrl]);
+        }
+      }
+      /* end change url */
+
       buttons = [
         ...buttons,
         <Button
@@ -163,7 +179,7 @@ class BaseTableBody extends Component {
           style={item.style}
           variant={item.variant}
           onClick={item.type === "button" ? item.onClick : () => {}}
-          href={item.type === "link" ? item.href : ""}
+          href={item.type === "link" ? href : ""}
           className={classNames(this.props.classes.button, item.class)}
         >
           {item.label}

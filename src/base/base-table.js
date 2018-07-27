@@ -147,7 +147,7 @@ class BaseTable extends PureComponent {
             style={item.style}
             variant={item.variant}
             onClick={item.type === "button" ? item.onClick : () => {}}
-            href={item.type === "link" ? item.href : () => {}}
+            href={item.type === "link" ? item.href : ""}
             className={classNames(this.props.classes.button, item.class)}
           >
             {item.label}
