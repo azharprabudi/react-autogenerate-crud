@@ -56,7 +56,9 @@ class BaseTableBody extends Component {
       onClick: () => alert(1),
       size: "small",
       variant: "contained",
-      style: {}
+      style: {},
+      href: "",
+      type: "button"
     };
     if (
       has(additionalButtons, "edit") &&
@@ -84,7 +86,9 @@ class BaseTableBody extends Component {
       onClick: () => alert(1),
       size: "small",
       variant: "contained",
-      style: {}
+      style: {},
+      href: "",
+      type: "button"
     };
 
     if (
@@ -158,7 +162,8 @@ class BaseTableBody extends Component {
           key={item.label}
           style={item.style}
           variant={item.variant}
-          onClick={item.onClick}
+          onClick={item.type === "button" ? item.onClick : () => {}}
+          href={item.type === "link" ? item.href : ""}
           className={classNames(this.props.classes.button, item.class)}
         >
           {item.label}

@@ -74,7 +74,9 @@ class BaseTable extends PureComponent {
       onClick: () => alert(1),
       size: "medium",
       variant: "contained",
-      style: {}
+      style: {},
+      href: "",
+      type: "button"
     };
 
     if (
@@ -102,7 +104,9 @@ class BaseTable extends PureComponent {
       onClick: props.onClickDelete,
       size: "medium",
       variant: "contained",
-      style: {}
+      style: {},
+      href: "",
+      type: "button"
     };
 
     if (
@@ -142,7 +146,8 @@ class BaseTable extends PureComponent {
             size={item.size}
             style={item.style}
             variant={item.variant}
-            onClick={item.onClick}
+            onClick={item.type === "button" ? item.onClick : () => {}}
+            href={item.type === "link" ? item.href : () => {}}
             className={classNames(this.props.classes.button, item.class)}
           >
             {item.label}
