@@ -9,9 +9,10 @@ import TablePagination from "@material-ui/core/TablePagination";
 import Button from "@material-ui/core/Button";
 
 /* etc modules */
+import has from "lodash/has";
+import omit from "lodash/omit";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import has from "lodash/has";
 
 /* my modules */
 import BaseTableHeader from "../components/table/base-table-header";
@@ -62,27 +63,70 @@ class BaseTable extends PureComponent {
     super(props);
 
     /* this additional button added from user configuration at parent component */
-    const additionalButton = has(props.tableOptions, "buttonTopTable")
+    let additionalButton = has(props.tableOptions, "buttonTopTable")
       ? { ...props.tableOptions.buttonTopTable }
       : {};
 
+    /* if there any configuration for button add new like change color, size and etc just replace it in configuration, this just working on delete and add button */
+    let configurationAddNewButton = {
+      label: "Add New",
+      class: props.classes.buttonAddNew,
+      onClick: () => alert(1),
+      size: "medium",
+      variant: "contained",
+      style: {}
+    };
+
+    if (
+      has(additionalButton, "addNew") &&
+      Object.keys(additionalButton.addNew).length > 0
+    ) {
+      configurationAddNewButton = {
+        ...configurationAddNewButton,
+        ...additionalButton.addNew
+      };
+      /* remove index add new */
+      additionalButton = omit(additionalButton, "addNew");
+    } else if (
+      has(additionalButton, "addNew") &&
+      Object.keys(additionalButton.addNew).length === 0
+    ) {
+      configurationAddNewButton = {};
+      /* remove index add new */
+      additionalButton = omit(additionalButton, "addNew");
+    }
+
+    let configurationDeleteButton = {
+      label: "Delete",
+      class: props.classes.buttonDelete,
+      onClick: props.onClickDelete,
+      size: "medium",
+      variant: "contained",
+      style: {}
+    };
+
+    if (
+      has(additionalButton, "delete") &&
+      Object.keys(additionalButton.delete).length > 0
+    ) {
+      configurationDeleteButton = {
+        ...configurationDeleteButton,
+        ...additionalButton.delete
+      };
+      /* remove index add new */
+      additionalButton = omit(additionalButton, "delete");
+    } else if (
+      has(additionalButton, "delete") &&
+      Object.keys(additionalButton.delete).length === 0
+    ) {
+      configurationDeleteButton = {};
+      /* remove index add new */
+      additionalButton = omit(additionalButton, "delete");
+    }
+
     this.button = {
-      addNew: {
-        label: "Add New",
-        class: props.classes.buttonAddNew,
-        onClick: () => alert(1),
-        size: "medium",
-        variant: "contained",
-        style: {}
-      },
-      delete: {
-        label: "Delete",
-        class: props.classes.buttonDelete,
-        onClick: props.onClickDelete,
-        size: "medium",
-        variant: "contained",
-        style: {}
-      },
+      addNew: configurationAddNewButton,
+      delete: configurationDeleteButton,
       ...additionalButton
     };
   }
