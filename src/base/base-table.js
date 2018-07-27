@@ -225,8 +225,9 @@ class BaseTable extends PureComponent {
                 checkboxObjName={checkboxOptions.objName}
                 listChecked={this.props.listChecked}
                 onClickCheckbox={this.props.onClickCheckbox}
-                additionalButtons={this.props.tableOptions.additionalButtons}
                 onToggleFormDialog={this.props.onToggleFormDialog}
+                onDeleteRowButtonClick={this.props.onDeleteRowButtonClick}
+                additionalButtons={this.props.tableOptions.additionalButtons}
               />
             </Table>
           </div>
@@ -280,7 +281,8 @@ BaseTable.propTypes = {
   onClickDelete: PropTypes.func.isRequired,
   onToggleFormDialog: PropTypes.func.isRequired,
   onChangeRowsPerPage: PropTypes.func.isRequired,
-  onOrderingColumnTable: PropTypes.func.isRequired
+  onOrderingColumnTable: PropTypes.func.isRequired,
+  onDeleteRowButtonClick: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(BaseTable);

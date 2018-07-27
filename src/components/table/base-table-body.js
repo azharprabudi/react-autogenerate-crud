@@ -88,7 +88,7 @@ class BaseTableBody extends Component {
     let configurationDeleteButton = {
       label: "Delete",
       class: props.classes.buttonDelete,
-      onClick: () => alert(1),
+      onClick: id => props.onDeleteRowButtonClick(id),
       size: "small",
       variant: "contained",
       style: {},
@@ -200,10 +200,11 @@ class BaseTableBody extends Component {
       if (item.label === "Edit") {
         funcOnClick = () =>
           item.onClick("Edit", {
-            [BaseForm.ID_FORM]: item.id,
+            [BaseForm.ID_FORM]: rowData[this.props.checkboxObjName],
             [BaseForm.EXISTING_DATA_FROM_PROPS]: {}
           });
       } else if (item.label == "Delete") {
+        funcOnClick = () => item.onClick(rowData[this.props.checkboxObjName]);
       }
 
       buttons = [
@@ -276,7 +277,8 @@ BaseTableBody.propTypes = {
   onClickCheckbox: PropTypes.func.isRequired,
   checkboxObjName: PropTypes.string.isRequired,
   additionalButtons: PropTypes.object.isRequired,
-  onToggleFormDialog: PropTypes.func.isRequired
+  onToggleFormDialog: PropTypes.func.isRequired,
+  onDeleteRowButtonClick: PropTypes.func.isRequired
 };
 
 BaseTableBody.defaultProps = {

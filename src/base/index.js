@@ -386,7 +386,9 @@ class CRUDGeneration extends Component {
   };
 
   /* delete single item */
-  doDeleteSelectedItem = data => {};
+  onDeleteRowButtonClick = id => {
+    console.log(id);
+  };
 
   /* pagination */
   onChangePage = (e, toValue) => {
@@ -443,6 +445,7 @@ class CRUDGeneration extends Component {
           onChangeRowsPerPage={this.onChangeRowsPerPage}
           onOrderingColumnTable={this.onOrderingColumnTable}
           onToggleFormDialog={this.onToggleFormDialog}
+          onDeleteRowButtonClick={this.onDeleteRowButtonClick}
         />
         <CustomSnackbar
           visible={this.state.snackbarInfo.visible}
