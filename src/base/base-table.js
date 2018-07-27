@@ -25,8 +25,8 @@ import Colors from "../constants/colors";
 const styles = theme => ({
   loading: {
     position: "absolute",
-    left: "48%",
-    top: 120
+    top: "48%",
+    left: "48%"
   },
   table: {
     minWidth: 1020
@@ -230,10 +230,10 @@ class BaseTable extends PureComponent {
             </Table>
           </div>
           {loading === true && (
-            <div className={classes.loading}>
+            <div className={this.props.classes.loading}>
               <CircularProgress
-                color={loadingOptions.color}
                 size={loadingOptions.size}
+                style={{ color: loadingOptions.color }}
               />
             </div>
           )}

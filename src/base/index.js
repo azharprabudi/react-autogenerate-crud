@@ -14,6 +14,7 @@ import AlertDialog from "../components/etc/alert-dialog";
 
 /* custom configuration */
 import TableConf from "../constants/table-conf";
+import Colors from "../constants/colors";
 
 class CRUDGeneration extends Component {
   constructor(props) {
@@ -338,6 +339,9 @@ class CRUDGeneration extends Component {
     }
   };
 
+  /* delete single item */
+  doDeleteSelectedItem = data => {};
+
   /* pagination */
   onChangePage = (e, toValue) => {
     let { page, offset, limit } = this.state.table;
@@ -424,8 +428,8 @@ CRUDGeneration.defaultProps = {
     objName: ""
   },
   loadingOptions: {
-    color: "primary",
-    size: 30
+    color: Colors.blue,
+    size: 40
   }
 };
 
