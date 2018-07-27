@@ -12,6 +12,7 @@ import Button from "@material-ui/core/Button";
 /* etc modules */
 import has from "lodash/has";
 import moment from "moment";
+import omit from "lodash/omit";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import uniqueId from "lodash/uniqueId";
@@ -44,27 +45,68 @@ class BaseTableBody extends Component {
   constructor(props) {
     super(props);
 
-    const additionalButtons = has(props.additionalButtons, "button")
+    let additionalButtons = has(props.additionalButtons, "button")
       ? props.additionalButtons.button
       : {};
 
+    /* if there any configuration for button edit can replace here */
+    let configurationEditButton = {
+      label: "Edit",
+      class: props.classes.buttonEdit,
+      onClick: () => alert(1),
+      size: "small",
+      variant: "contained",
+      style: {}
+    };
+    if (
+      has(additionalButtons, "edit") &&
+      Object.keys(additionalButtons.edit).length > 0
+    ) {
+      configurationEditButton = {
+        ...configurationEditButton,
+        ...additionalButtons.edit
+      };
+      /* remove index edit  */
+      additionalButtons = omit(additionalButtons, "edit");
+    } else if (
+      has(additionalButtons, "edit") &&
+      Object.keys(additionalButtons.edit).length === 0
+    ) {
+      configurationEditButton = {};
+      /* remove index edit  */
+      additionalButtons = omit(additionalButtons, "edit");
+    }
+
+    /* if there any configuration for button delete can replace here */
+    let configurationDeleteButton = {
+      label: "Delete",
+      class: props.classes.buttonDelete,
+      onClick: () => alert(1),
+      size: "small",
+      variant: "contained",
+      style: {}
+    };
+
+    if (
+      has(additionalButtons, "delete") &&
+      Object.keys(additionalButtons.delete).length > 0
+    ) {
+      configurationDeleteButton = {
+        ...configurationDeleteButton,
+        ...additionalButtons.delete
+      };
+      additionalButtons = omit(additionalButtons, "delete");
+    } else if (
+      has(additionalButtons, "delete") &&
+      Object.keys(additionalButtons.delete).length === 0
+    ) {
+      configurationDeleteButton = {};
+      additionalButtons = omit(additionalButtons, "delete");
+    }
     this.buttons = {
-      edit: {
-        label: "Edit",
-        class: props.classes.buttonEdit,
-        onClick: () => alert(1),
-        size: "small",
-        variant: "contained",
-        style: {}
-      },
-      delete: {
-        label: "Delete",
-        class: props.classes.buttonDelete,
-        onClick: () => alert(1),
-        size: "small",
-        variant: "contained",
-        style: {}
-      }
+      edit: configurationEditButton,
+      delete: configurationDeleteButton,
+      ...additionalButtons
     };
   }
 

@@ -34,9 +34,9 @@ class Index extends Component {
           }
         }}
         tableOptions={{
-          buttonTopTable: {},
+          buttonTopTable: { addNew: {} },
           additionalButtons: {
-            enable: true,
+            enable: false,
             replaceUrl: {
               "{id}": "id"
             },
