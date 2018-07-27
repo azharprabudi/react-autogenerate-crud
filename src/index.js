@@ -34,9 +34,7 @@ class Index extends Component {
           }
         }}
         tableOptions={{
-          buttonTopTable: {
-            addNew: {}
-          },
+          buttonTopTable: {},
           additionalButtons: {
             enable: true,
             replaceUrl: {
@@ -74,6 +72,15 @@ class Index extends Component {
               objName: "address.geo.lng",
               canBeSort: true,
               type: "text"
+            },
+            {
+              title: "TEST",
+              objName: "address.geo.lng",
+              canBeSort: false,
+              type: "custom",
+              onCustomValue: data => {
+                return `Name : ${data.name} Username: ${data.username}`;
+              }
             }
           ]
         }}

@@ -130,9 +130,10 @@ class BaseTableBody extends Component {
     return rawData[attrName];
   };
 
-  renderItemBody = (value, type) => {
+  renderItemBody = (itemBody, itemColumn) => {
     const { classes } = this.props;
-    switch (type.toLowerCase()) {
+    const value = this.getValueItemBody(itemBody, itemColumn.objName);
+    switch (itemColumn.type.toLowerCase()) {
       case "image":
         return <img src={value} alt={value} className={classes.img} />;
       case "date":
@@ -147,6 +148,14 @@ class BaseTableBody extends Component {
         return <Typography>{`${value.substr(0, 50)}...`}</Typography>;
       case "nominal":
         return <Typography>{value.toLocaleString()}</Typography>;
+      case "custom":
+        return (
+          <Typography>
+            {has(itemColumn, "onCustomValue")
+              ? itemColumn.onCustomValue(itemBody)
+              : ""}
+          </Typography>
+        );
       default:
         return <Typography>{value}</Typography>;
     }
@@ -214,17 +223,11 @@ class BaseTableBody extends Component {
                   />
                 </TableCell>
               )}
-              {columns.map(itemColumn => {
-                const realValue = this.getValueItemBody(
-                  itemBody,
-                  itemColumn.objName
-                );
-                return (
-                  <TableCell key={realValue}>
-                    {this.renderItemBody(realValue, itemColumn.type)}
-                  </TableCell>
-                );
-              })}
+              {columns.map(itemColumn => (
+                <TableCell key={uniqueId(itemColumn.title)}>
+                  {this.renderItemBody(itemBody, itemColumn)}
+                </TableCell>
+              ))}
               {this.props.additionalButtons.enable && (
                 <TableCell>{this.renderAdditionalButtons(itemBody)}</TableCell>
               )}

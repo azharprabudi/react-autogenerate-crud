@@ -48,7 +48,8 @@ class BaseTableHeader extends Component {
             {columns.map(itemColumn => (
               <TableCell key={itemColumn.title}>
                 {has(itemColumn, "canBeSort") &&
-                itemColumn.canBeSort === true ? (
+                itemColumn.canBeSort === true &&
+                itemColumn.type !== "custom" ? (
                   <TableSortLabel
                     direction={sort}
                     active={orderBy === itemColumn.objName}
