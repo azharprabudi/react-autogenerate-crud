@@ -7,79 +7,7 @@ class Index extends Component {
   render() {
     return (
       <Fragment>
-        <BaseForm
-          formOptions={{
-            main: {
-              title: "Test",
-              type: "standard",
-              groupName: "Main",
-              details: [
-                {
-                  class: "",
-                  style: {},
-                  id: "name",
-                  type: "text",
-                  label: "Name",
-                  objName: "",
-                  onEdit: {
-                    isDisabled: "", // boolean
-                    isReadonly: "" // bolean
-                  },
-                  validation: "required|characteryOnly|validationCustom-test",
-                  validation_custom: {
-                    test: data => {}
-                  }
-                },
-                {
-                  class: "",
-                  style: {},
-                  id: "address",
-                  label: "Address",
-                  type: "textarea",
-                  edit: {
-                    attribute: "disabled"
-                  },
-                  validation: "required"
-                }
-              ]
-            },
-            main2: {
-              title: "Test",
-              type: "standard",
-              groupName: "Main",
-              details: [
-                {
-                  class: "",
-                  style: {},
-                  id: "name",
-                  type: "text",
-                  label: "Name",
-                  objName: "",
-                  onEdit: {
-                    isDisabled: "", // boolean
-                    isReadonly: "" // bolean
-                  },
-                  validation: "required|characteryOnly|validationCustom-test",
-                  validation_custom: {
-                    test: data => {}
-                  }
-                },
-                {
-                  class: "",
-                  style: {},
-                  id: "address",
-                  label: "Address",
-                  type: "textarea",
-                  edit: {
-                    attribute: "disabled"
-                  },
-                  validation: "required"
-                }
-              ]
-            }
-          }}
-        />
-        {/*<BaseTable
+        <BaseTable
           title={"Daftar Pegawai"}
           limit={10}
           checkboxOptions={{
@@ -95,7 +23,7 @@ class Index extends Component {
                 page: "_page",
                 search: {}
               },
-              config: {},
+              config: {}
             },
             delete: {
               url: "https://jsonplaceholder.typicode.com/users/{id}",
@@ -106,24 +34,25 @@ class Index extends Component {
               },
               config: {},
               method: "delete",
-              replaceUrl: "{id}",
+              replaceUrl: "{id}"
             },
             edit: {
               url: "https://jsonplaceholder.typicode.com/users/{id}",
               get: {
                 enable: false,
                 url: "https://jsonplaceholder.typicode.com/users/{id}",
-                method: "get",
+                method: "get"
               },
               config: {},
               method: "patch",
+              objName: "id",
               replaceUrl: "{id}",
-              existingDataFromProps: false,
+              existingDataFromProps: false
             },
             addNew: {
               url: "https://jsonplaceholder.typicode.com/users",
               method: "post",
-              config: {},
+              config: {}
             }
           }}
           tableOptions={{
@@ -177,8 +106,77 @@ class Index extends Component {
               }
             ]
           }}
-          formOptions={{}}
-        />*/}
+          formOptions={[
+            {
+              title: "Test",
+              type: "standard",
+              groupName: "Main",
+              details: [
+                {
+                  class: "",
+                  style: {},
+                  id: "name",
+                  type: "text",
+                  label: "Name",
+                  objName: "",
+                  onEdit: {
+                    isDisabled: "", // boolean
+                    isReadonly: "" // bolean
+                  },
+                  validation: "required|characteryOnly|validationCustom-test",
+                  validation_custom: {
+                    test: data => {}
+                  }
+                },
+                {
+                  class: "",
+                  style: {},
+                  id: "address",
+                  label: "Address",
+                  type: "textarea",
+                  edit: {
+                    attribute: "disabled"
+                  },
+                  validation: "required"
+                }
+              ]
+            },
+            {
+              title: "Test",
+              type: "standard",
+              groupName: "Main",
+              details: [
+                {
+                  class: "",
+                  style: {},
+                  id: "name",
+                  type: "text",
+                  label: "Name",
+                  objName: "",
+                  onEdit: {
+                    isDisabled: "", // boolean
+                    isReadonly: "" // bolean
+                  },
+                  validation: "required|characteryOnly|validationCustom-test",
+                  validation_custom: {
+                    test: data => {}
+                  }
+                },
+                {
+                  class: "",
+                  style: {},
+                  id: "address",
+                  label: "Address",
+                  type: "textarea",
+                  edit: {
+                    attribute: "disabled"
+                  },
+                  validation: "required"
+                }
+              ]
+            }
+          ]}
+        />
       </Fragment>
     );
   }

@@ -39,7 +39,7 @@ class BaseFormInput extends PureComponent {
           value={this.state.name}
           onChange={this.onChangeStateName("name")}
           fullWidth
-          margin={"normal"}
+          margin={"dense"}
         />
       </FormControl>
     );

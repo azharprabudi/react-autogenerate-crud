@@ -9,8 +9,9 @@ import isArray from "lodash/isArray";
 /* custom components */
 import BaseTable from "./base-table";
 import BaseSearch from "./base-search";
-import CustomSnackbar from "../components/etc/custom-snackbar";
+import FormDialog from "../components/form/form-dialog";
 import AlertDialog from "../components/etc/alert-dialog";
+import CustomSnackbar from "../components/etc/custom-snackbar";
 
 /* custom configuration */
 import TableConf from "../constants/table-conf";
@@ -39,13 +40,16 @@ class CRUDGeneration extends Component {
       },
       dialog: {
         form: {
-          visible: false
+          title: "",
+          visible: false,
+          params: {}
         },
         alert: {
           visible: false,
           title: "",
           message: "",
-          type: ""
+          type: "",
+          params: {}
         }
       },
       listChecked: [],
@@ -233,14 +237,16 @@ class CRUDGeneration extends Component {
         ...configDialog,
         title: "Confirmation",
         message: "Are you sure to delete this data",
-        type: "confirmation"
+        type: "confirmation",
+        params: {}
       };
     } else {
       configDialog = {
         ...configDialog,
         title: "Failed",
         message: "Please fill the configuration bulk delete options",
-        type: "alert"
+        type: "alert",
+        params: {}
       };
     }
 
@@ -249,7 +255,8 @@ class CRUDGeneration extends Component {
         ...configDialog,
         title: "Failed",
         message: "No item checked",
-        type: "alert"
+        type: "alert",
+        params: {}
       };
     }
 
@@ -262,7 +269,22 @@ class CRUDGeneration extends Component {
     });
   };
 
-  /* alert dialog */
+  /* form alert dialog open */
+  onToggleFormDialog = (title = "", params = {}) => {
+    this.setState({
+      ...this.state,
+      dialog: {
+        ...this.state.dialog,
+        form: {
+          title,
+          visible: true,
+          params
+        }
+      }
+    });
+  };
+
+  /* form alert dialog close */
   onDialogClose = (dialogName, action) => () => {
     if (this.state.dialog[dialogName].visible === true) {
       this.setState({
@@ -271,7 +293,8 @@ class CRUDGeneration extends Component {
           ...this.state.dialog,
           [dialogName]: {
             ...this.state.dialog[dialogName],
-            visible: false
+            visible: false,
+            params: {}
           }
         }
       });
@@ -291,20 +314,42 @@ class CRUDGeneration extends Component {
       const dltConfig = dlt.hasOwnProperty("config") ? dlt.config : {};
       await this.setLoadingProms(true);
 
+      let isContinue = true; // this just flag if the user want to make a http request from the crud generator
       let { listChecked } = this.state;
+
+      /* this condition used if user want to modif or just delete data using step they want */
       if (typeof this.props.callbackBeforeBulkDelete !== "undefined") {
-        listChecked = this.props.callbackBeforeBulkDelete(
+        /*
+        Every callbackBeforeBulkDelete have to wrap in promise function, and then have to return object like this {isContinue, error, data}. Which are the isContinue just flag if the user want to continue to delete the data using the method creator made, just set isContinue to true, but if not just set to false then if user using their method and then, there is a error message return the error to the object attribute error. The attribute data is the data already modifier by user 
+        */
+        const resultCallback = await this.props.callbackBeforeBulkDelete(
           listChecked,
           this.state.data
         );
+        if (has(resultCallback, "isContinue") && !resultCallback.isContinue) {
+          if (has(resultCallback, "error")) {
+            throw new Error(resultCallback.error);
+          }
+          isContinue = false;
+        } else if (
+          has(resultCallback, "isContinue") &&
+          resultCallback.isContinue
+        ) {
+          if (has(resultCallback, "data")) {
+            listChecked = data;
+          }
+          isContinue = true;
+        }
       }
 
-      // axios.patch or put (url, data, config);
-      const result = await axios[dlt.bulk.method](
-        dlt.bulk.url,
-        listChecked,
-        dltConfig
-      );
+      if (isContinue) {
+        // axios.patch or put (url, data, config);
+        const result = await axios[dlt.bulk.method](
+          dlt.bulk.url,
+          listChecked,
+          dltConfig
+        );
+      }
 
       this.setState(
         {
@@ -315,6 +360,7 @@ class CRUDGeneration extends Component {
           dialog: {
             ...this.state.dialog,
             alert: {
+              ...this.state.dialog.alert,
               visible: false
             }
           },
@@ -366,6 +412,17 @@ class CRUDGeneration extends Component {
     return (
       <Fragment>
         {/* <BaseSearch /> */}
+        <FormDialog
+          title={this.state.dialog.form.title}
+          visible={this.state.dialog.form.visible}
+          params={this.state.dialog.form.params}
+          onClose={this.onDialogClose("form", "close")}
+          onClickButtonnClose={this.onDialogClose("form", "close")}
+          onClickButtonSubmit={this.onDialogClose("form", "submit")}
+          addNewConfiguration={this.props.fetchOptions.addNew}
+          editConfiguration={this.props.fetchOptions.edit}
+          formOptions={this.props.formOptions}
+        />
         <BaseTable
           title={this.props.title}
           data={this.state.data}
@@ -385,6 +442,7 @@ class CRUDGeneration extends Component {
           onClickCheckbox={this.onClickCheckbox}
           onChangeRowsPerPage={this.onChangeRowsPerPage}
           onOrderingColumnTable={this.onOrderingColumnTable}
+          onToggleFormDialog={this.onToggleFormDialog}
         />
         <CustomSnackbar
           visible={this.state.snackbarInfo.visible}
@@ -413,7 +471,9 @@ CRUDGeneration.propTypes = {
   fetchOptions: PropTypes.object,
   tableOptions: PropTypes.object,
   loadingOptions: PropTypes.object,
+  formOptions: PropTypes.array,
   checkbox: PropTypes.bool,
+  callbackBeforeEditForm: PropTypes.func,
   callbackBeforeBulkDelete: PropTypes.func,
   /* required only */
   title: PropTypes.string.isRequired

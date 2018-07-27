@@ -19,6 +19,7 @@ import uniqueId from "lodash/uniqueId";
 
 /* my modules */
 import Colors from "../../constants/colors";
+import BaseForm from "../../base/base-form";
 
 const styles = theme => ({
   img: {
@@ -56,7 +57,7 @@ class BaseTableBody extends Component {
     let configurationEditButton = {
       label: "Edit",
       class: props.classes.buttonEdit,
-      onClick: () => alert(1),
+      onClick: (title, params) => props.onToggleFormDialog(title, params),
       size: "small",
       variant: "contained",
       style: {},
@@ -194,6 +195,17 @@ class BaseTableBody extends Component {
         }
       }
 
+      /* replace the function */
+      let funcOnClick = item.onClick;
+      if (item.label === "Edit") {
+        funcOnClick = () =>
+          item.onClick("Edit", {
+            [BaseForm.ID_FORM]: item.id,
+            [BaseForm.EXISTING_DATA_FROM_PROPS]: {}
+          });
+      } else if (item.label == "Delete") {
+      }
+
       buttons = [
         ...buttons,
         <Button
@@ -201,7 +213,7 @@ class BaseTableBody extends Component {
           key={item.label}
           style={item.style}
           variant={item.variant}
-          onClick={item.type === "button" ? item.onClick : () => {}}
+          onClick={item.type === "button" ? funcOnClick : () => {}}
           href={item.type === "link" ? href : ""}
           className={classNames(this.props.classes.button, item.class)}
         >
@@ -263,11 +275,13 @@ BaseTableBody.propTypes = {
   listChecked: PropTypes.array.isRequired,
   onClickCheckbox: PropTypes.func.isRequired,
   checkboxObjName: PropTypes.string.isRequired,
-  additionalButtons: PropTypes.object.isRequired
+  additionalButtons: PropTypes.object.isRequired,
+  onToggleFormDialog: PropTypes.func.isRequired
 };
 
 BaseTableBody.defaultProps = {
-  onClickCheckbox: () => {}
+  onClickCheckbox: () => {},
+  onToggleFormDialog: () => {}
 };
 
 export default withStyles(styles)(BaseTableBody);

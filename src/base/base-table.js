@@ -74,7 +74,7 @@ class BaseTable extends PureComponent {
     let configurationAddNewButton = {
       label: "Add New",
       class: props.classes.buttonAddNew,
-      onClick: () => alert(1),
+      onClick: () => props.onToggleFormDialog("Add New"),
       size: "medium",
       variant: "contained",
       style: {},
@@ -226,6 +226,7 @@ class BaseTable extends PureComponent {
                 listChecked={this.props.listChecked}
                 onClickCheckbox={this.props.onClickCheckbox}
                 additionalButtons={this.props.tableOptions.additionalButtons}
+                onToggleFormDialog={this.props.onToggleFormDialog}
               />
             </Table>
           </div>
@@ -277,6 +278,7 @@ BaseTable.propTypes = {
   checkAllList: PropTypes.bool.isRequired,
   onCheckAllItem: PropTypes.func.isRequired,
   onClickDelete: PropTypes.func.isRequired,
+  onToggleFormDialog: PropTypes.func.isRequired,
   onChangeRowsPerPage: PropTypes.func.isRequired,
   onOrderingColumnTable: PropTypes.func.isRequired
 };
