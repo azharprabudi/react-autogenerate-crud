@@ -84,6 +84,7 @@ class Index extends Component {
             }
           ]
         }}
+        formOptions={{}}
       />
     );
   }

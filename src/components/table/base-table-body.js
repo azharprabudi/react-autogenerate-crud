@@ -38,6 +38,9 @@ const styles = theme => ({
   buttonDelete: {
     backgroundColor: Colors.red,
     color: Colors.white
+  },
+  icon: {
+    marginHorizontal: theme.spacing.unit
   }
 });
 
@@ -58,7 +61,8 @@ class BaseTableBody extends Component {
       variant: "contained",
       style: {},
       href: "",
-      type: "button"
+      type: "button",
+      iconName: "Edit"
     };
     if (
       has(additionalButtons, "edit") &&
@@ -88,7 +92,8 @@ class BaseTableBody extends Component {
       variant: "contained",
       style: {},
       href: "",
-      type: "button"
+      type: "button",
+      iconName: "Delete"
     };
 
     if (
@@ -180,6 +185,15 @@ class BaseTableBody extends Component {
       }
       /* end change url */
 
+      /* if the item has the icon name give the icon */
+      let IconSelected = "";
+      if (has(item, "iconName") && item.iconName !== "") {
+        let Icon = require(`@material-ui/icons/${item.iconName}`);
+        if (has(Icon, "default")) {
+          IconSelected = Icon.default;
+        }
+      }
+
       buttons = [
         ...buttons,
         <Button
@@ -191,6 +205,9 @@ class BaseTableBody extends Component {
           href={item.type === "link" ? href : ""}
           className={classNames(this.props.classes.button, item.class)}
         >
+          {IconSelected !== "" && (
+            <IconSelected className={this.props.classes.icon} />
+          )}
           {item.label}
         </Button>
       ];

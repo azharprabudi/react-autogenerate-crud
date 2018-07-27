@@ -55,6 +55,9 @@ const styles = theme => ({
     borderWidth: 1,
     borderColor: "#f3f3f3",
     borderStyle: "solid"
+  },
+  icon: {
+    marginHorizontal: theme.spacing.unit
   }
 });
 
@@ -76,7 +79,8 @@ class BaseTable extends PureComponent {
       variant: "contained",
       style: {},
       href: "",
-      type: "button"
+      type: "button",
+      iconName: "Add"
     };
 
     if (
@@ -106,7 +110,8 @@ class BaseTable extends PureComponent {
       variant: "contained",
       style: {},
       href: "",
-      type: "button"
+      type: "button",
+      iconName: "Delete"
     };
 
     if (
@@ -139,6 +144,15 @@ class BaseTable extends PureComponent {
     let buttons = [];
     for (let [index, item] of Object.entries(this.button)) {
       if (Object.keys(item).length > 0) {
+        /* if the item has the icon name give the icon */
+        let IconSelected = "";
+        if (has(item, "iconName") && item.iconName !== "") {
+          let Icon = require(`@material-ui/icons/${item.iconName}`);
+          if (has(Icon, "default")) {
+            IconSelected = Icon.default;
+          }
+        }
+
         buttons = [
           ...buttons,
           <Button
@@ -150,6 +164,9 @@ class BaseTable extends PureComponent {
             href={item.type === "link" ? item.href : ""}
             className={classNames(this.props.classes.button, item.class)}
           >
+            {IconSelected !== "" && (
+              <IconSelected className={this.props.classes.icon} />
+            )}
             {item.label}
           </Button>
         ];
