@@ -26,9 +26,7 @@ const styles = theme => ({
     maxWidth: 150,
     maxHeight: 150
   },
-  checkbox: {
-    color: Colors.red
-  },
+
   button: {
     margin: theme.spacing.unit
   },
@@ -248,7 +246,7 @@ class BaseTableBody extends Component {
                     checked={
                       listChecked.indexOf(itemBody[checkboxObjName]) > -1
                     }
-                    className={classes.checkbox}
+                    style={{ color: Colors.red }}
                     onClick={this.onClickCheckbox(itemBody[checkboxObjName])}
                   />
                 </TableCell>

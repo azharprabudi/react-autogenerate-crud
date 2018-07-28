@@ -96,7 +96,7 @@ class Index extends Component {
                 type: "text"
               },
               {
-                title: "TEST",
+                title: "Merging Column Cannot Sort",
                 objName: "address.geo.lng",
                 canBeSort: false,
                 type: "custom",
@@ -113,68 +113,85 @@ class Index extends Component {
               groupName: "Main",
               details: [
                 {
+                  component: "input",
                   class: "",
                   style: {},
-                  id: "name",
+                  id: "firstName",
+                  name: "firstName",
                   type: "text",
-                  label: "Name",
-                  objName: "",
+                  label: "First Name",
                   onEdit: {
                     isDisabled: "", // boolean
                     isReadonly: "" // bolean
-                  },
-                  validation: "required|characteryOnly|validationCustom-test",
-                  validation_custom: {
-                    test: data => {}
-                  }
-                },
-                {
-                  class: "",
-                  style: {},
-                  id: "address",
-                  label: "Address",
-                  type: "textarea",
-                  edit: {
-                    attribute: "disabled"
                   },
                   validation: "required"
-                }
-              ]
-            },
-            {
-              title: "Test",
-              type: "standard",
-              groupName: "Main",
-              details: [
+                },
                 {
+                  component: "input",
                   class: "",
                   style: {},
-                  id: "name",
+                  id: "secondName",
+                  name: "secondName",
                   type: "text",
-                  label: "Name",
-                  objName: "",
+                  label: "Second Name",
                   onEdit: {
                     isDisabled: "", // boolean
                     isReadonly: "" // bolean
                   },
-                  validation: "required|characteryOnly|validationCustom-test",
-                  validation_custom: {
-                    test: data => {}
-                  }
+                  validation: "required"
                 },
                 {
+                  component: "textarea",
                   class: "",
                   style: {},
                   id: "address",
+                  name: "address",
+                  type: "text",
                   label: "Address",
-                  type: "textarea",
-                  edit: {
-                    attribute: "disabled"
+                  onEdit: {
+                    isDisabled: "", // boolean
+                    isReadonly: "" // bolean
                   },
                   validation: "required"
                 }
               ]
             }
+            // {
+            //   title: "Test",
+            //   type: "standard",
+            //   groupName: "Main",
+            //   details: [
+            //     {
+            //       component: "input",
+            //       class: "",
+            //       style: {},
+            //       id: "name",
+            //       type: "text",
+            //       label: "Name",
+            //       objName: "",
+            //       onEdit: {
+            //         isDisabled: "", // boolean
+            //         isReadonly: "" // bolean
+            //       },
+            //       validation: "required|characteryOnly|validationCustom-test",
+            //       validation_custom: {
+            //         test: data => {}
+            //       }
+            //     },
+            //     {
+            //       component: "input",
+            //       class: "",
+            //       style: {},
+            //       id: "address",
+            //       label: "Address",
+            //       type: "textarea",
+            //       edit: {
+            //         attribute: "disabled"
+            //       },
+            //       validation: "required"
+            //     }
+            //   ]
+            // }
           ]}
         />
       </Fragment>

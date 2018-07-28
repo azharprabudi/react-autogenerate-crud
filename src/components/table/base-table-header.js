@@ -19,9 +19,6 @@ import Colors from "../../constants/colors";
 const styles = theme => ({
   header: {
     backgroundColor: Colors.semiWhite
-  },
-  checkbox: {
-    color: Colors.red
   }
 });
 
@@ -41,7 +38,7 @@ class BaseTableHeader extends Component {
                 <Checkbox
                   checked={this.props.checkAllList}
                   onClick={this.props.onCheckAllItem}
-                  className={classes.checkbox}
+                  style={{ color: Colors.red }}
                 />
               </TableCell>
             )}

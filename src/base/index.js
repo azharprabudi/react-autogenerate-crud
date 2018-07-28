@@ -387,7 +387,7 @@ class CRUDGeneration extends Component {
 
   /* delete single item */
   onDeleteRowButtonClick = id => {
-    console.log(id);
+    alert(`your unique data is : ${id}`);
   };
 
   /* pagination */
