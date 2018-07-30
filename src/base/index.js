@@ -41,6 +41,8 @@ class CRUDGeneration extends Component {
       dialog: {
         form: {
           title: "",
+          message: "",
+          type: "",
           visible: false,
           params: {}
         },
@@ -63,8 +65,21 @@ class CRUDGeneration extends Component {
     }
   }
 
-  /* create url link, if the user want to refresh or search value, or do limitation */
   getUrlLink = (obj, limit, offset, page) => {
+    /*
+
+    Create url link from configuration in parent component also configuration of limitation per row and current page or offset.
+    
+    AVAILABLE :
+    1. Limit
+    2. Offset / Page
+
+    NOT AVAILABLE :
+    1. SORT
+    2. SEARCH
+    
+    */
+
     let url = obj.url;
 
     if (has(obj, "query")) {
@@ -130,21 +145,24 @@ class CRUDGeneration extends Component {
         loading: false
       });
     } catch (e) {
-      this.setState({
-        ...this.state,
-        loading: false,
-        snackbarInfo: {
-          type: "error",
-          message: isArray(e) ? JSON.stringify(e) : e.toString(),
-          visible: true
+      this.setState(
+        {
+          ...this.state,
+          loading: false,
+          snackbarInfo: {
+            type: "error",
+            message: isArray(e) ? JSON.stringify(e) : e.toString(),
+            visible: true
+          },
+          table: {
+            ...this.state.table,
+            limit,
+            offset,
+            page
+          }
         },
-        table: {
-          ...this.state.table,
-          limit,
-          offset,
-          page
-        }
-      });
+        () => setTimeout(this.resetSnackbarInfo, 3000)
+      );
     }
   };
 
@@ -152,18 +170,28 @@ class CRUDGeneration extends Component {
     new Promise(resolve => this.setState({ ...this.state, loading }, resolve));
 
   resetSnackbarInfo = () => {
-    this.setState({
-      ...this.state,
-      snackbarInfo: {
-        ...this.state.snackbarInfo,
-        message: "",
-        visible: false
-      }
-    });
+    if (this.state.snackbarInfo.visible === true) {
+      this.setState({
+        ...this.state,
+        snackbarInfo: {
+          ...this.state.snackbarInfo,
+          message: "",
+          visible: false
+        }
+      });
+    }
   };
 
-  /* set state table */
   onOrderingColumnTable = (orderByNameColumn, sort) => {
+    /*
+    This function will be called, if the user want to sort column depend on data in state, maybe for next time i want to make it sort data by query API link.
+
+    AVAILABLE :
+    1. SORT by current state
+
+    NO AVAILABLE :
+    2. SORT to query link api
+    */
     this.setState({
       ...this.state,
       data: this.orderingData(orderByNameColumn, sort),
@@ -178,16 +206,34 @@ class CRUDGeneration extends Component {
   orderingData = (orderByNameColumn, sort) => {
     /* sort depend on orderByNameColumn clicked */
     return this.state.data.sort((curr, next) => {
-      if (/^[0-9]/g.test(curr[orderByNameColumn])) {
-        if (sort === "asc") {
-          return curr[orderByNameColumn] - next[orderByNameColumn];
+      let currOrderBy = null;
+      let nextOrderBy = null;
+      let removeSeparatorOrderBy = orderByNameColumn.split(".");
+
+      if (removeSeparatorOrderBy.length > 1) {
+        let tmpCurrOrderBy = curr;
+        let tmpNextOrderBy = next;
+        for (let i = 0; i < removeSeparatorOrderBy.length; i++) {
+          tmpCurrOrderBy = tmpCurrOrderBy[removeSeparatorOrderBy[i]];
+          tmpNextOrderBy = tmpNextOrderBy[removeSeparatorOrderBy[i]];
         }
-        return next[orderByNameColumn] - curr[orderByNameColumn];
+        currOrderBy = tmpCurrOrderBy;
+        nextOrderBy = tmpNextOrderBy;
+      } else {
+        currOrderBy = curr[orderByNameColumn];
+        nextOrderBy = next[orderByNameColumn];
+      }
+
+      if (/\d/g.test(currOrderBy)) {
+        if (sort === "asc") {
+          return currOrderBy - nextOrderBy;
+        }
+        return nextOrderBy - currOrderBy;
       } else {
         if (sort === "asc") {
-          return curr[orderByNameColumn].localeCompare(next[orderByNameColumn]);
+          return currOrderBy.localeCompare(nextOrderBy);
         }
-        return next[orderByNameColumn].localeCompare(curr[orderByNameColumn]);
+        return nextOrderBy.localeCompare(currOrderBy);
       }
     });
   };
@@ -223,8 +269,8 @@ class CRUDGeneration extends Component {
     });
   };
 
-  /* when user delete data, show alert dialog */
-  onClickDelete = () => {
+  /* when user want to delete bulk data, show alert dialog */
+  onClickBulkDelete = () => {
     const { delete: dlt } = this.props.fetchOptions;
     let configDialog = { visible: true, title: "", message: "" };
 
@@ -236,9 +282,9 @@ class CRUDGeneration extends Component {
       configDialog = {
         ...configDialog,
         title: "Confirmation",
-        message: "Are you sure to delete this data",
+        message: "Are you sure want to delete this data ?",
         type: "confirmation",
-        params: {}
+        params
       };
     } else {
       configDialog = {
@@ -246,7 +292,7 @@ class CRUDGeneration extends Component {
         title: "Failed",
         message: "Please fill the configuration bulk delete options",
         type: "alert",
-        params: {}
+        params
       };
     }
 
@@ -256,7 +302,7 @@ class CRUDGeneration extends Component {
         title: "Failed",
         message: "No item checked",
         type: "alert",
-        params: {}
+        params
       };
     }
 
@@ -264,54 +310,17 @@ class CRUDGeneration extends Component {
       ...this.state,
       dialog: {
         ...this.state.dialog,
-        alert: configDialog
+        alert: configDialog,
+        params: { bulkDelete: true }
       }
     });
   };
 
-  /* form alert dialog open */
-  onToggleFormDialog = (title = "", params = {}) => {
-    this.setState({
-      ...this.state,
-      dialog: {
-        ...this.state.dialog,
-        form: {
-          title,
-          visible: true,
-          params
-        }
-      }
-    });
-  };
-
-  /* form alert dialog close */
-  onDialogClose = (dialogName, action) => () => {
-    if (this.state.dialog[dialogName].visible === true) {
-      this.setState({
-        ...this.state,
-        dialog: {
-          ...this.state.dialog,
-          [dialogName]: {
-            ...this.state.dialog[dialogName],
-            visible: false,
-            params: {}
-          }
-        }
-      });
-    }
-
-    if (dialogName === "alert" && action === "submit") {
-      this.doDeleteCheckItem();
-    } else if (dialogName === "form" && action == "submit") {
-      this.doSubmitForm();
-    }
-  };
-
-  /* submit to delete data */
-  doDeleteCheckItem = async () => {
+  /* submit to delete bulk data */
+  doDeleteBulkItem = async (params = {}) => {
     try {
       const { delete: dlt } = this.props.fetchOptions;
-      const dltConfig = dlt.hasOwnProperty("config") ? dlt.config : {};
+      const dltConfig = has(dlt, "config") ? dlt.config : {};
       await this.setLoadingProms(true);
 
       let isContinue = true; // this just flag if the user want to make a http request from the crud generator
@@ -373,21 +382,141 @@ class CRUDGeneration extends Component {
         () => setTimeout(this.resetSnackbarInfo, 3000)
       );
     } catch (e) {
-      this.setState({
-        ...this.state,
-        loading: false,
-        snackbarInfo: {
-          visible: true,
-          type: "error",
-          message: isArray(e) ? JSON.stringify(e) : e.toString()
-        }
-      });
+      this.setState(
+        {
+          ...this.state,
+          loading: false,
+          snackbarInfo: {
+            visible: true,
+            type: "error",
+            message: isArray(e) ? JSON.stringify(e) : e.toString()
+          }
+        },
+        () => setTimeout(this.resetSnackbarInfo, 3000)
+      );
     }
   };
 
-  /* delete single item */
+  /* this method will be call when user want to delete single row item */
   onDeleteRowButtonClick = id => {
-    alert(`your unique data is : ${id}`);
+    this.setState({
+      ...this.state,
+      dialog: {
+        ...this.state.dialog,
+        alert: {
+          visible: true,
+          type: "confirmation",
+          title: "Confirmation",
+          message: "Are you sure want to delete this data ?",
+          params: { id, bulkDelete: false }
+        }
+      }
+    });
+  };
+
+  /* do delete single row */
+  doDeleteRowButtonClick = async params => {
+    try {
+      // set loading to true
+      await this.setLoadingProms(true);
+
+      const { delete: dlt } = this.props.fetchOptions;
+      if (!has(params, "id")) {
+        throw new Error("The row doesnt have unique id");
+      }
+
+      const configDlt = has(dlt, "config") ? dlt.config : {};
+      const methodDlt = has(dlt, "method") ? dlt.method : "delete";
+      if (dlt.url === "") {
+        throw new Error("The url delete not specified");
+      }
+
+      let { url } = dlt;
+      if (has(dlt, "replaceUrl")) {
+        url = url.replace(dlt.replaceUrl, params.id);
+      }
+
+      const resultDelete = await axios[methodDlt](url, configDlt);
+      if (!resultDelete) {
+        throw new Error("Failed to delete the data");
+      }
+
+      this.setState(
+        {
+          ...this.state,
+          loading: false,
+          dialog: {
+            ...this.state.dialog,
+            alert: {
+              ...this.state.dialog.alert,
+              visible: false
+            }
+          },
+          snackbarInfo: {
+            visible: true,
+            type: "success",
+            message: "Success to delete the data"
+          }
+        },
+        () => setTimeout(this.resetSnackbarInfo, 3000)
+      );
+    } catch (e) {
+      this.setState(
+        {
+          ...this.state,
+          loading: false,
+          snackbarInfo: {
+            visible: true,
+            type: "error",
+            message: isArray(e) ? JSON.stringify(e) : e.toString()
+          }
+        },
+        () => setTimeout(this.resetSnackbarInfo, 3000)
+      );
+    }
+  };
+
+  /* form alert dialog open */
+  onToggleFormDialog = (title = "", params = {}) => {
+    this.setState({
+      ...this.state,
+      dialog: {
+        ...this.state.dialog,
+        form: {
+          title,
+          visible: true,
+          params
+        }
+      }
+    });
+  };
+
+  /* form alert dialog close */
+  onDialogClose = (dialogName, action) => () => {
+    let { params } = this.state.dialog[dialogName];
+    if (this.state.dialog[dialogName].visible === true) {
+      this.setState({
+        ...this.state,
+        dialog: {
+          ...this.state.dialog,
+          [dialogName]: {
+            ...this.state.dialog[dialogName],
+            visible: false,
+            params: {}
+          }
+        }
+      });
+    }
+
+    if (dialogName === "alert" && action === "submit") {
+      if (has(params, "bulkDelete") && params.bulkDelete) {
+        this.doDeleteBulkItem(params);
+      } else if (has(params, "bulkDelete") && !params.bulkDelete) {
+        this.doDeleteRowButtonClick(params);
+      }
+    } else if (dialogName === "form" && action == "submit") {
+      this.doSubmitForm(params);
+    }
   };
 
   /* pagination */
@@ -404,7 +533,7 @@ class CRUDGeneration extends Component {
     this.getDataFromServer(null, offset, page);
   };
 
-  /* limitatation */
+  /* limitation */
   onChangeRowsPerPage = event => {
     this.getDataFromServer(event.target.value);
   };
@@ -418,8 +547,8 @@ class CRUDGeneration extends Component {
           title={this.state.dialog.form.title}
           visible={this.state.dialog.form.visible}
           params={this.state.dialog.form.params}
-          onClose={this.onDialogClose("form", "close")}
-          onClickButtonnClose={this.onDialogClose("form", "close")}
+          onClose={this.onDialogClose("form", "cancel")}
+          onClickButtonnClose={this.onDialogClose("form", "cancel")}
           onClickButtonSubmit={this.onDialogClose("form", "submit")}
           addNewConfiguration={this.props.fetchOptions.addNew}
           editConfiguration={this.props.fetchOptions.edit}
@@ -439,7 +568,7 @@ class CRUDGeneration extends Component {
           loadingOptions={this.props.loadingOptions}
           checkboxOptions={this.props.checkboxOptions}
           onChangePage={this.onChangePage}
-          onClickDelete={this.onClickDelete}
+          onClickBulkDelete={this.onClickBulkDelete}
           onCheckAllItem={this.onCheckAllItem}
           onClickCheckbox={this.onClickCheckbox}
           onChangeRowsPerPage={this.onChangeRowsPerPage}
@@ -458,9 +587,9 @@ class CRUDGeneration extends Component {
           title={this.state.dialog.alert.title}
           message={this.state.dialog.alert.message}
           visible={this.state.dialog.alert.visible}
-          onClose={this.onDialogClose("alert", "close")}
+          onClose={this.onDialogClose("alert", "cancel")}
           onAggree={this.onDialogClose("alert", "submit")}
-          onDisaggree={this.onDialogClose("alert", "close")}
+          onDisaggree={this.onDialogClose("alert", "cancel")}
         />
       </Fragment>
     );

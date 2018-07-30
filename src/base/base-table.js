@@ -105,7 +105,7 @@ class BaseTable extends PureComponent {
     let configurationDeleteButton = {
       label: "Delete",
       class: props.classes.buttonDelete,
-      onClick: props.onClickDelete,
+      onClick: props.onClickBulkDelete,
       size: "medium",
       variant: "contained",
       style: {},
@@ -278,7 +278,7 @@ BaseTable.propTypes = {
   onClickCheckbox: PropTypes.func.isRequired,
   checkAllList: PropTypes.bool.isRequired,
   onCheckAllItem: PropTypes.func.isRequired,
-  onClickDelete: PropTypes.func.isRequired,
+  onClickBulkDelete: PropTypes.func.isRequired,
   onToggleFormDialog: PropTypes.func.isRequired,
   onChangeRowsPerPage: PropTypes.func.isRequired,
   onOrderingColumnTable: PropTypes.func.isRequired,
