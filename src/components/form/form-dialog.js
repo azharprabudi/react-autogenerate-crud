@@ -25,6 +25,10 @@ const styles = theme => ({
   },
   flex: {
     flex: 1
+  },
+  toolbar: {
+    paddingLeft: 0,
+    paddingRight: 0
   }
 });
 
@@ -41,7 +45,7 @@ class FormDialog extends Component {
     return (
       <Dialog fullScreen open={visible} onClose={onClose}>
         <AppBar className={classes.appBar}>
-          <Toolbar>
+          <Toolbar className={classes.toolbar}>
             <IconButton color="inherit" onClick={onClose} aria-label="Close">
               <CloseIcon />
             </IconButton>

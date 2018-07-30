@@ -39,15 +39,40 @@ class BaseForm extends Component {
     // }
   }
 
-  getDataFromServerAndSetToState() {
-    const id = this.props.options[ID_FORM];
-    if (has(this.props.editConfiguration, "get")) {
-    } else {
-      alert("");
-    }
-  }
+  // getDataFromServerAndSetToState() {
+  //   const id = this.props.options[ID_FORM];
+  //   if (has(this.props.editConfiguration, "get")) {
+  //   } else {
+  //     alert("");
+  //   }
+  // }
 
   initialState = formOptions => {
+    let form = {};
+    for (let i = 0; i < formOptions.length; i++) {
+      let { groupName, details, type } = formOptions[i];
+      if (type === "standard") {
+        form[groupName] = {};
+        for (let j = 0; j < details.length; j++) {
+          let { name } = details[j].attribute;
+          form[groupName][name] = {
+            value: "",
+            validationStatus: true,
+            validationText: ""
+          };
+        }
+      } else if (type === "details") {
+        form[groupName] = [{}];
+        for (let j = 0; j < details.length; j++) {
+          let { name } = details[j].attribute;
+          form[groupName][0][name] = {
+            value: "",
+            validationStatus: true,
+            validationText: ""
+          };
+        }
+      }
+    }
     let initialState = {
       loading: false,
       snackbarInfo: {
@@ -55,22 +80,55 @@ class BaseForm extends Component {
         message: "",
         visible: false
       },
-      form: {}
+      form
     };
+
+    return initialState;
+  };
+
+  onChangeBaseformStandar = (groupName, stateName, value) => {
+    this.setState({
+      ...this.state,
+      form: {
+        ...this.state.form,
+        [groupName]: {
+          ...this.state.form.groupName,
+          [stateName]: {
+            value,
+            validationStatus: false,
+            validationText: "Ikan Cuek"
+          }
+        }
+      }
+    });
   };
 
   render() {
     const { classes } = this.props;
     return (
-      <div className={classes.container}>
-        {this.props.formOptions.map(groupForm => {
-          if (groupForm.type === "standard") {
-            return <BaseFormStandar key={groupForm.title} {...groupForm} />;
+      <form
+        method="post"
+        encType="multipart/form-data"
+        className={classes.container}
+      >
+        {this.props.formOptions.map(({ type, title, groupName, details }) => {
+          if (type === "standard") {
+            return (
+              <BaseFormStandar
+                key={title}
+                details={details}
+                state={this.state.form[groupName]}
+                onChange={(stateName, value) =>
+                  this.onChangeBaseformStandar(groupName, stateName, value)
+                }
+                title={title}
+              />
+            );
           } else {
             return <BaseFormDetails key={groupForm.title} {...groupForm} />;
           }
         })}
-      </div>
+      </form>
     );
   }
 }

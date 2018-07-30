@@ -284,7 +284,7 @@ class CRUDGeneration extends Component {
         title: "Confirmation",
         message: "Are you sure want to delete this data ?",
         type: "confirmation",
-        params
+        params: { bulkDelete: true }
       };
     } else {
       configDialog = {
@@ -292,7 +292,7 @@ class CRUDGeneration extends Component {
         title: "Failed",
         message: "Please fill the configuration bulk delete options",
         type: "alert",
-        params
+        params: {}
       };
     }
 
@@ -302,7 +302,7 @@ class CRUDGeneration extends Component {
         title: "Failed",
         message: "No item checked",
         type: "alert",
-        params
+        params: {}
       };
     }
 
@@ -310,8 +310,7 @@ class CRUDGeneration extends Component {
       ...this.state,
       dialog: {
         ...this.state.dialog,
-        alert: configDialog,
-        params: { bulkDelete: true }
+        alert: configDialog
       }
     });
   };

@@ -23,13 +23,23 @@ const styles = theme => ({
   }
 });
 
-console.log("lib", lib);
-
 class BaseFormStandar extends Component {
-  renderItemInput = item => {
-    if (typeof lib[item.component] !== "undefined") {
-      const SelectedComponent = lib[item.component];
-      return <SelectedComponent {...item} key={item.id} />;
+  renderItemInput = ({ component, attribute }) => {
+    if (typeof lib[component] !== "undefined") {
+      const SelectedComponent = lib[component];
+      const { value, validationStatus, validationText } = this.props.state[
+        attribute.name
+      ];
+      return (
+        <SelectedComponent
+          {...attribute}
+          value={value}
+          key={attribute.id}
+          error={!validationStatus}
+          helperText={validationText}
+          onChange={value => this.props.onChange(attribute.name, value)}
+        />
+      );
     }
     return null;
   };
@@ -41,7 +51,7 @@ class BaseFormStandar extends Component {
         <Typography variant="title" color="inherit">
           {this.props.title.toUpperCase()}
         </Typography>
-        {this.props.details.map(itemInput => this.renderItemInput(itemInput))}
+        {this.props.details.map(item => this.renderItemInput(item))}
       </div>
     );
   }
@@ -49,9 +59,9 @@ class BaseFormStandar extends Component {
 
 BaseFormStandar.propTypes = {
   title: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
-  groupName: PropTypes.string.isRequired,
-  details: PropTypes.array.isRequired
+  details: PropTypes.array.isRequired,
+  state: PropTypes.object.isRequired,
+  onChange: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(BaseFormStandar);

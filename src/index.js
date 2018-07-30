@@ -113,85 +113,28 @@ class Index extends Component {
               groupName: "Main",
               details: [
                 {
-                  component: "input",
-                  class: "",
-                  style: {},
-                  id: "firstName",
-                  name: "firstName",
-                  type: "text",
-                  label: "First Name",
-                  onEdit: {
-                    isDisabled: "", // boolean
-                    isReadonly: "" // bolean
+                  component: "Input",
+                  attribute: {
+                    style: {},
+                    class: "",
+                    id: "firstName",
+                    name: "firstName",
+                    type: "text",
+                    label: "First Name",
+                    edit: {
+                      disabled: false,
+                      readonly: false
+                    },
+                    addNew: {
+                      disabled: false,
+                      readonly: false
+                    }
                   },
-                  validation: "required"
-                },
-                {
-                  component: "input",
-                  class: "",
-                  style: {},
-                  id: "secondName",
-                  name: "secondName",
-                  type: "text",
-                  label: "Second Name",
-                  onEdit: {
-                    isDisabled: "", // boolean
-                    isReadonly: "" // bolean
-                  },
-                  validation: "required"
-                },
-                {
-                  component: "textarea",
-                  class: "",
-                  style: {},
-                  id: "address",
-                  name: "address",
-                  type: "text",
-                  label: "Address",
-                  onEdit: {
-                    isDisabled: "", // boolean
-                    isReadonly: "" // bolean
-                  },
+                  allowSearch: true,
                   validation: "required"
                 }
               ]
             }
-            // {
-            //   title: "Test",
-            //   type: "standard",
-            //   groupName: "Main",
-            //   details: [
-            //     {
-            //       component: "input",
-            //       class: "",
-            //       style: {},
-            //       id: "name",
-            //       type: "text",
-            //       label: "Name",
-            //       objName: "",
-            //       onEdit: {
-            //         isDisabled: "", // boolean
-            //         isReadonly: "" // bolean
-            //       },
-            //       validation: "required|characteryOnly|validationCustom-test",
-            //       validation_custom: {
-            //         test: data => {}
-            //       }
-            //     },
-            //     {
-            //       component: "input",
-            //       class: "",
-            //       style: {},
-            //       id: "address",
-            //       label: "Address",
-            //       type: "textarea",
-            //       edit: {
-            //         attribute: "disabled"
-            //       },
-            //       validation: "required"
-            //     }
-            //   ]
-            // }
           ]}
         />
       </Fragment>
