@@ -36,11 +36,12 @@ class FormDialog extends Component {
   render() {
     const {
       classes,
-      onClickButtonnClose,
       onClose,
       visible,
       title,
-      params
+      params,
+      serverRequest,
+      onClickButtonClose
     } = this.props;
     return (
       <Dialog fullScreen open={visible} onClose={onClose}>
@@ -56,16 +57,15 @@ class FormDialog extends Component {
             >
               {upperFirst(title)}
             </Typography>
-            <Button color="inherit" onClick={onClickButtonnClose}>
+            <Button color="inherit" onClick={onClickButtonClose}>
               Submit
             </Button>
           </Toolbar>
         </AppBar>
         <BaseForm
           params={params}
-          editConfiguration={this.props.editConfiguration}
-          addNewConfiguration={this.props.addNewConfiguration}
-          formOptions={this.props.formOptions}
+          fields={this.fields}
+          serverRequest={this.props.serverRequest}
         />
       </Dialog>
     );
@@ -77,10 +77,10 @@ FormDialog.propTypes = {
   params: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  onClickButtonnClose: PropTypes.func.isRequired,
-  onClickButtonSubmit: PropTypes.func.isRequired,
-  addNewConfiguration: PropTypes.object.isRequired,
-  editConfiguration: PropTypes.object.isRequired
+  fields: PropTypes.array.isRequired,
+  serverRequest: PropTypes.object.isRequired,
+  onClickButtonClose: PropTypes.func.isRequired,
+  onClickButtonSubmit: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(FormDialog);

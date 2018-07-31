@@ -212,13 +212,13 @@ class BaseTable extends PureComponent {
                 columns={tableOptions.columns}
                 checkbox={checkboxOptions.enable}
                 onChangeOrderBy={this.onChangeOrderBy}
-                checkAllList={this.props.checkAllList}
+                isCheckAllItem={this.props.isCheckAllItem}
                 onCheckAllItem={this.props.onCheckAllItem}
                 useAdditionalButton={
                   this.props.tableOptions.additionalButtons.enable
                 }
               />
-              <BaseTableBody
+              {/* <BaseTableBody
                 data={data}
                 columns={tableOptions.columns}
                 checkbox={checkboxOptions.enable}
@@ -228,7 +228,7 @@ class BaseTable extends PureComponent {
                 onToggleFormDialog={this.props.onToggleFormDialog}
                 onDeleteRowButtonClick={this.props.onDeleteRowButtonClick}
                 additionalButtons={this.props.tableOptions.additionalButtons}
-              />
+              /> */}
             </Table>
           </div>
           {loading === true && (
@@ -276,13 +276,20 @@ BaseTable.propTypes = {
   loadingOptions: PropTypes.object.isRequired,
   listChecked: PropTypes.array.isRequired,
   onClickCheckbox: PropTypes.func.isRequired,
-  checkAllList: PropTypes.bool.isRequired,
+  isCheckAllItem: PropTypes.bool.isRequired,
   onCheckAllItem: PropTypes.func.isRequired,
   onClickBulkDelete: PropTypes.func.isRequired,
   onToggleFormDialog: PropTypes.func.isRequired,
   onChangeRowsPerPage: PropTypes.func.isRequired,
   onOrderingColumnTable: PropTypes.func.isRequired,
   onDeleteRowButtonClick: PropTypes.func.isRequired
+};
+
+BaseTable.defaultProps = {
+  loadingOptions: {
+    color: Colors.blue,
+    size: 40
+  }
 };
 
 export default withStyles(styles)(BaseTable);

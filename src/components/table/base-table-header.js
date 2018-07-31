@@ -36,7 +36,7 @@ class BaseTableHeader extends Component {
             {checkbox && (
               <TableCell padding={"checkbox"}>
                 <Checkbox
-                  checked={this.props.checkAllList}
+                  checked={this.props.isCheckAllItem}
                   onClick={this.props.onCheckAllItem}
                   style={{ color: Colors.red }}
                 />
@@ -80,7 +80,7 @@ BaseTableHeader.propTypes = {
   orderBy: PropTypes.string.isRequired,
   columns: PropTypes.array.isRequired,
   checkbox: PropTypes.bool.isRequired,
-  checkAllList: PropTypes.bool.isRequired,
+  isCheckAllItem: PropTypes.bool.isRequired,
   onCheckAllItem: PropTypes.func.isRequired,
   onChangeOrderBy: PropTypes.func.isRequired,
   useAdditionalButton: PropTypes.bool.isRequired

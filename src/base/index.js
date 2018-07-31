@@ -34,7 +34,7 @@ class CRUDGenerate extends Component {
         orderBy: "",
         page: 1,
         offset: 0,
-        limit: props.limit
+        limit: props.initialLimit
       },
       dialog: {
         form: {
@@ -53,21 +53,80 @@ class CRUDGenerate extends Component {
         }
       },
       listChecked: [],
-      checkAllList: false
+      isCheckAllItem: false
     };
+
+    this.columnTable = this.getListColumnTable();
   }
 
   componentDidMount() {
-    if (!this.props.existingData) {
-      this.getDataFromServer();
-    }
+    this.getDataDependOnConfig();
   }
 
-  getUrlLink = (obj, limit, offset, page) => {
-    /*
+  getListColumnTable = () => {
+    const columns = [];
+    const { fields } = this.props.options;
+    for (let i = 0; i <= fields.length - 1; i++) {
+      let itemColumn = fields[i];
+      if (has(itemColumn, "showOnTable") && itemColumn.showOnTable === true) {
+        columns.push(itemColumn);
+      }
+    }
+    return columns;
+  };
 
+  getDataDependOnConfig = () => {
+    /* check acl first */
+    const { aclRules, aclId, options } = this.props;
+    if (
+      has(aclRules, aclId) &&
+      has(aclRules[aclId], "view") &&
+      aclRules[aclId].view
+    ) {
+      /* check user already using http to get data or not */
+      if (
+        has(options, "server") &&
+        has(option.server, "http") &&
+        has(option.server.http, "read") &&
+        Object.keys(options.server.http.read).length > 0
+      ) {
+        this.getDataFromHTTPServer();
+      }
+    }
+  };
+
+  deleteDataDependOnConfig = (isBulk = false, params = {}) => () => {
+    /* check acl first */
+    const { aclRules, aclId, options } = this.props;
+    if (
+      has(aclRules, aclId) &&
+      has(aclRules[aclId], "delete") &&
+      aclRules[aclId].delete
+    ) {
+      /* check user already using http to get data or not */
+      if (
+        has(options, "server") &&
+        has(option.server, "http") &&
+        has(option.server.http, "delete") &&
+        Object.keys(options.server.http.delete).length > 0
+      ) {
+        if (
+          has(options.server.http.delete, "bulk") &&
+          has(options.server.http.delete.bulk, "enable") &&
+          options.server.http.delete.bulk.enable &&
+          isBulk
+        ) {
+          this.doHTTPDeleteBulk(params);
+        } else {
+          this.doDeleteRowToHTTPServer(params);
+        }
+      }
+    }
+  };
+
+  getHTTPUrl = (obj, limit, offset, page) => {
+    /*
     Create url link from configuration in parent component also configuration of limitation per row and current page or offset.
-    
     AVAILABLE :
     1. Limit
     2. Offset / Page
@@ -75,11 +134,8 @@ class CRUDGenerate extends Component {
     NOT AVAILABLE :
     1. SORT
     2. SEARCH
-    
     */
-
     let url = obj.url;
-
     if (has(obj, "query")) {
       url = `${obj.url}?`;
       if (has(obj.query, "limit")) {
@@ -91,57 +147,58 @@ class CRUDGenerate extends Component {
       } else if (has(obj.query, "page")) {
         url += `&${obj.query.page}=${page};`;
       }
-
-      // search
-      // if (has(obj.query, 'page'))
     }
-
     return url;
   };
 
-  getDataFromServer = async (limit = null, offset = null, page = null) => {
+  getDataFromHTTPServer = async (limit = null, offset = null, page = null) => {
     try {
-      const { search, table } = this.state;
-      const { view } = this.props.options.server;
+      /*
+      get data from url has been specify in the configuration of crud generation
+      */
+      if (has(this.props.options.server, "read")) {
+        const { search, table } = this.state;
+        const { read } = this.props.options.server;
 
-      /* if the parameter null, set to the current value at state */
-      if (limit === null) {
-        limit = table.limit;
+        /* if the parameter null, set to the current value at state */
+        if (limit === null) {
+          limit = table.limit;
+        }
+
+        if (offset === null) {
+          offset = table.offset;
+        }
+
+        if (page === null) {
+          page = table.page;
+        }
+
+        /* required data when get data from server */
+        let configRead = has(read, "config") ? read.config : {};
+        let methodRead = has(read, "method")
+          ? read.method.toLowerCase()
+          : "get";
+        let urlRead = has(read, "url")
+          ? this.getHTTPUrl(view, limit, offset, page)
+          : "";
+
+        /* start fetching data */
+        await this.setLoadingProms(true);
+        let { data } = await axios[methodRead](urlRead, configRead);
+
+        /* finish fetch data and set data into state */
+        this.setState({
+          ...this.state,
+          data,
+          table: {
+            ...this.state.table,
+            limit,
+            offset,
+            page
+          },
+          loading: false
+        });
       }
-
-      if (offset === null) {
-        offset = table.offset;
-      }
-
-      if (page === null) {
-        page = table.page;
-      }
-
-      /* required data when get data from server */
-      let configGetData = has(view, "config") ? view.config : {};
-      let methodGetData = has(view, "method")
-        ? view.method.toLowerCase()
-        : "get";
-      let url = has(view, "url")
-        ? this.getUrlLink(view, limit, offset, page)
-        : "";
-
-      /* start fetching data */
-      await this.setLoadingProms(true);
-      let { data } = await axios[methodGetData](url, configGetData);
-
-      /* finish fetch data and set data into state */
-      this.setState({
-        ...this.state,
-        data,
-        table: {
-          ...this.state.table,
-          limit,
-          offset,
-          page
-        },
-        loading: false
-      });
     } catch (e) {
       this.setState(
         {
@@ -202,7 +259,7 @@ class CRUDGenerate extends Component {
   };
 
   orderingData = (orderByNameColumn, sort) => {
-    /* sort depend on orderByNameColumn clicked */
+    /* this sort will be categorize by two type data, there are number and text. So if text, using function localeCompare, meanwhile number using step curr - next */
     return this.state.data.sort((curr, next) => {
       let currOrderBy = null;
       let nextOrderBy = null;
@@ -236,7 +293,7 @@ class CRUDGenerate extends Component {
     });
   };
 
-  /* setState checked item */
+  /* add item into state list check item */
   onClickCheckbox = id => {
     let { listChecked } = this.state;
 
@@ -252,10 +309,13 @@ class CRUDGenerate extends Component {
     });
   };
 
+  /* add all item in row, and push it into list check item */
   onCheckAllItem = () => {
-    let { checkAllList, listChecked, data } = this.state;
-    if (!checkAllList === true) {
-      listChecked = data.map(item => item[this.props.checkboxOptions.objName]);
+    let { isCheckAllItem, listChecked, data } = this.state;
+    const { delete: dltConf } = this.props.option.server.http;
+
+    if (!isCheckAllItem === true) {
+      listChecked = data.map(item => item[dltConf.attributeName]);
     } else {
       listChecked = [];
     }
@@ -263,44 +323,27 @@ class CRUDGenerate extends Component {
     this.setState({
       ...this.state,
       listChecked,
-      checkAllList: !checkAllList
+      isCheckAllItem: !isCheckAllItem
     });
   };
 
   /* when user want to delete bulk data, show alert dialog */
   onClickBulkDelete = () => {
-    const { delete: dlt } = this.props.fetchOptions;
-    let configDialog = { visible: true, title: "", message: "" };
+    let configDialog = {
+      visible: true,
+      title: "Failed",
+      message: "No item checked",
+      type: "alert",
+      params: {}
+    };
 
-    if (
-      has(dlt, "bulk") &&
-      has(dlt.bulk, "enable") &&
-      dlt.bulk.enable === true
-    ) {
+    if (this.state.listChecked.length >= 1) {
       configDialog = {
         ...configDialog,
         title: "Confirmation",
         message: "Are you sure want to delete this data ?",
         type: "confirmation",
         params: { bulkDelete: true }
-      };
-    } else {
-      configDialog = {
-        ...configDialog,
-        title: "Failed",
-        message: "Please fill the configuration bulk delete options",
-        type: "alert",
-        params: {}
-      };
-    }
-
-    if (this.state.listChecked.length < 1) {
-      configDialog = {
-        ...configDialog,
-        title: "Failed",
-        message: "No item checked",
-        type: "alert",
-        params: {}
       };
     }
 
@@ -314,47 +357,52 @@ class CRUDGenerate extends Component {
   };
 
   /* submit to delete bulk data */
-  doDeleteBulkItem = async (params = {}) => {
+  doDeleteBulkToHTTPServer = async (params = {}) => {
     try {
-      const { delete: dlt } = this.props.fetchOptions;
-      const dltConfig = has(dlt, "config") ? dlt.config : {};
+      // set loading to true
       await this.setLoadingProms(true);
 
-      let isContinue = true; // this just flag if the user want to make a http request from the crud generator
+      const { delete: dltBulk } = this.props.options.server.http;
+      const dltBulkConfig = has(dltBulk, "config") ? dltBulk.config : {};
+      const dltBulkMethod = has(dltBulk.bulk, "method")
+        ? dltBulk.bulk.method
+        : "delete";
+      const dltBulkUrl = has(dltBulk.bulk, "url") ? dltBulk.bulk.url : "";
+
+      let isContinue = true; // flag for the continue this function or already taken by user
       let { listChecked } = this.state;
 
-      /* this condition used if user want to modif or just delete data using step they want */
-      if (typeof this.props.callbackBeforeBulkDelete !== "undefined") {
-        /*
-        Every callbackBeforeBulkDelete have to wrap in promise function, and then have to return object like this {isContinue, error, data}. Which are the isContinue just flag if the user want to continue to delete the data using the method creator made, just set isContinue to true, but if not just set to false then if user using their method and then, there is a error message return the error to the object attribute error. The attribute data is the data already modifier by user 
-        */
-        const resultCallback = await this.props.callbackBeforeBulkDelete(
-          listChecked,
-          this.state.data
+      /* before submit callback the data to user, if user want to modify */
+      if (has(dltBulk.bulk, "callbackBeforeBulkDelete")) {
+        const response = await dltBulk.bulk.callbackBeforeBulkDelete(
+          listChecked, // data checked
+          this.state.data // all data
         );
-        if (has(resultCallback, "isContinue") && !resultCallback.isContinue) {
-          if (has(resultCallback, "error")) {
-            throw new Error(resultCallback.error);
+        /* return from every callback, have to same format like { isContinue, error, data } */
+        if (has(response, "isContinue") && !response.isContinue) {
+          if (has(response, "error") && response !== "") {
+            throw new Error(response.error);
           }
           isContinue = false;
-        } else if (
-          has(resultCallback, "isContinue") &&
-          resultCallback.isContinue
-        ) {
-          if (has(resultCallback, "data")) {
+        } else if (has(response, "isContinue") && response.isContinue) {
+          if (has(response, "data")) {
             listChecked = data;
           }
           isContinue = true;
         }
       }
 
+      /* if user want to continue submit data using crud generate, just execute it */
       if (isContinue) {
-        // axios.patch or put (url, data, config);
-        const result = await axios[dlt.bulk.method](
-          dlt.bulk.url,
+        const result = await axios[dltBulkMethod](
+          dltBulkUrl,
           listChecked,
-          dltConfig
+          dltBulkConfig
         );
+
+        if (has(dltBulk.bulk, "callbackAfterDeleteBulk")) {
+          const response = await dltBulk.bulk.callbackAfterDeleteBulk(result);
+        }
       }
 
       this.setState(
@@ -362,7 +410,7 @@ class CRUDGenerate extends Component {
           ...this.state,
           loading: false,
           listChecked: [],
-          checkAllList: false,
+          isCheckAllItem: false,
           dialog: {
             ...this.state.dialog,
             alert: {
@@ -395,7 +443,7 @@ class CRUDGenerate extends Component {
   };
 
   /* this method will be call when user want to delete single row item */
-  onDeleteRowButtonClick = id => {
+  onClickDeleteRowItem = id => {
     this.setState({
       ...this.state,
       dialog: {
@@ -412,28 +460,22 @@ class CRUDGenerate extends Component {
   };
 
   /* do delete single row */
-  doDeleteRowButtonClick = async params => {
+  doDeleteRowToHTTPServer = async params => {
     try {
       // set loading to true
       await this.setLoadingProms(true);
+      const { delete: dltRow } = this.props.options.server;
 
-      const { delete: dlt } = this.props.fetchOptions;
-      if (!has(params, "id")) {
-        throw new Error("The row doesnt have unique id");
-      }
+      const configDltRow = has(dltRow, "config") ? dltRow.config : {};
+      const methodDltRow = has(dltRow, "method") ? dltRow.method : "delete";
 
-      const configDlt = has(dlt, "config") ? dlt.config : {};
-      const methodDlt = has(dlt, "method") ? dlt.method : "delete";
-      if (dlt.url === "") {
-        throw new Error("The url delete not specified");
-      }
-
-      let { url } = dlt;
-      if (has(dlt, "replaceUrl")) {
+      let urlDltRow = has(dltRow, "url") ? dltRow.url : "";
+      if (has(urlDltRow, "replaceUrl")) {
         url = url.replace(dlt.replaceUrl, params.id);
       }
 
-      const resultDelete = await axios[methodDlt](url, configDlt);
+      /* perform delete action to one data */
+      const resultDelete = await axios[methodDltRow](urlDltRow, configDltRow);
       if (!resultDelete) {
         throw new Error("Failed to delete the data");
       }
@@ -488,7 +530,7 @@ class CRUDGenerate extends Component {
     });
   };
 
-  /* form alert dialog close */
+  /* form submit alert and alert dialog close */
   onDialogClose = (dialogName, action) => () => {
     let { params } = this.state.dialog[dialogName];
     if (this.state.dialog[dialogName].visible === true) {
@@ -507,16 +549,16 @@ class CRUDGenerate extends Component {
 
     if (dialogName === "alert" && action === "submit") {
       if (has(params, "bulkDelete") && params.bulkDelete) {
-        this.doDeleteBulkItem(params);
-      } else if (has(params, "bulkDelete") && !params.bulkDelete) {
-        this.doDeleteRowButtonClick(params);
+        this.deleteDataDependOnConfig(true, params);
+      } else {
+        this.deleteDataDependOnConfig(false, params);
       }
     } else if (dialogName === "form" && action == "submit") {
       this.doSubmitForm(params);
     }
   };
 
-  /* pagination */
+  /* doing pagination table */
   onChangePage = (e, toValue) => {
     let { page, offset, limit } = this.state.table;
     if (toValue > page - 1) {
@@ -527,51 +569,49 @@ class CRUDGenerate extends Component {
       offset -= limit;
     }
 
-    this.getDataFromServer(null, offset, page);
+    this.configGetDataFromServer(null, offset, page);
   };
 
-  /* limitation */
+  /* doing limitation of how much row will be render */
   onChangeRowsPerPage = event => {
-    this.getDataFromServer(event.target.value);
+    this.configGetDataFromServer(event.target.value);
   };
 
   render() {
     return (
       <Fragment>
-        <FormDialog
+        {/* <FormDialog
+          fields={fields}
           title={this.state.dialog.form.title}
-          visible={this.state.dialog.form.visible}
           params={this.state.dialog.form.params}
+          visible={this.state.dialog.form.visible}
+          serverRequest={this.props.options.server}
           onClose={this.onDialogClose("form", "cancel")}
-          onClickButtonnClose={this.onDialogClose("form", "cancel")}
+          onClickButtonClose={this.onDialogClose("form", "cancel")}
           onClickButtonSubmit={this.onDialogClose("form", "submit")}
-          addNewConfiguration={this.props.fetchOptions.addNew}
-          editConfiguration={this.props.fetchOptions.edit}
-          formOptions={this.props.formOptions}
-        />
+        /> */}
         <BaseTable
-          title={this.props.title}
           data={this.state.data}
+          columns={this.columnTable}
           loading={this.state.loading}
           sort={this.state.table.sort}
           page={this.state.table.page}
           limit={this.state.table.limit}
           orderBy={this.state.table.orderBy}
           listChecked={this.state.listChecked}
-          checkAllList={this.state.checkAllList}
-          tableOptions={this.props.tableOptions}
-          loadingOptions={this.props.loadingOptions}
-          checkboxOptions={this.props.checkboxOptions}
-          onChangePage={this.onChangePage}
-          onClickBulkDelete={this.onClickBulkDelete}
+          isCheckAllItem={this.state.isCheckAllItem}
+          tableOptions={this.props.options.table}
+          loadingOptions={this.props.options.loading}
           onCheckAllItem={this.onCheckAllItem}
           onClickCheckbox={this.onClickCheckbox}
+          onClickBulkDelete={this.onClickBulkDelete}
+          onClickDeleteRowItem={this.onClickDeleteRowItem}
+          onChangePage={this.onChangePage}
           onChangeRowsPerPage={this.onChangeRowsPerPage}
-          onOrderingColumnTable={this.onOrderingColumnTable}
           onToggleFormDialog={this.onToggleFormDialog}
-          onDeleteRowButtonClick={this.onDeleteRowButtonClick}
+          onOrderingColumnTable={this.onOrderingColumnTable}
         />
-        <CustomSnackbar
+        {/* <CustomSnackbar
           visible={this.state.snackbarInfo.visible}
           type={this.state.snackbarInfo.type}
           message={this.state.snackbarInfo.message}
@@ -585,7 +625,7 @@ class CRUDGenerate extends Component {
           onClose={this.onDialogClose("alert", "cancel")}
           onAggree={this.onDialogClose("alert", "submit")}
           onDisaggree={this.onDialogClose("alert", "cancel")}
-        />
+        /> */}
       </Fragment>
     );
   }
