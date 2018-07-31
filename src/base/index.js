@@ -8,16 +8,14 @@ import isArray from "lodash/isArray";
 
 /* custom components */
 import BaseTable from "./base-table";
-import BaseSearch from "./base-search";
 import FormDialog from "../components/form/form-dialog";
 import AlertDialog from "../components/etc/alert-dialog";
 import CustomSnackbar from "../components/etc/custom-snackbar";
 
 /* custom configuration */
 import TableConf from "../constants/table-conf";
-import Colors from "../constants/colors";
 
-class CRUDGeneration extends Component {
+class CRUDGenerate extends Component {
   constructor(props) {
     super(props);
 
@@ -104,7 +102,7 @@ class CRUDGeneration extends Component {
   getDataFromServer = async (limit = null, offset = null, page = null) => {
     try {
       const { search, table } = this.state;
-      const { view } = this.props.fetchOptions;
+      const { view } = this.props.options.server;
 
       /* if the parameter null, set to the current value at state */
       if (limit === null) {
@@ -538,10 +536,8 @@ class CRUDGeneration extends Component {
   };
 
   render() {
-    const { classes, classNames } = this.props;
     return (
       <Fragment>
-        {/* <BaseSearch /> */}
         <FormDialog
           title={this.state.dialog.form.title}
           visible={this.state.dialog.form.visible}
@@ -595,33 +591,29 @@ class CRUDGeneration extends Component {
   }
 }
 
-CRUDGeneration.propTypes = {
-  limit: PropTypes.oneOf(TableConf.limitValue).isRequired,
-  useCheckbox: PropTypes.bool,
-  existingData: PropTypes.bool,
-  fetchOptions: PropTypes.object,
-  tableOptions: PropTypes.object,
-  loadingOptions: PropTypes.object,
-  formOptions: PropTypes.array,
-  checkbox: PropTypes.bool,
-  callbackBeforeEditForm: PropTypes.func,
-  callbackBeforeBulkDelete: PropTypes.func,
+CRUDGenerate.propTypes = {
+  aclId: PropTypes.string,
+  aclRules: PropTypes.object,
+  title: PropTypes.string,
   /* required only */
-  title: PropTypes.string.isRequired
+  options: PropTypes.object.isRequired,
+  initialLimit: PropTypes.oneOf(TableConf.limitValue).isRequired
 };
 
-CRUDGeneration.defaultProps = {
-  limit: 10,
-  fetchOptions: {},
-  tableOptions: {},
-  checkboxOptions: {
-    enabled: false,
-    objName: ""
+CRUDGenerate.defaultProps = {
+  aclId: "*",
+  title: "",
+  aclRules: {
+    "*": {
+      create: true,
+      read: true,
+      update: true,
+      delete: true,
+      export: true,
+      import: true
+    }
   },
-  loadingOptions: {
-    color: Colors.blue,
-    size: 40
-  }
+  initialLimit: 10
 };
 
-export default CRUDGeneration;
+export default CRUDGenerate;

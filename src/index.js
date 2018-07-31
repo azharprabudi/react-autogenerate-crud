@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from "react";
 import ReactDOM from "react-dom";
-import BaseTable from "./base";
-import BaseForm from "./base/base-form";
+import CRUDGenerate from "./base";
 
 /*
   note : 
@@ -14,204 +13,118 @@ import BaseForm from "./base/base-form";
 class Index extends Component {
   render() {
     return (
-      <Fragment>
-        <BaseTable
-          title={"Daftar Pegawai"}
-          limit={10}
-          checkboxOptions={{
-            enable: true,
-            objName: "id"
-          }}
-          fetchOptions={{
-            view: {
-              url: "https://jsonplaceholder.typicode.com/users",
-              method: "get",
-              query: {
-                limit: "_limit",
-                page: "_page",
-                search: {}
+      <CRUDGenerate
+        aclId={"*"}
+        aclRules={{
+          "*": {
+            create: true,
+            read: true,
+            update: true,
+            delete: true,
+            export: true,
+            import: true
+          }
+        }}
+        initialLimit={10}
+        title={"Daftar Pegawai"}
+        options={{
+          server: {
+            http: {
+              create: {
+                url: "https://jsonplaceholder.typicode.com/users",
+                method: "post",
+                config: {},
+                callbackBeforeCreate: () => {},
+                callbackAfterCreate: () => {}
               },
-              config: {}
-            },
-            delete: {
-              url: "https://jsonplaceholder.typicode.com/users/{id}",
-              bulk: {
-                enable: true,
+              read: {
+                url: "https://jsonplaceholder.typicode.com/users",
+                method: "get",
+                query: {
+                  limit: "_limit",
+                  page: "_page",
+                  search: {}
+                },
+                config: {},
+                callbackBeforeRead: () => {},
+                callbackAfterRead: () => {}
+              },
+              update: {
                 url: "https://jsonplaceholder.typicode.com/users/{id}",
-                method: "get"
+                get: {
+                  enable: false,
+                  url: "https://jsonplaceholder.typicode.com/users/{id}",
+                  method: "get"
+                },
+                config: {},
+                method: "patch",
+                objName: "id",
+                replaceUrl: "{id}",
+                existingDataFromProps: false,
+                callbackBeforeUpdate: () => {},
+                callbackAfterUpdate: () => {}
               },
-              config: {},
-              method: "delete",
-              replaceUrl: "{id}"
-            },
-            edit: {
-              url: "https://jsonplaceholder.typicode.com/users/{id}",
-              get: {
-                enable: false,
+              delete: {
                 url: "https://jsonplaceholder.typicode.com/users/{id}",
-                method: "get"
-              },
-              config: {},
-              method: "patch",
-              objName: "id",
-              replaceUrl: "{id}",
-              existingDataFromProps: false
-            },
-            addNew: {
-              url: "https://jsonplaceholder.typicode.com/users",
-              method: "post",
-              config: {}
+                bulk: {
+                  enable: true,
+                  method: "get",
+                  attributeName: "id",
+                  url: "https://jsonplaceholder.typicode.com/users/{id}"
+                },
+                config: {},
+                method: "delete",
+                replaceUrl: "{id}",
+                callbackBeforeDelete: () => {},
+                callbackAfterDelete: () => {}
+              }
             }
-          }}
-          tableOptions={{
-            buttonTopTable: {},
-            additionalButtons: {
-              enable: true,
-              replaceUrl: {
-                "{id}": "id"
-              },
-              button: {}
+          },
+          table: {
+            header: {
+              buttons: {}
             },
-            columns: [
-              {
-                title: "Name",
-                objName: "name",
-                canBeSort: true,
-                type: "text"
-              },
-              {
-                title: "Username",
-                objName: "username",
-                canBeSort: true,
-                type: "text"
-              },
-              {
-                title: "Email",
-                objName: "email",
-                canBeSort: true,
-                type: "text"
-              },
-              {
-                title: "Alamat",
-                objName: "address.street",
-                canBeSort: true,
-                type: "text"
-              },
-              {
-                title: "Lang",
-                objName: "address.geo.lng",
-                canBeSort: true,
-                type: "text"
-              },
-              {
-                title: "Merging Column Cannot Sort",
-                objName: "address.geo.lng",
-                canBeSort: false,
-                type: "custom",
-                onCustomValue: data => {
-                  return `Name : ${data.name} Username: ${data.username}`;
+            body: {
+              rows: {
+                buttons: {},
+                replaceUrl: {
+                  "{id}": 1
                 }
               }
-            ]
-          }}
-          formOptions={[
-            {
-              title: "Test",
-              type: "standard",
-              groupName: "Main",
-              details: [
-                {
-                  component: "Input",
-                  attribute: {
-                    style: {},
-                    id: "firstName",
-                    name: "firstName",
-                    type: "text",
-                    label: "First Name",
-                    onEdit: {
-                      disabled: false,
-                      readonly: false
-                    },
-                    onAdd: {
-                      disabled: false,
-                      readonly: false
-                    }
-                  },
-                  allowSearch: true,
-                  validation: "required|minLength[5]|callback_checkName",
-                  callback: {
-                    checkName: value => ({
-                      validation: true,
-                      message: ""
-                    })
-                  }
-                },
-                {
-                  component: "Input",
-                  attribute: {
-                    style: {},
-                    id: "lastName",
-                    name: "lastName",
-                    type: "password",
-                    label: "Last Name",
-                    onEdit: {
-                      disabled: false,
-                      readonly: false
-                    },
-                    onAdd: {
-                      disabled: false,
-                      readonly: false
-                    },
-                    inputProps: {
-                      adornmentType: "password"
-                    }
-                  },
-                  allowSearch: true,
-                  validation: "required"
-                },
-                {
-                  component: "TextArea",
-                  attribute: {
-                    style: {},
-                    id: "note",
-                    name: "note",
-                    label: "Catatan",
-                    onEdit: {
-                      disabled: false,
-                      readonly: false
-                    },
-                    onAdd: {
-                      disabled: false,
-                      readonly: false
-                    }
-                  },
-                  allowSearch: true,
-                  validation: "required"
-                },
-                {
-                  component: "InputNominal",
-                  attribute: {
-                    style: {},
-                    id: "pay",
-                    name: "pay",
-                    label: "Pay",
-                    edit: {
-                      disabled: false,
-                      readonly: false
-                    },
-                    addNew: {
-                      disabled: false,
-                      readonly: false
-                    }
-                  },
-                  allowSearch: true,
-                  validation: "required"
-                }
-              ]
             }
-          ]}
-        />
-      </Fragment>
+          },
+          fields: [
+            {
+              component: "Input",
+              groupName: "Main",
+              componentAttribute: {
+                id: "id",
+                name: "id",
+                label: "Id",
+                style: {},
+                type: "text",
+                onAdd: {
+                  disabled: false,
+                  readonly: false
+                },
+                onEdit: {
+                  disabled: false,
+                  readonly: false
+                },
+                validation: "required|minLength[5]|callback_checkName",
+                callbackValidation: {
+                  checkName: () => true
+                },
+                showOnTable: true,
+                mergingColumn: false,
+                sortColumnTable: true,
+                columnNameTable: "AIDI",
+                allowSearch: true
+              }
+            }
+          ]
+        }}
+      />
     );
   }
 }
