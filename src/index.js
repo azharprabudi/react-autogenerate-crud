@@ -3,6 +3,14 @@ import ReactDOM from "react-dom";
 import BaseTable from "./base";
 import BaseForm from "./base/base-form";
 
+/*
+  note : 
+  1. acl
+  2. showOnTable merge fetch options & tableOptions
+  3. import and export
+  4. Button import export
+*/
+
 class Index extends Component {
   render() {
     return (
@@ -131,7 +139,13 @@ class Index extends Component {
                     }
                   },
                   allowSearch: true,
-                  validation: "required"
+                  validation: "required|minLength[5]|callback_checkName",
+                  callback: {
+                    checkName: data => {
+                      console.log(data);
+                      return true;
+                    }
+                  }
                 }
               ]
             }

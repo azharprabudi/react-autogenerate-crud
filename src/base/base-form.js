@@ -5,9 +5,11 @@ import { withStyles } from "@material-ui/core/styles";
 
 /* etc modules */
 import axios from "axios";
+import has from "lodash/has";
 import PropTypes from "prop-types";
 
 /* my modules */
+import validators from "../helpers/validators";
 import BaseFormStandar from "../components/form/base-form-standar";
 import BaseFormDetails from "../components/form/base-form-details";
 
@@ -86,7 +88,88 @@ class BaseForm extends Component {
     return initialState;
   };
 
+  doValidatingInput = (groupName, stateName, value) => {
+    /* this function find the selected input from data array */
+    let i = 0;
+    let selectedInput = {};
+    while (i < this.props.formOptions.length) {
+      let itemInput = this.props.formOptions[i];
+      if (itemInput.groupName === groupName) {
+        let j = 0;
+        while (j < itemInput.details.length) {
+          if (itemInput.details[j].attribute.name === stateName) {
+            selectedInput = itemInput.details[j];
+            break;
+          }
+          j++;
+        }
+        break;
+      }
+      i++;
+    }
+
+    /* do validation */
+    if (!has(selectedInput, "validation")) {
+      return { validationStatus: true, validationText: "" };
+    }
+
+    let { validation } = selectedInput;
+    let iteration = 0;
+    let validationText = "";
+    let validationStatus = true;
+    let validationArr = validation.split("|");
+    console.log(validators);
+    while (iteration < validationArr.length) {
+      let itemValidator = validationArr[iteration];
+      let itemValidatorArr = itemValidator.split(/\[(.*?)\]/g);
+      if (
+        itemValidatorArr.length === 1 &&
+        has(validators, itemValidatorArr[0])
+      ) {
+        let { validation, message } = validators[itemValidatorArr[0]](value);
+        if (validation === false) {
+          validationText = message;
+          validationStatus = validation;
+          break;
+        }
+      } else if (
+        itemValidatorArr.length === 3 &&
+        has(validators, itemValidatorArr[0])
+      ) {
+        let { validation, message } = validators[itemValidatorArr[0]](
+          value,
+          itemValidatorArr[1]
+        );
+        if (validation === false) {
+          validationText = message;
+          validationStatus = validation;
+          break;
+        }
+      } else if (
+        itemValidatorArr.length === 6 &&
+        has(validators, itemValidatorArr[0])
+      ) {
+        let { validation, message } = validators[itemValidatorArr[0]](
+          value,
+          this.state.form[itemValidatorArr[1]][itemValidatorArr[3]].value
+        );
+        if (validation === false) {
+          validationText = message;
+          validationStatus = validation;
+          break;
+        }
+      }
+      iteration++;
+    }
+    return { validationStatus, validationText };
+  };
+
   onChangeBaseformStandar = (groupName, stateName, value) => {
+    const { validationStatus, validationText } = this.doValidatingInput(
+      groupName,
+      stateName,
+      value
+    );
     this.setState({
       ...this.state,
       form: {
@@ -95,8 +178,8 @@ class BaseForm extends Component {
           ...this.state.form.groupName,
           [stateName]: {
             value,
-            validationStatus: false,
-            validationText: "Ikan Cuek"
+            validationText: "",
+            validationStatus: true
           }
         }
       }
@@ -110,6 +193,7 @@ class BaseForm extends Component {
         method="post"
         encType="multipart/form-data"
         className={classes.container}
+        onSubmit={() => alert(1)}
       >
         {this.props.formOptions.map(({ type, title, groupName, details }) => {
           if (type === "standard") {
