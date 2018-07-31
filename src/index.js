@@ -128,11 +128,11 @@ class Index extends Component {
                     name: "firstName",
                     type: "text",
                     label: "First Name",
-                    edit: {
+                    onEdit: {
                       disabled: false,
                       readonly: false
                     },
-                    addNew: {
+                    onAdd: {
                       disabled: false,
                       readonly: false
                     }
@@ -154,11 +154,11 @@ class Index extends Component {
                     name: "lastName",
                     type: "password",
                     label: "Last Name",
-                    edit: {
+                    onEdit: {
                       disabled: false,
                       readonly: false
                     },
-                    addNew: {
+                    onAdd: {
                       disabled: false,
                       readonly: false
                     },
@@ -176,11 +176,11 @@ class Index extends Component {
                     id: "note",
                     name: "note",
                     label: "Catatan",
-                    edit: {
+                    onEdit: {
                       disabled: false,
                       readonly: false
                     },
-                    addNew: {
+                    onAdd: {
                       disabled: false,
                       readonly: false
                     }
