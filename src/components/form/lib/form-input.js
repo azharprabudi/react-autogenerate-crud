@@ -116,6 +116,7 @@ FormInput.propTypes = {
   disabled: PropTypes.bool,
   style: PropTypes.object,
   required: PropTypes.bool,
+  helperText: PropTypes.string,
   type: PropTypes.oneOf(["text", "password", "number", "hidden"]),
   inputProps: PropTypes.object
 };

@@ -13,7 +13,16 @@ class FormTextArea extends PureComponent {
   };
 
   render() {
-    const { label, value, rows, error, helperText, name, id } = this.props;
+    const {
+      label,
+      value,
+      rows,
+      error,
+      helperText,
+      name,
+      id,
+      style
+    } = this.props;
     return (
       <TextField
         fullWidth
@@ -27,6 +36,7 @@ class FormTextArea extends PureComponent {
         margin={"normal"}
         error={error}
         helperText={helperText}
+        style={style}
         onChange={this.onChange}
       />
     );
@@ -40,6 +50,7 @@ FormTextArea.propTypes = {
   label: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   /* no required */
+  style: PropTypes.object,
   value: PropTypes.string,
   rows: PropTypes.number,
   error: PropTypes.bool,
@@ -50,7 +61,8 @@ FormTextArea.defaultProps = {
   value: "",
   rows: 4,
   error: false,
-  helperText: ""
+  helperText: "",
+  style: {}
 };
 
 export default FormTextArea;

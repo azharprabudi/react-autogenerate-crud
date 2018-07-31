@@ -167,13 +167,7 @@ class Index extends Component {
                     }
                   },
                   allowSearch: true,
-                  validation: "required|minLength[5]|callback_checkName",
-                  callback: {
-                    checkName: value => ({
-                      validation: true,
-                      message: ""
-                    })
-                  }
+                  validation: "required"
                 },
                 {
                   component: "TextArea",
@@ -181,7 +175,7 @@ class Index extends Component {
                     style: {},
                     id: "note",
                     name: "note",
-                    label: "Last Name",
+                    label: "Catatan",
                     edit: {
                       disabled: false,
                       readonly: false
@@ -192,13 +186,26 @@ class Index extends Component {
                     }
                   },
                   allowSearch: true,
-                  validation: "required|minLength[5]|callback_checkName",
-                  callback: {
-                    checkName: value => ({
-                      validation: true,
-                      message: ""
-                    })
-                  }
+                  validation: "required"
+                },
+                {
+                  component: "InputNominal",
+                  attribute: {
+                    style: {},
+                    id: "pay",
+                    name: "pay",
+                    label: "Pay",
+                    edit: {
+                      disabled: false,
+                      readonly: false
+                    },
+                    addNew: {
+                      disabled: false,
+                      readonly: false
+                    }
+                  },
+                  allowSearch: true,
+                  validation: "required"
                 }
               ]
             }
