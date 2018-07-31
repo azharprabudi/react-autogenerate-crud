@@ -88,7 +88,7 @@ class BaseForm extends Component {
     return initialState;
   };
 
-  doValidatingInput = (groupName, stateName, value) => {
+  doValidatingInput = async (groupName, stateName, value) => {
     /* this function find the selected input from data array */
     let i = 0;
     let selectedInput = {};
@@ -118,45 +118,63 @@ class BaseForm extends Component {
     let validationText = "";
     let validationStatus = true;
     let validationArr = validation.split("|");
-    console.log(validators);
     while (iteration < validationArr.length) {
       let itemValidator = validationArr[iteration];
-      let itemValidatorArr = itemValidator.split(/\[(.*?)\]/g);
-      if (
-        itemValidatorArr.length === 1 &&
-        has(validators, itemValidatorArr[0])
-      ) {
-        let { validation, message } = validators[itemValidatorArr[0]](value);
-        if (validation === false) {
-          validationText = message;
-          validationStatus = validation;
-          break;
+      /* there two type custom validation, one is depend on crud generator and the other one is custom callback validation have to promise function */
+      if (itemValidator.indexOf("callback") > -1) {
+        const functionName = itemValidator.substr(17 - 8);
+        if (
+          has(selectedInput, "callback") &&
+          has(selectedInput.callback, functionName)
+        ) {
+          let { validation, message } = await selectedInput.callback[
+            functionName
+          ](value);
+          if (validation === false) {
+            validationText = message;
+            validationStatus = validation;
+            break;
+          }
         }
-      } else if (
-        itemValidatorArr.length === 3 &&
-        has(validators, itemValidatorArr[0])
-      ) {
-        let { validation, message } = validators[itemValidatorArr[0]](
-          value,
-          itemValidatorArr[1]
-        );
-        if (validation === false) {
-          validationText = message;
-          validationStatus = validation;
-          break;
-        }
-      } else if (
-        itemValidatorArr.length === 6 &&
-        has(validators, itemValidatorArr[0])
-      ) {
-        let { validation, message } = validators[itemValidatorArr[0]](
-          value,
-          this.state.form[itemValidatorArr[1]][itemValidatorArr[3]].value
-        );
-        if (validation === false) {
-          validationText = message;
-          validationStatus = validation;
-          break;
+      } else {
+        let itemValidatorArr = itemValidator.split(/\[(.*?)\]/g);
+        if (
+          itemValidatorArr.length === 1 &&
+          has(validators, itemValidatorArr[0])
+        ) {
+          let { validation, message } = validators[itemValidatorArr[0]](value);
+
+          if (validation === false) {
+            validationText = message;
+            validationStatus = validation;
+            break;
+          }
+        } else if (
+          itemValidatorArr.length === 3 &&
+          has(validators, itemValidatorArr[0])
+        ) {
+          let { validation, message } = validators[itemValidatorArr[0]](
+            value,
+            itemValidatorArr[1]
+          );
+          if (validation === false) {
+            validationText = message;
+            validationStatus = validation;
+            break;
+          }
+        } else if (
+          itemValidatorArr.length === 6 &&
+          has(validators, itemValidatorArr[0])
+        ) {
+          let { validation, message } = validators[itemValidatorArr[0]](
+            value,
+            this.state.form[itemValidatorArr[1]][itemValidatorArr[3]].value
+          );
+          if (validation === false) {
+            validationText = message;
+            validationStatus = validation;
+            break;
+          }
         }
       }
       iteration++;
@@ -164,22 +182,23 @@ class BaseForm extends Component {
     return { validationStatus, validationText };
   };
 
-  onChangeBaseformStandar = (groupName, stateName, value) => {
-    const { validationStatus, validationText } = this.doValidatingInput(
+  onChangeBaseFormStandar = async (groupName, stateName, value) => {
+    const { validationText, validationStatus } = await this.doValidatingInput(
       groupName,
       stateName,
       value
     );
+
     this.setState({
       ...this.state,
       form: {
         ...this.state.form,
         [groupName]: {
-          ...this.state.form.groupName,
+          ...this.state.form[groupName],
           [stateName]: {
             value,
-            validationText: "",
-            validationStatus: true
+            validationText,
+            validationStatus
           }
         }
       }
@@ -203,7 +222,7 @@ class BaseForm extends Component {
                 details={details}
                 state={this.state.form[groupName]}
                 onChange={(stateName, value) =>
-                  this.onChangeBaseformStandar(groupName, stateName, value)
+                  this.onChangeBaseFormStandar(groupName, stateName, value)
                 }
                 title={title}
               />

@@ -124,7 +124,6 @@ class Index extends Component {
                   component: "Input",
                   attribute: {
                     style: {},
-                    class: "",
                     id: "firstName",
                     name: "firstName",
                     type: "text",
@@ -141,10 +140,64 @@ class Index extends Component {
                   allowSearch: true,
                   validation: "required|minLength[5]|callback_checkName",
                   callback: {
-                    checkName: data => {
-                      console.log(data);
-                      return true;
+                    checkName: value => ({
+                      validation: true,
+                      message: ""
+                    })
+                  }
+                },
+                {
+                  component: "Input",
+                  attribute: {
+                    style: {},
+                    id: "lastName",
+                    name: "lastName",
+                    type: "password",
+                    label: "Last Name",
+                    edit: {
+                      disabled: false,
+                      readonly: false
+                    },
+                    addNew: {
+                      disabled: false,
+                      readonly: false
+                    },
+                    inputProps: {
+                      adornmentType: "password"
                     }
+                  },
+                  allowSearch: true,
+                  validation: "required|minLength[5]|callback_checkName",
+                  callback: {
+                    checkName: value => ({
+                      validation: true,
+                      message: ""
+                    })
+                  }
+                },
+                {
+                  component: "TextArea",
+                  attribute: {
+                    style: {},
+                    id: "note",
+                    name: "note",
+                    label: "Last Name",
+                    edit: {
+                      disabled: false,
+                      readonly: false
+                    },
+                    addNew: {
+                      disabled: false,
+                      readonly: false
+                    }
+                  },
+                  allowSearch: true,
+                  validation: "required|minLength[5]|callback_checkName",
+                  callback: {
+                    checkName: value => ({
+                      validation: true,
+                      message: ""
+                    })
                   }
                 }
               ]

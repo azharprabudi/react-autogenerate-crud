@@ -2,11 +2,65 @@ import React, { PureComponent } from "react";
 
 /* material ui */
 import TextField from "@material-ui/core/TextField";
+import IconButton from "@material-ui/core/IconButton";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import { withStyles } from "@material-ui/core/styles";
 
 /* etc modules */
+import has from "lodash/has";
 import PropTypes from "prop-types";
 
+const styles = theme => ({
+  wrapperIconVisibility: {
+    right: 10,
+    zIndex: 999,
+    position: "absolute"
+  }
+});
+
 class FormInput extends PureComponent {
+  state = {
+    showPassword: false
+  };
+
+  /* handler on change hide and show password */
+  onTogglePassword = () => {
+    this.setState({
+      showPassword: !this.state.showPassword
+    });
+  };
+
+  /* add adornment here */
+  getContentStartAdornment = () => {
+    if (has(this.props, "inputProps")) {
+      if (this.props.inputProps.adornmentType === "text") {
+        return (
+          <InputAdornment position={this.props.inputProps.adornmentPosition}>
+            {this.props.inputProps.adornmentType}
+          </InputAdornment>
+        );
+      } else if (this.props.inputProps.adornmentType === "password") {
+        return (
+          <InputAdornment
+            position="end"
+            className={this.props.classes.wrapperIconVisibility}
+          >
+            <IconButton
+              aria-label="Toggle password visibility"
+              onClick={this.onTogglePassword}
+            >
+              {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
+          </InputAdornment>
+        );
+      }
+    }
+    return null;
+  };
+
+  /* handler on change value */
   onChange = e => {
     this.props.onChange(e.target.value);
   };
@@ -23,24 +77,23 @@ class FormInput extends PureComponent {
       readOnly,
       required,
       error,
-      class: classes,
       style
     } = this.props;
     return (
       <TextField
         id={id}
         name={name}
-        type={type}
+        type={this.state.showPassword ? "text" : type}
         value={value}
         margin={"normal"}
         onChange={this.onChange}
         required={required}
         fullWidth={true}
-        inputProps={{
+        InputProps={{
           disabled,
           readOnly,
-          classes,
-          style
+          style,
+          startAdornment: this.getContentStartAdornment()
         }}
         label={label}
         error={error}
@@ -63,7 +116,8 @@ FormInput.propTypes = {
   disabled: PropTypes.bool,
   style: PropTypes.object,
   required: PropTypes.bool,
-  type: PropTypes.oneOf(["text", "password", "number", "hidden"])
+  type: PropTypes.oneOf(["text", "password", "number", "hidden"]),
+  inputProps: PropTypes.object
 };
 
 FormInput.defaultProps = {
@@ -73,7 +127,8 @@ FormInput.defaultProps = {
   style: {},
   disabled: false,
   class: "",
-  error: true
+  error: true,
+  inputProps: {}
 };
 
-export default FormInput;
+export default withStyles(styles)(FormInput);

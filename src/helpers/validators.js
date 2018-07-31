@@ -6,7 +6,7 @@ const isRequired = str => {
     str = str.toString();
   }
   if (str.replace(/\s/g, "") === "") {
-    return { validation: false, message: "this field is required" };
+    return { validation: false, message: "This field is required" };
   }
   return { validation: true, message: "" };
 };
@@ -158,6 +158,18 @@ const isUrl = url => {
   return { validation: true, message: "" };
 };
 
+const validRegex = (str, regex) => {
+  if (!isString(str)) {
+    str = str.toString();
+  }
+
+  const isValidate = validate({ str }, { str: { format: regex } });
+  if (has(isValidate, "str")) {
+    return { validation: false, message: "Not matches with custom validation" };
+  }
+  return true;
+};
+
 export default {
   required: isRequired,
   validEmail: isEmail,
@@ -170,5 +182,6 @@ export default {
   gte: greaterThanEqual,
   lt: lessThan,
   lte: lessThanEqual,
-  validUrl: isUrl
+  validUrl: isUrl,
+  regex: validRegex
 };
