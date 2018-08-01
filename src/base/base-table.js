@@ -19,7 +19,7 @@ import BaseTableHeader from "../components/table/base-table-header";
 import BaseTableBody from "../components/table/base-table-body";
 
 /* custom config */
-import TableConf from "../constants/table-conf";
+import OptionsConf from "../constants/options-conf";
 import Colors from "../constants/colors";
 
 const styles = theme => ({
@@ -65,79 +65,85 @@ class BaseTable extends PureComponent {
   constructor(props) {
     super(props);
 
+    const { table, aclSelected } = props;
+
     /* this additional button added from user configuration at parent component */
-    let additionalButton = has(props.tableOptions, "buttonTopTable")
-      ? { ...props.tableOptions.buttonTopTable }
+    let buttonTopTable = has(table, "buttonTopTable")
+      ? table.buttonTopTable
       : {};
 
     /* if there any configuration for button add new like change color, size and etc just replace it in configuration, this just working on delete and add button */
-    let configurationAddNewButton = {
-      label: "Add New",
-      class: props.classes.buttonAddNew,
-      onClick: () => props.onToggleFormDialog("Add New"),
-      size: "medium",
-      variant: "contained",
-      style: {},
-      href: "",
-      type: "button",
-      iconName: "Add"
-    };
+    let buttonCreate = {};
+    let buttonDelete = {};
+    let buttonExport = {};
+    let buttonImport = {};
 
-    if (
-      has(additionalButton, "addNew") &&
-      Object.keys(additionalButton.addNew).length > 0
-    ) {
-      configurationAddNewButton = {
-        ...configurationAddNewButton,
-        ...additionalButton.addNew
+    if (has(aclSelected, "create") && aclSelected.create) {
+      buttonCreate = {
+        label: "Add New",
+        class: props.classes.buttonAddNew,
+        onClick: () => props.onToggleFormDialog("Add New"),
+        size: "medium",
+        variant: "contained",
+        style: {},
+        href: "",
+        type: "button",
+        iconName: "Add",
+        ...buttonTopTable.create
       };
-      /* remove index add new */
-      additionalButton = omit(additionalButton, "addNew");
-    } else if (
-      has(additionalButton, "addNew") &&
-      Object.keys(additionalButton.addNew).length === 0
-    ) {
-      configurationAddNewButton = {};
-      /* remove index add new */
-      additionalButton = omit(additionalButton, "addNew");
+      buttonTopTable = omit(buttonTopTable, "create");
     }
 
-    let configurationDeleteButton = {
-      label: "Delete",
-      class: props.classes.buttonDelete,
-      onClick: props.onClickBulkDelete,
-      size: "medium",
-      variant: "contained",
-      style: {},
-      href: "",
-      type: "button",
-      iconName: "Delete"
-    };
-
-    if (
-      has(additionalButton, "delete") &&
-      Object.keys(additionalButton.delete).length > 0
-    ) {
-      configurationDeleteButton = {
-        ...configurationDeleteButton,
-        ...additionalButton.delete
+    if (has(aclSelected, "delete") && aclSelected.delete) {
+      buttonDelete = {
+        label: "Delete",
+        class: props.classes.buttonDelete,
+        onClick: props.onClickBulkDelete,
+        size: "medium",
+        variant: "contained",
+        style: {},
+        href: "",
+        type: "button",
+        iconName: "Delete",
+        ...buttonTopTable.delete
       };
-      /* remove index add new */
-      additionalButton = omit(additionalButton, "delete");
-    } else if (
-      has(additionalButton, "delete") &&
-      Object.keys(additionalButton.delete).length === 0
-    ) {
-      configurationDeleteButton = {};
-      /* remove index add new */
-      additionalButton = omit(additionalButton, "delete");
+      buttonTopTable = omit(buttonTopTable, "delete");
     }
 
     this.button = {
-      addNew: configurationAddNewButton,
-      delete: configurationDeleteButton,
-      ...additionalButton
+      create: buttonCreate,
+      delete: buttonDelete,
+      ...buttonTopTable
     };
+
+    /* just for flag for the header table and body table */
+    this.useAdditionalButtons = false;
+    if (
+      (has(aclSelected, "delete") && aclSelected.delete) ||
+      (has(aclSelected, "update") && aclSelected.update)
+    ) {
+      this.useAdditionalButtons = true;
+    } else if (has(table, "row") && has(table, "additionalButtons")) {
+      for (let [index, item] of Object.entries(table.row.additionalButtons)) {
+        if (index !== "update" || index !== "create") {
+          this.useAdditionalButtons = true;
+          break;
+        }
+      }
+    }
+
+    /* this for additional butt in row item */
+    this.additionalRowColumn = {
+      additionalButtons: {},
+      replaceUrl: "",
+      attributeName: ""
+    };
+    if (has(props.table, "row")) {
+      this.additionalRowColumn = {
+        ...this.additionalRowColumn,
+        ...props.table.row
+      };
+    }
   }
 
   renderButton() {
@@ -196,9 +202,21 @@ class BaseTable extends PureComponent {
       classes,
       orderBy,
       loading,
-      tableOptions,
-      loadingOptions,
-      checkboxOptions
+      isLoading,
+      table,
+      page,
+      limit,
+      columns,
+      aclSelected,
+      listChecked,
+      onChangePage,
+      isCheckAllItem,
+      onCheckAllItem,
+      onClickCheckbox,
+      onToggleFormDialog,
+      onChangeRowsPerPage,
+      onClickDeleteRowItem,
+      checkboxAttributeName
     } = this.props;
     return (
       <Fragment>
@@ -209,38 +227,38 @@ class BaseTable extends PureComponent {
               <BaseTableHeader
                 sort={sort}
                 orderBy={orderBy}
-                columns={tableOptions.columns}
-                checkbox={checkboxOptions.enable}
+                columns={columns}
+                isCheckAllItem={isCheckAllItem}
+                onCheckAllItem={onCheckAllItem}
                 onChangeOrderBy={this.onChangeOrderBy}
-                isCheckAllItem={this.props.isCheckAllItem}
-                onCheckAllItem={this.props.onCheckAllItem}
-                useAdditionalButton={
-                  this.props.tableOptions.additionalButtons.enable
-                }
+                useAdditionalButtons={this.useAdditionalButtons}
+                checkbox={has(aclSelected, "delete") && aclSelected.delete}
               />
-              {/* <BaseTableBody
+              <BaseTableBody
                 data={data}
-                columns={tableOptions.columns}
-                checkbox={checkboxOptions.enable}
-                checkboxObjName={checkboxOptions.objName}
-                listChecked={this.props.listChecked}
-                onClickCheckbox={this.props.onClickCheckbox}
-                onToggleFormDialog={this.props.onToggleFormDialog}
-                onDeleteRowButtonClick={this.props.onDeleteRowButtonClick}
-                additionalButtons={this.props.tableOptions.additionalButtons}
-              /> */}
+                columns={columns}
+                listChecked={listChecked}
+                aclSelected={aclSelected}
+                onClickCheckbox={onClickCheckbox}
+                onToggleFormDialog={onToggleFormDialog}
+                onClickDeleteRowItem={onClickDeleteRowItem}
+                checkboxAttributeName={checkboxAttributeName}
+                additionalRowColumn={this.additionalRowColumn}
+                useAdditionalButtons={this.useAdditionalButtons}
+                checkbox={has(aclSelected, "delete") && aclSelected.delete}
+              />
             </Table>
           </div>
-          {loading === true && (
-            <div className={this.props.classes.loading}>
+          {isLoading === true && (
+            <div className={classes.loading}>
               <CircularProgress
-                size={loadingOptions.size}
-                style={{ color: loadingOptions.color }}
+                size={loading.size}
+                style={{ color: loading.color }}
               />
             </div>
           )}
           <TablePagination
-            page={this.props.page - 1}
+            page={page - 1}
             component="div"
             backIconButtonProps={{
               "aria-label": "Previous Page"
@@ -248,10 +266,10 @@ class BaseTable extends PureComponent {
             nextIconButtonProps={{
               "aria-label": "Next Page"
             }}
-            rowsPerPage={this.props.limit}
-            onChangePage={this.props.onChangePage}
-            rowsPerPageOptions={TableConf.limitValue}
-            onChangeRowsPerPage={this.props.onChangeRowsPerPage}
+            rowsPerPage={limit}
+            onChangePage={onChangePage}
+            rowsPerPageOptions={OptionsConf.limitValue}
+            onChangeRowsPerPage={onChangeRowsPerPage}
             count={99999999999999999999999999999999}
             labelDisplayedRows={({ from, to, count }) => `${from} - ${to}`}
           />
@@ -263,33 +281,45 @@ class BaseTable extends PureComponent {
 
 BaseTable.propTypes = {
   /* required */
+  data: PropTypes.array.isRequired,
+  sort: PropTypes.string.isRequired,
   page: PropTypes.number.isRequired,
   limit: PropTypes.number.isRequired,
-  sort: PropTypes.string.isRequired,
-  data: PropTypes.array.isRequired,
-  classes: PropTypes.object.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  table: PropTypes.shape({
+    row: PropTypes.shape({
+      replaceUrl: PropTypes.string,
+      attributeName: PropTypes.string,
+      additionalButtons: PropTypes.object.isRequired
+    }),
+    buttonTopTable: PropTypes.object.isRequired
+  }).isRequired,
   orderBy: PropTypes.string.isRequired,
-  loading: PropTypes.bool.isRequired,
-  onChangePage: PropTypes.func.isRequired,
-  tableOptions: PropTypes.object.isRequired,
-  checkboxOptions: PropTypes.object.isRequired,
-  loadingOptions: PropTypes.object.isRequired,
+  loading: PropTypes.shape({
+    size: PropTypes.number.isRequired,
+    color: PropTypes.string.isRequired
+  }).isRequired,
+  classes: PropTypes.object.isRequired,
   listChecked: PropTypes.array.isRequired,
-  onClickCheckbox: PropTypes.func.isRequired,
+  columns: PropTypes.array.isRequired,
+  aclSelected: PropTypes.shape({
+    create: PropTypes.bool,
+    read: PropTypes.bool,
+    update: PropTypes.bool,
+    delete: PropTypes.bool,
+    export: PropTypes.bool,
+    import: PropTypes.bool
+  }).isRequired,
+  onChangePage: PropTypes.func.isRequired,
   isCheckAllItem: PropTypes.bool.isRequired,
+  checkboxAttributeName: PropTypes.string.isRequired,
   onCheckAllItem: PropTypes.func.isRequired,
+  onClickCheckbox: PropTypes.func.isRequired,
   onClickBulkDelete: PropTypes.func.isRequired,
-  onToggleFormDialog: PropTypes.func.isRequired,
+  onClickDeleteRowItem: PropTypes.func.isRequired,
   onChangeRowsPerPage: PropTypes.func.isRequired,
-  onOrderingColumnTable: PropTypes.func.isRequired,
-  onDeleteRowButtonClick: PropTypes.func.isRequired
-};
-
-BaseTable.defaultProps = {
-  loadingOptions: {
-    color: Colors.blue,
-    size: 40
-  }
+  onToggleFormDialog: PropTypes.func.isRequired,
+  onOrderingColumnTable: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(BaseTable);

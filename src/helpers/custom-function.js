@@ -1,24 +1,18 @@
-/* not used just created */
-export const findExistingData = (objName, value, data) => {
-  let left = 0;
-  let right = data.length - 1;
-  let index = 0;
-
-  while (left < right) {
-    if (data[left][objName] === value) {
-      index = left;
-    }
-
-    if (data[right][objName] === value) {
-      index = right;
-    }
-
-    left++;
-    right--;
+export const thousandSeparator = (nominal, prefix = "") => {
+  if (typeof nominal !== "string") {
+    nominal = nominal.toString();
   }
 
-  let newData = [...data];
-  newData.splice(index, 1);
-
-  return { index, data: newData };
+  let i = 0;
+  let initialLengthStr = -3;
+  let nominalArr = nominal.split("");
+  while (i < Math.floor(nominal.length / 3)) {
+    let lengthStr = initialLengthStr - i;
+    if (Math.sign(lengthStr) * lengthStr < nominalArr.length) {
+      nominalArr.splice(lengthStr, 0, ",");
+      initialLengthStr -= 3;
+    }
+    i++;
+  }
+  return `${prefix}${nominalArr.join("")}`;
 };

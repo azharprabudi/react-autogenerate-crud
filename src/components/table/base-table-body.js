@@ -20,6 +20,7 @@ import uniqueId from "lodash/uniqueId";
 /* my modules */
 import Colors from "../../constants/colors";
 import BaseForm from "../../base/base-form";
+import { thousandSeparator } from "../../helpers/custom-function";
 
 const styles = theme => ({
   img: {
@@ -47,73 +48,53 @@ class BaseTableBody extends Component {
   constructor(props) {
     super(props);
 
-    let additionalButtons = has(props.additionalButtons, "button")
-      ? props.additionalButtons.button
-      : {};
+    const { additionalRowColumn, aclSelected } = props;
+
+    let additionalButtons =
+      has(additionalRowColumn, "row") &&
+      has(additionalRowColumn, "additionalButtons")
+        ? additionalRowColumn.row.additionalButtons
+        : {};
 
     /* if there any configuration for button edit can replace here */
-    let configurationEditButton = {
-      label: "Edit",
-      class: props.classes.buttonEdit,
-      onClick: (title, params) => props.onToggleFormDialog(title, params),
-      size: "small",
-      variant: "contained",
-      style: {},
-      href: "",
-      type: "button",
-      iconName: "Edit"
-    };
-    if (
-      has(additionalButtons, "edit") &&
-      Object.keys(additionalButtons.edit).length > 0
-    ) {
-      configurationEditButton = {
-        ...configurationEditButton,
-        ...additionalButtons.edit
+    let buttonEdit = {};
+    let buttonDelete = {};
+
+    if (has(aclSelected, "update") && aclSelected.update) {
+      buttonEdit = {
+        label: "Edit",
+        class: props.classes.buttonEdit,
+        onClick: (title, params) => props.onToggleFormDialog(title, params),
+        size: "small",
+        variant: "contained",
+        style: {},
+        href: "",
+        type: "button",
+        iconName: "Edit",
+        ...additionalButtons.update
       };
-      /* remove index edit  */
-      additionalButtons = omit(additionalButtons, "edit");
-    } else if (
-      has(additionalButtons, "edit") &&
-      Object.keys(additionalButtons.edit).length === 0
-    ) {
-      configurationEditButton = {};
-      /* remove index edit  */
-      additionalButtons = omit(additionalButtons, "edit");
+      additionalButtons = omit(additionalButtons, "update");
     }
 
-    /* if there any configuration for button delete can replace here */
-    let configurationDeleteButton = {
-      label: "Delete",
-      class: props.classes.buttonDelete,
-      onClick: id => props.onDeleteRowButtonClick(id),
-      size: "small",
-      variant: "contained",
-      style: {},
-      href: "",
-      type: "button",
-      iconName: "Delete"
-    };
-
-    if (
-      has(additionalButtons, "delete") &&
-      Object.keys(additionalButtons.delete).length > 0
-    ) {
-      configurationDeleteButton = {
-        ...configurationDeleteButton,
+    if (has(aclSelected, "delete") && aclSelected.update) {
+      buttonDelete = {
+        label: "Delete",
+        class: props.classes.buttonDelete,
+        onClick: id => props.onClickDeleteRowItem(id),
+        size: "small",
+        variant: "contained",
+        style: {},
+        href: "",
+        type: "button",
+        iconName: "Delete",
         ...additionalButtons.delete
       };
       additionalButtons = omit(additionalButtons, "delete");
-    } else if (
-      has(additionalButtons, "delete") &&
-      Object.keys(additionalButtons.delete).length === 0
-    ) {
-      configurationDeleteButton = {};
-      additionalButtons = omit(additionalButtons, "delete");
     }
+
     this.buttons = {
-      edit: configurationEditButton,
-      delete: configurationDeleteButton,
+      update: buttonEdit,
+      delete: buttonDelete,
       ...additionalButtons
     };
   }
@@ -122,7 +103,7 @@ class BaseTableBody extends Component {
     this.props.onClickCheckbox(id);
   };
 
-  getValueItemBody = (rawData, attrName) => {
+  getValueEachColumn = (rawData, attrName) => {
     let attrSplit = attrName.split(".");
     if (attrSplit.length > 1) {
       let newRawData = rawData;
@@ -134,34 +115,52 @@ class BaseTableBody extends Component {
     return rawData[attrName];
   };
 
-  renderItemBody = (itemBody, itemColumn) => {
+  renderItemEachColumn = (data, itemColumn) => {
     const { classes } = this.props;
-    const value = this.getValueItemBody(itemBody, itemColumn.objName);
-    switch (itemColumn.type.toLowerCase()) {
+    const prefix = has(itemColumn, "prefixColumnTable")
+      ? itemColumn.prefixColumnTable
+      : "";
+    const valueEachColumn = `${prefix} ${this.getValueEachColumn(
+      data,
+      itemColumn.attributeColumnTable
+    )}`;
+    switch (itemColumn.typeColumnTable) {
       case "image":
-        return <img src={value} alt={value} className={classes.img} />;
+        return (
+          <img
+            src={valueEachColumn}
+            alt={valueEachColumn}
+            className={classes.img}
+          />
+        );
       case "date":
-        return <Typography>{moment(value).format("YYYY-MM-D")}</Typography>;
+        return (
+          <Typography>{moment(valueEachColumn).format("YYYY-MM-D")}</Typography>
+        );
       case "time":
-        return <Typography>{moment(value).format("H:mm:ss")}</Typography>;
+        return (
+          <Typography>{moment(valueEachColumn).format("H:mm:ss")}</Typography>
+        );
       case "datetime":
         return (
-          <Typography>{moment(value).format("YYYY-MM-D, H:mm:ss")}</Typography>
-        );
-      case "longtext":
-        return <Typography>{`${value.substr(0, 50)}...`}</Typography>;
-      case "nominal":
-        return <Typography>{value.toLocaleString()}</Typography>;
-      case "custom":
-        return (
           <Typography>
-            {has(itemColumn, "onCustomValue")
-              ? itemColumn.onCustomValue(itemBody)
-              : ""}
+            {moment(valueEachColumn).format("YYYY-MM-D, H:mm:ss")}
           </Typography>
         );
+      case "longtext":
+        return <Typography>{`${valueEachColumn.substr(0, 50)}...`}</Typography>;
+      case "nominal":
+        return <Typography>{thousandSeparator(valueEachColumn)}</Typography>;
+      case "custom":
+        return (
+          <div>
+            {has(itemColumn, "onCustomValue")
+              ? itemColumn.onCustomValue(data)
+              : ""}
+          </div>
+        );
       default:
-        return <Typography>{value}</Typography>;
+        return <Typography>{valueEachColumn}</Typography>;
     }
   };
 
@@ -198,11 +197,12 @@ class BaseTableBody extends Component {
       if (item.label === "Edit") {
         funcOnClick = () =>
           item.onClick("Edit", {
-            [BaseForm.ID_FORM]: rowData[this.props.checkboxObjName],
+            [BaseForm.ID_FORM]: rowData[this.props.checkboxAttributeName],
             [BaseForm.EXISTING_DATA_FROM_PROPS]: {}
           });
       } else if (item.label == "Delete") {
-        funcOnClick = () => item.onClick(rowData[this.props.checkboxObjName]);
+        funcOnClick = () =>
+          item.onClick(rowData[this.props.checkboxAttributeName]);
       }
 
       buttons = [
@@ -231,33 +231,33 @@ class BaseTableBody extends Component {
       data,
       columns,
       checkbox,
-      classes,
-      checkboxObjName,
-      listChecked
+      listChecked,
+      useAdditionalButtons,
+      checkboxAttributeName
     } = this.props;
     return (
       <TableBody component="tbody">
-        {data.map(itemBody => {
+        {data.map(item => {
           return (
-            <TableRow key={uniqueId(itemBody.objName)} hover>
+            <TableRow key={uniqueId(item[checkboxAttributeName])} hover>
               {checkbox && (
                 <TableCell padding={"checkbox"}>
                   <Checkbox
                     checked={
-                      listChecked.indexOf(itemBody[checkboxObjName]) > -1
+                      listChecked.indexOf(item[checkboxAttributeName]) > -1
                     }
                     style={{ color: Colors.red }}
-                    onClick={this.onClickCheckbox(itemBody[checkboxObjName])}
+                    onClick={this.onClickCheckbox(item[checkboxAttributeName])}
                   />
                 </TableCell>
               )}
               {columns.map(itemColumn => (
                 <TableCell key={uniqueId(itemColumn.title)}>
-                  {this.renderItemBody(itemBody, itemColumn)}
+                  {this.renderItemEachColumn(item, itemColumn)}
                 </TableCell>
               ))}
-              {this.props.additionalButtons.enable && (
-                <TableCell>{this.renderAdditionalButtons(itemBody)}</TableCell>
+              {useAdditionalButtons && (
+                <TableCell>{this.renderAdditionalButtons(item)}</TableCell>
               )}
             </TableRow>
           );
@@ -271,17 +271,24 @@ BaseTableBody.propTypes = {
   data: PropTypes.array.isRequired,
   columns: PropTypes.array.isRequired,
   checkbox: PropTypes.bool.isRequired,
+  classes: PropTypes.object.isRequired,
   listChecked: PropTypes.array.isRequired,
   onClickCheckbox: PropTypes.func.isRequired,
-  checkboxObjName: PropTypes.string.isRequired,
-  additionalButtons: PropTypes.object.isRequired,
   onToggleFormDialog: PropTypes.func.isRequired,
-  onDeleteRowButtonClick: PropTypes.func.isRequired
-};
-
-BaseTableBody.defaultProps = {
-  onClickCheckbox: () => {},
-  onToggleFormDialog: () => {}
+  onClickDeleteRowItem: PropTypes.func.isRequired,
+  checkboxAttributeName: PropTypes.string.isRequired,
+  additionalRowColumn: PropTypes.shape({
+    replaceUrl: PropTypes.string,
+    attributeName: PropTypes.string,
+    additionalButtons: PropTypes.object
+  }),
+  aclSelected: PropTypes.shape({
+    create: PropTypes.bool,
+    read: PropTypes.bool,
+    update: PropTypes.bool,
+    delete: PropTypes.bool
+  }),
+  useAdditionalButtons: PropTypes.bool.isRequired
 };
 
 export default withStyles(styles)(BaseTableBody);

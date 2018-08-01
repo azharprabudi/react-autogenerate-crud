@@ -13,7 +13,8 @@ import AlertDialog from "../components/etc/alert-dialog";
 import CustomSnackbar from "../components/etc/custom-snackbar";
 
 /* custom configuration */
-import TableConf from "../constants/table-conf";
+import OptionsConf from "../constants/options-conf";
+import Colors from "../constants/colors";
 
 class CRUDGenerate extends Component {
   constructor(props) {
@@ -57,39 +58,41 @@ class CRUDGenerate extends Component {
     };
 
     this.columnTable = this.getListColumnTable();
+
+    this.checkboxAttributeName = "";
+    if (has(props.server, "http") && has(props.server.http, "delete")) {
+      this.checkboxAttributeName = props.server.http.delete.attributeName;
+    }
   }
 
   componentDidMount() {
     this.getDataDependOnConfig();
   }
 
+  /* this function to get all fields who want to show at the table */
   getListColumnTable = () => {
     const columns = [];
-    const { fields } = this.props.options;
+    const { fields } = this.props;
     for (let i = 0; i <= fields.length - 1; i++) {
       let itemColumn = fields[i];
-      if (has(itemColumn, "showOnTable") && itemColumn.showOnTable === true) {
+      if (has(itemColumn, "showOnTable") && itemColumn.showOnTable) {
         columns.push(itemColumn);
       }
     }
     return columns;
   };
 
+  /* fetching data depend on configuration using http / firebase / graphql */
   getDataDependOnConfig = () => {
     /* check acl first */
-    const { aclRules, aclId, options } = this.props;
+    const { aclRules, aclId, server } = this.props;
     if (
       has(aclRules, aclId) &&
-      has(aclRules[aclId], "view") &&
-      aclRules[aclId].view
+      has(aclRules[aclId], "read") &&
+      aclRules[aclId].read
     ) {
       /* check user already using http to get data or not */
-      if (
-        has(options, "server") &&
-        has(option.server, "http") &&
-        has(option.server.http, "read") &&
-        Object.keys(options.server.http.read).length > 0
-      ) {
+      if (has(server, "http") && has(server.http, "read")) {
         this.getDataFromHTTPServer();
       }
     }
@@ -97,26 +100,16 @@ class CRUDGenerate extends Component {
 
   deleteDataDependOnConfig = (isBulk = false, params = {}) => () => {
     /* check acl first */
-    const { aclRules, aclId, options } = this.props;
+    const { aclRules, aclId, server } = this.props;
     if (
       has(aclRules, aclId) &&
       has(aclRules[aclId], "delete") &&
       aclRules[aclId].delete
     ) {
       /* check user already using http to get data or not */
-      if (
-        has(options, "server") &&
-        has(option.server, "http") &&
-        has(option.server.http, "delete") &&
-        Object.keys(options.server.http.delete).length > 0
-      ) {
-        if (
-          has(options.server.http.delete, "bulk") &&
-          has(options.server.http.delete.bulk, "enable") &&
-          options.server.http.delete.bulk.enable &&
-          isBulk
-        ) {
-          this.doHTTPDeleteBulk(params);
+      if (has(server, "http") && has(server.http, "delete")) {
+        if (has(server.http.delete, "bulk") && isBulk) {
+          this.doDeleteBulkToHTTPServer(params);
         } else {
           this.doDeleteRowToHTTPServer(params);
         }
@@ -156,49 +149,43 @@ class CRUDGenerate extends Component {
       /*
       get data from url has been specify in the configuration of crud generation
       */
-      if (has(this.props.options.server, "read")) {
-        const { search, table } = this.state;
-        const { read } = this.props.options.server;
+      const { read } = this.props.server.http;
+      const { search, table } = this.state;
 
-        /* if the parameter null, set to the current value at state */
-        if (limit === null) {
-          limit = table.limit;
-        }
-
-        if (offset === null) {
-          offset = table.offset;
-        }
-
-        if (page === null) {
-          page = table.page;
-        }
-
-        /* required data when get data from server */
-        let configRead = has(read, "config") ? read.config : {};
-        let methodRead = has(read, "method")
-          ? read.method.toLowerCase()
-          : "get";
-        let urlRead = has(read, "url")
-          ? this.getHTTPUrl(view, limit, offset, page)
-          : "";
-
-        /* start fetching data */
-        await this.setLoadingProms(true);
-        let { data } = await axios[methodRead](urlRead, configRead);
-
-        /* finish fetch data and set data into state */
-        this.setState({
-          ...this.state,
-          data,
-          table: {
-            ...this.state.table,
-            limit,
-            offset,
-            page
-          },
-          loading: false
-        });
+      /* if the parameter null, set to the current value at state */
+      if (limit === null) {
+        limit = table.limit;
       }
+
+      if (offset === null) {
+        offset = table.offset;
+      }
+
+      if (page === null) {
+        page = table.page;
+      }
+
+      /* required data when get data from server */
+      let configRead = has(read, "config") ? read.config : {};
+      let methodRead = has(read, "method") ? read.method : "get";
+      let urlRead = this.getHTTPUrl(read, limit, offset, page);
+
+      /* start fetching data */
+      await this.setLoadingProms(true);
+      let { data } = await axios[methodRead](urlRead, configRead);
+
+      /* finish fetch data and set data into state */
+      this.setState({
+        ...this.state,
+        data: this.orderingData(data, table.orderBy, table.sort),
+        table: {
+          ...this.state.table,
+          limit,
+          offset,
+          page
+        },
+        loading: false
+      });
     } catch (e) {
       this.setState(
         {
@@ -249,7 +236,7 @@ class CRUDGenerate extends Component {
     */
     this.setState({
       ...this.state,
-      data: this.orderingData(orderByNameColumn, sort),
+      data: this.orderingData(this.state.data, orderByNameColumn, sort),
       table: {
         ...this.state.table,
         orderBy: orderByNameColumn,
@@ -258,9 +245,13 @@ class CRUDGenerate extends Component {
     });
   };
 
-  orderingData = (orderByNameColumn, sort) => {
-    /* this sort will be categorize by two type data, there are number and text. So if text, using function localeCompare, meanwhile number using step curr - next */
-    return this.state.data.sort((curr, next) => {
+  /* this sort will be categorize by two type data, there are number and text. So if text, using function localeCompare, meanwhile number using step curr - next */
+  orderingData = (data, orderByNameColumn, sort) => {
+    /* just return it if there any sorting table */
+    if (orderByNameColumn === "") {
+      return data;
+    }
+    return data.sort((curr, next) => {
       let currOrderBy = null;
       let nextOrderBy = null;
       let removeSeparatorOrderBy = orderByNameColumn.split(".");
@@ -311,11 +302,16 @@ class CRUDGenerate extends Component {
 
   /* add all item in row, and push it into list check item */
   onCheckAllItem = () => {
+    let attributeName = "";
+    const { server } = this.props;
     let { isCheckAllItem, listChecked, data } = this.state;
-    const { delete: dltConf } = this.props.option.server.http;
+
+    if (has(server, "http") && has(server.http, "delete")) {
+      attributeName = server.http.delete.attributeName;
+    }
 
     if (!isCheckAllItem === true) {
-      listChecked = data.map(item => item[dltConf.attributeName]);
+      listChecked = data.map(item => item[attributeName]);
     } else {
       listChecked = [];
     }
@@ -362,25 +358,31 @@ class CRUDGenerate extends Component {
       // set loading to true
       await this.setLoadingProms(true);
 
-      const { delete: dltBulk } = this.props.options.server.http;
-      const dltBulkConfig = has(dltBulk, "config") ? dltBulk.config : {};
-      const dltBulkMethod = has(dltBulk.bulk, "method")
-        ? dltBulk.bulk.method
+      let dlt = {};
+      const { server } = this.props;
+
+      if (has(server, "http") && has(server.http, "delete")) {
+        dlt = server.http.delete;
+      }
+
+      const dltBulkConfig = has(dlt, "config") ? dlt.config : {};
+      const dltBulkMethod = has(dlt.bulk, "method")
+        ? dlt.bulk.method
         : "delete";
-      const dltBulkUrl = has(dltBulk.bulk, "url") ? dltBulk.bulk.url : "";
+      const dltBulkUrl = has(dlt.bulk, "url") ? dlt.bulk.url : "";
 
       let isContinue = true; // flag for the continue this function or already taken by user
-      let { listChecked } = this.state;
+      let { listChecked, data } = this.state;
 
       /* before submit callback the data to user, if user want to modify */
-      if (has(dltBulk.bulk, "callbackBeforeBulkDelete")) {
-        const response = await dltBulk.bulk.callbackBeforeBulkDelete(
+      if (has(dlt.bulk, "callbackBeforeBulkDelete")) {
+        const response = await dlt.bulk.callbackBeforeBulkDelete(
           listChecked, // data checked
-          this.state.data // all data
+          data // all data
         );
         /* return from every callback, have to same format like { isContinue, error, data } */
         if (has(response, "isContinue") && !response.isContinue) {
-          if (has(response, "error") && response !== "") {
+          if (has(response, "error") && response.error !== "") {
             throw new Error(response.error);
           }
           isContinue = false;
@@ -399,10 +401,13 @@ class CRUDGenerate extends Component {
           listChecked,
           dltBulkConfig
         );
-
-        if (has(dltBulk.bulk, "callbackAfterDeleteBulk")) {
-          const response = await dltBulk.bulk.callbackAfterDeleteBulk(result);
+        if (!has(result, "data")) {
+          throw new Error("Failed to delete item");
         }
+      }
+
+      if (has(dlt.bulk, "callbackAfterDeleteBulk")) {
+        await dlt.bulk.callbackAfterDeleteBulk();
       }
 
       this.setState(
@@ -464,20 +469,48 @@ class CRUDGenerate extends Component {
     try {
       // set loading to true
       await this.setLoadingProms(true);
-      const { delete: dltRow } = this.props.options.server;
 
-      const configDltRow = has(dltRow, "config") ? dltRow.config : {};
-      const methodDltRow = has(dltRow, "method") ? dltRow.method : "delete";
+      let dlt = {};
+      const { server } = this.props;
+      if (has(server, "http") && has(server.http, "delete")) {
+        dlt = server.http.delete;
+      }
 
-      let urlDltRow = has(dltRow, "url") ? dltRow.url : "";
+      let urlDltRow = dlt.url;
+      const configDltRow = has(dlt, "config") ? dlt.config : {};
+      const methodDltRow = has(dlt, "method") ? dlt.method : "delete";
+
       if (has(urlDltRow, "replaceUrl")) {
         url = url.replace(dlt.replaceUrl, params.id);
       }
 
-      /* perform delete action to one data */
-      const resultDelete = await axios[methodDltRow](urlDltRow, configDltRow);
-      if (!resultDelete) {
-        throw new Error("Failed to delete the data");
+      let isContinue = true; // just flag
+      if (has(dlt, "callbackBeforeDelete")) {
+        response = await dlt.callbackBeforeDelete(urlDltRow, params.id);
+        if (has(response, "isContinue") && !response.isContinue) {
+          if (has(response.error) && response.error !== "") {
+            throw new Error(response.error);
+          }
+          isContinue = false;
+        } else if (has(response, "isContinue") && response.isContinue) {
+          if (has(response, data)) {
+            urlDltRow = response.data;
+          }
+          isContinue = true;
+        }
+      }
+
+      /* perform is callback before update is to continue to this function */
+      if (isContinue) {
+        const result = await axios[methodDltRow](urlDltRow, configDltRow);
+        /* perform delete action to one data */
+        if (!has(resultDelete, "data")) {
+          throw new Error("Failed to delete the data");
+        }
+      }
+
+      if (has(dlt, "callbackAfterDelete")) {
+        await dlt.callbackAfterDelete();
       }
 
       this.setState(
@@ -548,11 +581,8 @@ class CRUDGenerate extends Component {
     }
 
     if (dialogName === "alert" && action === "submit") {
-      if (has(params, "bulkDelete") && params.bulkDelete) {
-        this.deleteDataDependOnConfig(true, params);
-      } else {
-        this.deleteDataDependOnConfig(false, params);
-      }
+      let isBulk = has(params, "bulkDelete") && params.bulkDelete;
+      this.deleteDataDependOnConfig(isBulk, params);
     } else if (dialogName === "form" && action == "submit") {
       this.doSubmitForm(params);
     }
@@ -578,66 +608,177 @@ class CRUDGenerate extends Component {
   };
 
   render() {
+    const { aclId, aclRules, fields, server, table, loading } = this.props;
+    const {
+      data,
+      loading: isLoading,
+      table: { sort, page, limit, orderBy },
+      dialog: {
+        form: { title: formTitle, params: formParams, visible: formVisible },
+        alert: {
+          type: alertType,
+          title: alertTitle,
+          message: alertMessage,
+          visible: alertVisible
+        }
+      },
+      listChecked,
+      isCheckAllItem,
+      snackbarInfo: { visible, type, message }
+    } = this.state;
     return (
       <Fragment>
         {/* <FormDialog
           fields={fields}
-          title={this.state.dialog.form.title}
-          params={this.state.dialog.form.params}
-          visible={this.state.dialog.form.visible}
-          serverRequest={this.props.options.server}
+          server={server}
+          title={formTitle}
+          params={formParams}
+          visible={formVisible}
           onClose={this.onDialogClose("form", "cancel")}
           onClickButtonClose={this.onDialogClose("form", "cancel")}
           onClickButtonSubmit={this.onDialogClose("form", "submit")}
         /> */}
         <BaseTable
-          data={this.state.data}
+          data={data}
+          sort={sort}
+          page={page}
+          limit={limit}
+          table={table}
+          orderBy={orderBy}
+          loading={loading}
+          isLoading={isLoading}
+          listChecked={listChecked}
           columns={this.columnTable}
-          loading={this.state.loading}
-          sort={this.state.table.sort}
-          page={this.state.table.page}
-          limit={this.state.table.limit}
-          orderBy={this.state.table.orderBy}
-          listChecked={this.state.listChecked}
-          isCheckAllItem={this.state.isCheckAllItem}
-          tableOptions={this.props.options.table}
-          loadingOptions={this.props.options.loading}
+          aclSelected={aclRules[aclId]}
+          isCheckAllItem={isCheckAllItem}
+          onChangePage={this.onChangePage}
           onCheckAllItem={this.onCheckAllItem}
           onClickCheckbox={this.onClickCheckbox}
           onClickBulkDelete={this.onClickBulkDelete}
           onClickDeleteRowItem={this.onClickDeleteRowItem}
-          onChangePage={this.onChangePage}
           onChangeRowsPerPage={this.onChangeRowsPerPage}
           onToggleFormDialog={this.onToggleFormDialog}
           onOrderingColumnTable={this.onOrderingColumnTable}
+          checkboxAttributeName={this.checkboxAttributeName}
         />
-        {/* <CustomSnackbar
-          visible={this.state.snackbarInfo.visible}
-          type={this.state.snackbarInfo.type}
-          message={this.state.snackbarInfo.message}
+        <CustomSnackbar
+          type={type}
+          visible={visible}
+          message={message}
           onClickSnackbar={this.resetSnackbarInfo}
         />
         <AlertDialog
-          type={this.state.dialog.alert.type}
-          title={this.state.dialog.alert.title}
-          message={this.state.dialog.alert.message}
-          visible={this.state.dialog.alert.visible}
+          type={alertType}
+          title={alertTitle}
+          message={alertMessage}
+          visible={alertVisible}
           onClose={this.onDialogClose("alert", "cancel")}
           onAggree={this.onDialogClose("alert", "submit")}
           onDisaggree={this.onDialogClose("alert", "cancel")}
-        /> */}
+        />
       </Fragment>
     );
   }
 }
 
 CRUDGenerate.propTypes = {
+  /* non required */
   aclId: PropTypes.string,
-  aclRules: PropTypes.object,
   title: PropTypes.string,
+  aclRules: PropTypes.object,
+  table: PropTypes.shape({
+    row: PropTypes.shape({
+      replaceUrl: PropTypes.string,
+      attributeName: PropTypes.string,
+      additionalButtons: PropTypes.object.isRequired
+    }),
+    buttonTopTable: PropTypes.object
+  }),
+  loading: PropTypes.shape({
+    size: PropTypes.number.isRequired,
+    color: PropTypes.string.isRequired
+  }),
   /* required only */
-  options: PropTypes.object.isRequired,
-  initialLimit: PropTypes.oneOf(TableConf.limitValue).isRequired
+  server: PropTypes.shape({
+    http: PropTypes.shape({
+      create: PropTypes.shape({
+        url: PropTypes.string.isRequired,
+        method: PropTypes.oneOf(OptionsConf.methodValue).isRequired,
+        config: PropTypes.object,
+        callbackBeforeCreate: PropTypes.func,
+        callbackAfterCreate: PropTypes.func
+      }),
+      read: PropTypes.shape({
+        url: PropTypes.string.isRequired,
+        method: PropTypes.oneOf(OptionsConf.methodValue).isRequired,
+        query: PropTypes.object,
+        config: PropTypes.object,
+        callbackBeforeRead: PropTypes.func,
+        callbackAfterRead: PropTypes.func
+      }),
+      update: PropTypes.shape({
+        url: PropTypes.string.isRequired,
+        get: PropTypes.shape({
+          url: PropTypes.string.isRequired,
+          method: PropTypes.oneOf(OptionsConf.methodValue).isRequired
+        }),
+        dataFromProps: PropTypes.bool.isRequired,
+        config: PropTypes.object,
+        method: PropTypes.oneOf(OptionsConf.methodValue).isRequired,
+        replaceUrl: PropTypes.string,
+        attributeName: PropTypes.string,
+        callbackBeforeUpdate: PropTypes.func,
+        callbackAfterUpdate: PropTypes.func
+      }),
+      delete: PropTypes.shape({
+        url: PropTypes.string.isRequired,
+        bulk: PropTypes.shape({
+          url: PropTypes.string.isRequired,
+          method: PropTypes.oneOf(OptionsConf.methodValue).isRequired,
+          callbackBeforeBulkDelete: PropTypes.func,
+          callbackAfterBulkDelete: PropTypes.func
+        }),
+        config: PropTypes.object,
+        method: PropTypes.oneOf(OptionsConf.methodValue).isRequired,
+        replaceUrl: PropTypes.string,
+        attributeName: PropTypes.string,
+        callbackBeforeDelete: PropTypes.func,
+        callbackAfterDelete: PropTypes.func
+      })
+    })
+  }).isRequired,
+  fields: PropTypes.arrayOf(
+    PropTypes.shape({
+      component: PropTypes.oneOf(OptionsConf.componentValue).isRequired,
+      groupName: PropTypes.string.isRequired,
+      componentAttribute: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        label: PropTypes.string.isRequired,
+        type: PropTypes.string.isRequired,
+        style: PropTypes.object,
+        onAdd: PropTypes.shape({
+          disabled: PropTypes.bool.isRequired,
+          readonly: PropTypes.bool.isRequired
+        }),
+        onEdit: PropTypes.shape({
+          disabled: PropTypes.bool.isRequired,
+          readonly: PropTypes.bool.isRequired
+        })
+      }).isRequired,
+      validation: PropTypes.string,
+      callbackValidation: PropTypes.object,
+      showOnTable: PropTypes.bool,
+      mergingColumn: PropTypes.bool,
+      sortColumnTable: PropTypes.bool,
+      titleColumnTable: PropTypes.string.isRequired,
+      typeColumnTable: PropTypes.oneOf(OptionsConf.typeColumnValue).isRequired,
+      attributeColumnTable: PropTypes.string.isRequired,
+      allowSearch: PropTypes.bool,
+      prefixColumnTable: PropTypes.string
+    })
+  ).isRequired,
+  initialLimit: PropTypes.oneOf(OptionsConf.limitValue).isRequired
 };
 
 CRUDGenerate.defaultProps = {
@@ -653,7 +794,17 @@ CRUDGenerate.defaultProps = {
       import: true
     }
   },
-  initialLimit: 10
+  initialLimit: 10,
+  loading: {
+    size: 40,
+    color: Colors.blue
+  },
+  table: {
+    buttonTopTable: {},
+    row: {
+      additionalButtons: {}
+    }
+  }
 };
 
 export default CRUDGenerate;

@@ -28,7 +28,16 @@ class BaseTableHeader extends Component {
   };
 
   render() {
-    const { sort, orderBy, columns, checkbox, classes } = this.props;
+    const {
+      sort,
+      orderBy,
+      columns,
+      checkbox,
+      classes,
+      isCheckAllItem,
+      onCheckAllItem,
+      useAdditionalButtons
+    } = this.props;
     return (
       <Fragment>
         <TableHead component="thead">
@@ -36,34 +45,41 @@ class BaseTableHeader extends Component {
             {checkbox && (
               <TableCell padding={"checkbox"}>
                 <Checkbox
-                  checked={this.props.isCheckAllItem}
-                  onClick={this.props.onCheckAllItem}
+                  checked={isCheckAllItem}
+                  onClick={onCheckAllItem}
                   style={{ color: Colors.red }}
                 />
               </TableCell>
             )}
-            {columns.map(itemColumn => (
-              <TableCell key={itemColumn.title}>
-                {has(itemColumn, "canBeSort") &&
-                itemColumn.canBeSort === true &&
-                itemColumn.type !== "custom" ? (
-                  <TableSortLabel
-                    direction={sort}
-                    active={orderBy === itemColumn.objName}
-                    onClick={this.onClickSortLabel(itemColumn.objName)}
-                  >
+            {columns.map(
+              ({
+                attributeName,
+                typeColumnTable,
+                titleColumnTable,
+                ...others
+              }) => (
+                <TableCell key={titleColumnTable}>
+                  {has(others, "sortColumnTable") &&
+                  others.sortColumnTable &&
+                  others.typeColumnTable !== "custom" ? (
+                    <TableSortLabel
+                      direction={sort}
+                      active={orderBy === attributeName}
+                      onClick={this.onClickSortLabel(attributeName)}
+                    >
+                      <Typography variant={"subheading"}>
+                        <b>{titleColumnTable.toUpperCase()}</b>
+                      </Typography>
+                    </TableSortLabel>
+                  ) : (
                     <Typography variant={"subheading"}>
-                      <b>{itemColumn.title.toUpperCase()}</b>
+                      <b>{titleColumnTable.toUpperCase()}</b>
                     </Typography>
-                  </TableSortLabel>
-                ) : (
-                  <Typography variant={"subheading"}>
-                    <b>{itemColumn.title.toUpperCase()}</b>
-                  </Typography>
-                )}
-              </TableCell>
-            ))}
-            {this.props.useAdditionalButton && (
+                  )}
+                </TableCell>
+              )
+            )}
+            {useAdditionalButtons && (
               <TableCell>
                 <Typography>#</Typography>
               </TableCell>
@@ -80,10 +96,11 @@ BaseTableHeader.propTypes = {
   orderBy: PropTypes.string.isRequired,
   columns: PropTypes.array.isRequired,
   checkbox: PropTypes.bool.isRequired,
+  classes: PropTypes.object.isRequired,
   isCheckAllItem: PropTypes.bool.isRequired,
   onCheckAllItem: PropTypes.func.isRequired,
   onChangeOrderBy: PropTypes.func.isRequired,
-  useAdditionalButton: PropTypes.bool.isRequired
+  useAdditionalButtons: PropTypes.bool.isRequired
 };
 
 export default withStyles(styles)(BaseTableHeader);
