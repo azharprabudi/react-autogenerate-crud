@@ -5,9 +5,9 @@ import TextField from "@material-ui/core/TextField";
 
 /* etc modules */
 import PropTypes from "prop-types";
-import NumberFormat from "react-number-format";
 
-console.log(NumberFormat);
+/* my modules */
+import NumberFormatCustom from "../../etc/number-format-custom";
 
 class FormInputNominal extends PureComponent {
   onChange = ({ value }) => {
@@ -15,7 +15,7 @@ class FormInputNominal extends PureComponent {
   };
 
   render() {
-    const { label, id, name, style, prefix, value } = this.props;
+    const { label, id, name, style, value, extension } = this.props;
     return (
       <TextField
         id={id}
@@ -24,20 +24,13 @@ class FormInputNominal extends PureComponent {
         label={label}
         margin={"normal"}
         InputProps={{
-          inputComponent: ({ inputRef, onChange, ...parentProps }) => {
-            return (
-              <NumberFormat
-                {...parentProps}
-                ref={inputRef}
-                thousandSeparator={true}
-                onValueChange={onChange}
-              />
-            );
+          inputComponent: NumberFormatCustom,
+          inputProps: {
+            prefix: "Rp."
           }
         }}
         value={value}
         style={style}
-        prefix={prefix}
         onChange={this.onChange}
       />
     );
@@ -53,13 +46,11 @@ FormInputNominal.propTypes = {
   onChange: PropTypes.func.isRequired,
   /* not required */
   error: PropTypes.bool,
-  prefix: PropTypes.string,
   style: PropTypes.object,
   helperText: PropTypes.string
 };
 
 FormInputNominal.defaultProps = {
-  prefix: "",
   style: {},
   helperText: ""
 };

@@ -1,7 +1,6 @@
 import FormInput from "./form-input";
 import FormTextArea from "./form-text-area";
 import FormInputNominal from "./form-input-nominal";
-import FormInputSeparator from "./form-input-separator";
 import FormInputAutoComplete from "./form-input-auto-complete";
 import FormRadio from "./form-radio";
 import FormCheckbox from "./form-checkbox";
@@ -16,7 +15,6 @@ const lib = {
   Input: FormInput,
   TextArea: FormTextArea,
   InputNominal: FormInputNominal,
-  InputSeparator: FormInputSeparator,
   InputAutoComplete: FormInputAutoComplete,
   Radio: FormRadio,
   Checkbox: FormCheckbox,

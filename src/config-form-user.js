@@ -39,7 +39,10 @@ const config = {
         url: "https://jsonplaceholder.typicode.com/users/{id}",
         get: {
           url: "https://jsonplaceholder.typicode.com/users/{id}",
-          method: "get"
+          method: "get",
+          config: {},
+          replaceUrl: "{id}",
+          attributeName: "id"
         },
         config: {},
         method: "patch",
@@ -82,15 +85,15 @@ const config = {
   fields: [
     {
       title: "Utama",
-      type: "standar",
+      type: "standard",
       groupName: "Main",
       details: [
         {
           component: "Input",
           componentAttribute: {
-            id: "id",
-            name: "id",
-            label: "Id",
+            id: "name",
+            name: "name",
+            label: "Name",
             style: {},
             type: "text",
             onAdd: {
@@ -104,23 +107,25 @@ const config = {
           },
           validation: "required|minLength[5]|callback_checkName",
           callbackValidation: {
-            checkName: () => true
+            checkName: value => {
+              return /^[a-zA-Z]+$/.test(value);
+            }
           },
           showOnTable: true,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "AIDEH",
+          titleColumnTable: "Name",
           typeColumnTable: "text",
-          attributeColumnTable: "id",
+          attributeColumnTable: "name",
           prefixColumnTable: "",
           allowSearch: true
         },
         {
           component: "Input",
           componentAttribute: {
-            id: "name",
-            name: "name",
-            label: "name",
+            id: "username",
+            name: "username",
+            label: "Username",
             style: {},
             type: "text",
             onAdd: {
@@ -132,16 +137,124 @@ const config = {
               readonly: false
             }
           },
-          validation: "required|minLength[5]|callback_checkName",
-          callbackValidation: {
-            checkName: () => true
-          },
+          validation: "required",
           showOnTable: true,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "NAME",
+          titleColumnTable: "Username",
           typeColumnTable: "text",
-          attributeColumnTable: "name",
+          attributeColumnTable: "username",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "Input",
+          componentAttribute: {
+            id: "email",
+            name: "email",
+            label: "Email",
+            style: {},
+            type: "text",
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "required|email",
+          showOnTable: true,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "Email",
+          typeColumnTable: "text",
+          attributeColumnTable: "email",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "Input",
+          componentAttribute: {
+            id: "phone",
+            name: "phone",
+            label: "Phone",
+            style: {},
+            type: "text",
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "required",
+          showOnTable: true,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "Phone",
+          typeColumnTable: "text",
+          attributeColumnTable: "phone",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "Input",
+          componentAttribute: {
+            id: "website",
+            name: "website",
+            label: "Website",
+            style: {},
+            type: "text",
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "required",
+          showOnTable: true,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "Website",
+          typeColumnTable: "text",
+          attributeColumnTable: "website",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "InputNominal",
+          componentAttribute: {
+            id: "address",
+            name: "address",
+            label: "Address",
+            style: {},
+            type: "text",
+            extension: {
+              prefix: "rp"
+            },
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "required",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "Address",
+          typeColumnTable: "text",
+          attributeColumnTable: "address",
           prefixColumnTable: "",
           allowSearch: true
         }

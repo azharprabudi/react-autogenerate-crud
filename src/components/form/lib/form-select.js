@@ -1,4 +1,5 @@
 import React, { PureComponent } from "react";
+import Select from "react-select";
 
 class FormSelect extends PureComponent {
   render() {

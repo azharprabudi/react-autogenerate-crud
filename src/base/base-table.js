@@ -253,13 +253,15 @@ class BaseTable extends PureComponent {
       aclSelected,
       listChecked,
       onChangePage,
+      dataFromProps,
       isCheckAllItem,
       onCheckAllItem,
       onClickCheckbox,
       onToggleFormDialog,
       onChangeRowsPerPage,
       onClickDeleteRowItem,
-      checkboxAttributeName
+      deleteAttributeName,
+      editAttributeName
     } = this.props;
     return (
       <Fragment>
@@ -282,10 +284,12 @@ class BaseTable extends PureComponent {
                 columns={columns}
                 listChecked={listChecked}
                 aclSelected={aclSelected}
+                dataFromProps={dataFromProps}
                 onClickCheckbox={onClickCheckbox}
                 onToggleFormDialog={onToggleFormDialog}
                 onClickDeleteRowItem={onClickDeleteRowItem}
-                checkboxAttributeName={checkboxAttributeName}
+                editAttributeName={editAttributeName}
+                deleteAttributeName={deleteAttributeName}
                 additionalRowColumn={this.additionalRowColumn}
                 useAdditionalButtons={this.useAdditionalButtons}
                 checkbox={has(aclSelected, "delete") && aclSelected.delete}
@@ -355,7 +359,7 @@ BaseTable.propTypes = {
   }).isRequired,
   onChangePage: PropTypes.func.isRequired,
   isCheckAllItem: PropTypes.bool.isRequired,
-  checkboxAttributeName: PropTypes.string.isRequired,
+  deleteAttributeName: PropTypes.string.isRequired,
   onCheckAllItem: PropTypes.func.isRequired,
   onClickCheckbox: PropTypes.func.isRequired,
   onClickBulkDelete: PropTypes.func.isRequired,
@@ -367,7 +371,8 @@ BaseTable.propTypes = {
     url: PropTypes.string,
     config: PropTypes.object,
     type: PropTypes.oneOf(OptionsConf.typeExportValue).isRequired
-  }).isRequired
+  }).isRequired,
+  dataFromProps: PropTypes.bool.isRequired
 };
 
 export default withStyles(styles)(BaseTable);

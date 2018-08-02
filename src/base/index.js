@@ -59,11 +59,23 @@ class CRUDGenerate extends Component {
       isCheckAllItem: false
     };
 
+    // list column table
     this.columnTable = this.getListColumnTable();
 
-    this.checkboxAttributeName = "";
+    this.deleteAttributeName = ""; // for identifier name attr, from data server
     if (has(props.server, "http") && has(props.server.http, "delete")) {
-      this.checkboxAttributeName = props.server.http.delete.attributeName;
+      this.deleteAttributeName = props.server.http.delete.attributeName;
+    }
+
+    this.editAttributeName = ""; // for identifier name attr, from data server
+    if (has(props.server, "http") && has(props.server.http, "update")) {
+      this.editAttributeName = props.server.http.update.attributeName;
+      if (
+        has(props.server.update, "get") &&
+        has(props.server.update, "attributeName")
+      ) {
+        this.editAttributeName = props.server.update.attributeName;
+      }
     }
 
     /* initial first so can using at other method */
@@ -101,10 +113,10 @@ class CRUDGenerate extends Component {
 
     if (has(server, "http") && Object.keys(server.http).length > 0) {
       if (has(server.http, "create")) {
-        this.addConfigurationServer = server.http.create;
+        this.addConfigurationServer = { ...server.http.create };
       }
       if (has(server.http, "update")) {
-        this.editConfigurationServer = server.http.update;
+        this.editConfigurationServer = { ...server.http.update };
       }
     }
 
@@ -726,8 +738,8 @@ class CRUDGenerate extends Component {
           title={formTitle}
           params={formParams}
           visible={formVisible}
-          addConfigurationServer={this.addConfigurationServer}
-          editConfigurationServer={this.editConfigurationServer}
+          createConfigurationServer={this.addConfigurationServer}
+          updateConfigurationServer={this.editConfigurationServer}
           onClose={this.onDialogClose("form", "cancel")}
           onClickButtonClose={this.onDialogClose("form", "cancel")}
           onClickButtonSubmit={this.onDialogClose("form", "submit")}
@@ -745,6 +757,11 @@ class CRUDGenerate extends Component {
           columns={this.columnTable}
           aclSelected={aclRules[aclId]}
           isCheckAllItem={isCheckAllItem}
+          dataFromProps={
+            has(this.editConfigurationServer, "dataFromProps")
+              ? this.editConfigurationServer.dataFromProps
+              : false
+          }
           onChangePage={this.onChangePage}
           onCheckAllItem={this.onCheckAllItem}
           onClickCheckbox={this.onClickCheckbox}
@@ -753,7 +770,8 @@ class CRUDGenerate extends Component {
           onChangeRowsPerPage={this.onChangeRowsPerPage}
           onToggleFormDialog={this.onToggleFormDialog}
           onOrderingColumnTable={this.onOrderingColumnTable}
-          checkboxAttributeName={this.checkboxAttributeName}
+          editAttributeName={this.editAttributeName}
+          deleteAttributeName={this.deleteAttributeName}
           export={exportConf}
           onClickExportCsv={this.onClickExport("csv")}
           onClickExportExcel={this.onClickExport("excel")}
@@ -815,7 +833,10 @@ CRUDGenerate.propTypes = {
         url: PropTypes.string.isRequired,
         get: PropTypes.shape({
           url: PropTypes.string.isRequired,
-          method: PropTypes.oneOf(OptionsConf.methodValue).isRequired
+          method: PropTypes.oneOf(OptionsConf.methodValue).isRequired,
+          config: PropTypes.object,
+          replaceUrl: PropTypes.string,
+          attributeName: PropTypes.string
         }),
         dataFromProps: PropTypes.bool.isRequired,
         config: PropTypes.object,

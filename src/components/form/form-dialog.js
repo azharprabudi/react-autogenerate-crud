@@ -21,7 +21,7 @@ import OptionsConf from "../../constants/options-conf";
 
 const styles = theme => ({
   appBar: {
-    position: "relative",
+    position: "fixed",
     backgroundColor: Colors.blue
   },
   flex: {
@@ -29,7 +29,7 @@ const styles = theme => ({
   },
   toolbar: {
     paddingLeft: 0,
-    paddingRight: 0
+    paddingRight: 15
   }
 });
 
@@ -43,7 +43,7 @@ class FormDialog extends Component {
       title,
       params,
       onClickButtonClose,
-      addConfigurationServer,
+      createConfigurationServer,
       updateConfigurationServer
     } = this.props;
     return (
@@ -68,7 +68,7 @@ class FormDialog extends Component {
         <BaseForm
           params={params}
           fields={fields}
-          addConfigurationServer={addConfigurationServer}
+          createConfigurationServer={createConfigurationServer}
           updateConfigurationServer={updateConfigurationServer}
         />
       </Dialog>
@@ -81,7 +81,7 @@ FormDialog.propTypes = {
   params: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  addConfigurationServer: PropTypes.shape({
+  createConfigurationServer: PropTypes.shape({
     url: PropTypes.string.isRequired,
     method: PropTypes.oneOf(OptionsConf.methodValue),
     config: PropTypes.object,

@@ -17,7 +17,8 @@ import BaseFormDetails from "../components/form/base-form-details";
 const styles = theme => ({
   container: {
     flex: 1,
-    backgroundColor: "#f3f3f3"
+    backgroundColor: "#f3f3f3",
+    paddingTop: 65
   }
 });
 
@@ -27,79 +28,156 @@ class BaseForm extends Component {
 
   constructor(props) {
     super(props);
-    this.state = this.initialState(props.formOptions);
-  }
-
-  componentDidMount() {
-    // if (this.props.options[BaseForm.IS_EDIT_FORM]) {
-    //   if (
-    //     has(this.props.editConfiguration, "useExistingDataFromProps") &&
-    //     this.props.editConfiguration.useExistingDataFromProps
-    //   ) {
-    //   } else {
-    //     this.getDataFromServerAndSetToState();
-    //   }
-    // }
-  }
-
-  // getDataFromServerAndSetToState() {
-  //   const id = this.props.options[ID_FORM];
-  //   if (has(this.props.editConfiguration, "get")) {
-  //   } else {
-  //     alert("");
-  //   }
-  // }
-
-  initialState = formOptions => {
-    let form = {};
-    for (let i = 0; i < formOptions.length; i++) {
-      let { groupName, details, type } = formOptions[i];
-      if (type === "standard") {
-        form[groupName] = {};
-        for (let j = 0; j < details.length; j++) {
-          let { name } = details[j].attribute;
-          form[groupName][name] = {
-            value: "",
-            validationStatus: true,
-            validationText: ""
-          };
-        }
-      } else if (type === "details") {
-        form[groupName] = [{}];
-        for (let j = 0; j < details.length; j++) {
-          let { name } = details[j].attribute;
-          form[groupName][0][name] = {
-            value: "",
-            validationStatus: true,
-            validationText: ""
-          };
-        }
-      }
-    }
-    let initialState = {
+    this.state = {
       loading: false,
       snackbarInfo: {
         type: "error",
         message: "",
         visible: false
       },
-      form
+      form: this.initialStateForm(props.fields)
     };
 
-    return initialState;
+    /* flag to show this is on edit mode or not */
+    this.isEdit =
+      has(params, BaseForm.ID_FORM) && params[BaseForm.ID_FORM] !== "";
+  }
+
+  componentDidMount() {
+    const { fields, params } = this.props;
+    if (
+      has(params, BaseForm.ID_FORM) &&
+      has(params, BaseForm.EXISTING_DATA_FROM_PROPS)
+    ) {
+      if (Object.keys(params[BaseForm.EXISTING_DATA_FROM_PROPS]).length > 0) {
+        this.setState({
+          ...this.state,
+          form: this.initialStateForm(
+            fields,
+            params[BaseForm.EXISTING_DATA_FROM_PROPS]
+          )
+        });
+      } else {
+        this.getInitialDataFromServer(params[BaseForm.ID_FORM]);
+      }
+    }
+  }
+
+  getInitialDataFromServer = async id => {
+    let { updateConfigurationServer, fields } = this.props;
+    if (has(updateConfigurationServer, "get")) {
+      updateConfigurationServer = { ...updateConfigurationServer.get };
+    }
+    const config = has(updateConfigurationServer, "config")
+      ? updateConfigurationServer.config
+      : {};
+    const method = has(updateConfigurationServer, "method")
+      ? updateConfigurationServer.method
+      : "get";
+    let url = has(updateConfigurationServer, "url")
+      ? updateConfigurationServer.url
+      : "";
+
+    /* if there a replace url exist, just replace it */
+    if (has(updateConfigurationServer, "replaceUrl")) {
+      url = url.replace(updateConfigurationServer.replaceUrl, id);
+    }
+
+    const data = await axios[method](url, config);
+    if (has(data, "data")) {
+      this.setState({
+        ...this.state,
+        form: this.initialStateForm(fields, data.data)
+      });
+    }
   };
 
+  initialStateForm = (fields, data = {}) => {
+    let form = {};
+
+    /* loop all the fields available */
+    for (let i = 0; i < fields.length; i++) {
+      const { groupName, details, type, ...groupField } = fields[i];
+
+      /*
+      currently there are two type of form,
+      there are standard and details
+      */
+
+      /* standar */
+      if (type === "standard") {
+        form[groupName] = {};
+        for (let j = 0; j < details.length; j++) {
+          const field = details[j];
+          if (!has(field, "mergingColumn") || field.mergingColumn === false) {
+            /* get value from data */
+            form[groupName][field.componentAttribute.name] = {
+              value: has(data, field.attributeColumnTable)
+                ? data[field.attributeColumnTable]
+                : "",
+              validationStatus: true,
+              validationText: ""
+            };
+          }
+        }
+      }
+
+      /* details */
+      if (type === "details") {
+        /* the attribute details can be specify just give the information about in configuration, in attribute attributeNameDetails   */
+        if (has(groupField, "attributeNameDetails")) {
+          const indexDetails = groupField["attributeNameDetails"];
+          const formDetails = data[indexDetails];
+          /* looping the data details */
+          for (let j = 0; j < formDetails.length; j++) {
+            form[groupName][j] = {};
+            for (let k = 0; k < details.length; k++) {
+              const field = details[k];
+              if (
+                !has(field, "mergingColumn") ||
+                field.mergingColumn === false
+              ) {
+                form[groupName][j][field.componentAttribute.name] = {
+                  value: has(formDetails[j], field.attributeColumnTable)
+                    ? formDetails[j][field.attributeColumnTable]
+                    : "",
+                  validationStatus: true,
+                  validationText: ""
+                };
+              }
+            }
+          }
+        } else {
+          form[groupName] = [{}];
+          for (let j = 0; j < details.length; j++) {
+            const field = details[j];
+            if (!has(field, "marginColumn") || field.mergingColumn === false) {
+              form[groupName][0][field.componentAttribute.name] = {
+                value: "",
+                validationStatus: true,
+                validationText: ""
+              };
+            }
+          }
+        }
+      }
+    }
+    return form;
+  };
+
+  /* handling do validation whenever user change the value on form */
   doValidatingInput = async (groupName, stateName, value) => {
     /* this function find the selected input from data array */
     let i = 0;
     let selectedInput = {};
-    while (i < this.props.formOptions.length) {
-      let itemInput = this.props.formOptions[i];
-      if (itemInput.groupName === groupName) {
+    const { fields } = this.props;
+
+    while (i < fields.length) {
+      if (fields[i].groupName === groupName) {
         let j = 0;
-        while (j < itemInput.details.length) {
-          if (itemInput.details[j].attribute.name === stateName) {
-            selectedInput = itemInput.details[j];
+        while (j < fields[i].details.length) {
+          if (fields[i].details[j].componentAttribute.name === stateName) {
+            selectedInput = fields[i].details[j];
             break;
           }
           j++;
@@ -183,7 +261,8 @@ class BaseForm extends Component {
     return { validationStatus, validationText };
   };
 
-  onChangeBaseFormStandar = async (groupName, stateName, value) => {
+  /* handling on change value in form */
+  onChangeBaseFormStandar = groupName => async (stateName, value) => {
     const { validationText, validationStatus } = await this.doValidatingInput(
       groupName,
       stateName,
@@ -207,7 +286,7 @@ class BaseForm extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, fields } = this.props;
     return (
       <form
         method="post"
@@ -215,21 +294,26 @@ class BaseForm extends Component {
         className={classes.container}
         onSubmit={() => alert(1)}
       >
-        {this.props.formOptions.map(({ type, title, groupName, details }) => {
+        {fields.map(({ type, title, groupName, details }) => {
           if (type === "standard") {
             return (
               <BaseFormStandar
                 key={title}
-                details={details}
-                state={this.state.form[groupName]}
-                onChange={(stateName, value) =>
-                  this.onChangeBaseFormStandar(groupName, stateName, value)
-                }
                 title={title}
+                details={details}
+                isEdit={this.isEdit}
+                state={this.state.form[groupName]}
+                onChange={this.onChangeBaseFormStandar(groupName)}
               />
             );
           } else {
-            return <BaseFormDetails key={groupForm.title} {...groupForm} />;
+            return (
+              <BaseFormDetails
+                isEdit={this.isEdit}
+                key={groupForm.title}
+                {...groupForm}
+              />
+            );
           }
         })}
       </form>
@@ -238,9 +322,12 @@ class BaseForm extends Component {
 }
 
 BaseForm.propTypes = {
-  params: PropTypes.object.isRequired,
+  params: PropTypes.shape({
+    [BaseForm.ID_FORM]: PropTypes.string,
+    [BaseForm.EXISTING_DATA_FROM_PROPS]: PropTypes.object
+  }).isRequired,
   fields: PropTypes.array.isRequired,
-  addConfigurationServer: PropTypes.shape({
+  createConfigurationServer: PropTypes.shape({
     url: PropTypes.string.isRequired,
     method: PropTypes.oneOf(OptionsConf.methodValue),
     config: PropTypes.object,

@@ -64,7 +64,7 @@ class BaseTableBody extends Component {
       buttonEdit = {
         label: "Edit",
         class: props.classes.buttonEdit,
-        onClick: (title, params) => props.onToggleFormDialog(title, params),
+        onClick: null,
         size: "small",
         variant: "contained",
         style: {},
@@ -80,7 +80,7 @@ class BaseTableBody extends Component {
       buttonDelete = {
         label: "Delete",
         class: props.classes.buttonDelete,
-        onClick: id => props.onClickDeleteRowItem(id),
+        onClick: null,
         size: "small",
         variant: "contained",
         style: {},
@@ -181,7 +181,6 @@ class BaseTableBody extends Component {
           href = href.replace(indexReplaceUrl, rowData[itemReplaceUrl]);
         }
       }
-      /* end change url */
 
       /* if the item has the icon name give the icon */
       let IconSelected = "";
@@ -193,16 +192,26 @@ class BaseTableBody extends Component {
       }
 
       /* replace the function */
-      let funcOnClick = item.onClick;
-      if (item.label === "Edit") {
-        funcOnClick = () =>
-          item.onClick("Edit", {
-            [BaseForm.ID_FORM]: rowData[this.props.checkboxAttributeName],
-            [BaseForm.EXISTING_DATA_FROM_PROPS]: {}
+      let funcOnClick = null;
+      if (index === "update" && item.onClick === null) {
+        funcOnClick = () => {
+          this.props.onToggleFormDialog("Edit", {
+            [BaseForm.ID_FORM]: rowData[
+              this.props.editAttributeName
+            ].toString(),
+            [BaseForm.EXISTING_DATA_FROM_PROPS]: this.props.dataFromProps
+              ? rowData
+              : {}
           });
-      } else if (item.label == "Delete") {
-        funcOnClick = () =>
-          item.onClick(rowData[this.props.checkboxAttributeName]);
+        };
+      } else if (index == "delete" && item.onClick === null) {
+        funcOnClick = () => {
+          this.props.onClickDeleteRowItem(
+            rowData[this.props.deleteAttributeName]
+          );
+        };
+      } else {
+        funcOnClick = item.onClick;
       }
 
       buttons = [
@@ -211,8 +220,8 @@ class BaseTableBody extends Component {
           size={item.size}
           key={item.label}
           style={item.style}
+          onClick={funcOnClick}
           variant={item.variant}
-          onClick={item.type === "button" ? funcOnClick : () => {}}
           href={item.type === "link" ? href : ""}
           className={classNames(this.props.classes.button, item.class)}
         >
@@ -233,21 +242,21 @@ class BaseTableBody extends Component {
       checkbox,
       listChecked,
       useAdditionalButtons,
-      checkboxAttributeName
+      deleteAttributeName
     } = this.props;
     return (
       <TableBody component="tbody">
         {data.map(item => {
           return (
-            <TableRow key={uniqueId(item[checkboxAttributeName])} hover>
+            <TableRow key={uniqueId(item[deleteAttributeName])} hover>
               {checkbox && (
                 <TableCell padding={"checkbox"}>
                   <Checkbox
                     checked={
-                      listChecked.indexOf(item[checkboxAttributeName]) > -1
+                      listChecked.indexOf(item[deleteAttributeName]) > -1
                     }
                     style={{ color: Colors.red }}
-                    onClick={this.onClickCheckbox(item[checkboxAttributeName])}
+                    onClick={this.onClickCheckbox(item[deleteAttributeName])}
                   />
                 </TableCell>
               )}
@@ -276,7 +285,7 @@ BaseTableBody.propTypes = {
   onClickCheckbox: PropTypes.func.isRequired,
   onToggleFormDialog: PropTypes.func.isRequired,
   onClickDeleteRowItem: PropTypes.func.isRequired,
-  checkboxAttributeName: PropTypes.string.isRequired,
+  deleteAttributeName: PropTypes.string.isRequired,
   additionalRowColumn: PropTypes.shape({
     replaceUrl: PropTypes.string,
     attributeName: PropTypes.string,
@@ -288,6 +297,7 @@ BaseTableBody.propTypes = {
     update: PropTypes.bool,
     delete: PropTypes.bool
   }),
+  dataFromProps: PropTypes.bool.isRequired,
   useAdditionalButtons: PropTypes.bool.isRequired
 };
 

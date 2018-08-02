@@ -24,20 +24,64 @@ const styles = theme => ({
 });
 
 class BaseFormStandar extends Component {
-  renderItemInput = ({ component, attribute }) => {
+  onChange = stateName => value => {
+    this.props.onChange(stateName, value);
+  };
+
+  renderItemInput = ({
+    component,
+    componentAttribute: { name, id, label, type, ...others }
+  }) => {
     if (typeof lib[component] !== "undefined") {
       const SelectedComponent = lib[component];
       const { value, validationStatus, validationText } = this.props.state[
-        attribute.name
+        componentAttribute.name
       ];
+
+      let readonly = false;
+      let disabled = false;
+      let extension = {};
+
+      /* condition readonly and disabled form */
+      if (this.props.isEdit && has(others, "onEdit")) {
+        if (has(others.onEdit, "readonly")) {
+          readonly = others.onEdit.readonly;
+        }
+
+        if (has(others.onEdit, "disabled")) {
+          disabled = others.onEdit.disabled;
+        }
+      } else if (!this.props.isEdit && has(others, "onAdd")) {
+        if (has(others.onAdd, "readonly")) {
+          readonly = others.onAdd.readonly;
+        }
+
+        if (has(others.onAdd, "disabled")) {
+          disabled = others.onAdd.disabled;
+        }
+      }
+
+      /* condition extension */
+      if (has(others, "extension")) {
+        extension = others.extension;
+      }
+
+      const style = has(others, "style") ? others.style : {};
       return (
         <SelectedComponent
-          {...attribute}
+          id={id}
+          key={id}
+          type={type}
+          name={name}
+          label={label}
           value={value}
-          key={attribute.id}
+          extension={others}
+          readonly={readonly}
+          disabled={disabled}
+          extension={extension}
           error={!validationStatus}
           helperText={validationText}
-          onChange={value => this.props.onChange(attribute.name, value)}
+          onChange={this.onChange(componentAttribute.name)}
         />
       );
     }
@@ -61,7 +105,8 @@ BaseFormStandar.propTypes = {
   title: PropTypes.string.isRequired,
   details: PropTypes.array.isRequired,
   state: PropTypes.object.isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  isEdit: PropTypes.bool.isRequired
 };
 
 export default withStyles(styles)(BaseFormStandar);
