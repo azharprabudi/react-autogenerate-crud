@@ -4,7 +4,7 @@ This very usefully for the component know, how to fetch the data from. The examp
             <pre>
             <code>
 {
-    get: { url: "", config: {}, method: 'get' },
+    get: { url: "", config: {}, meth od: 'get' },
     add: { url: "", config: {}, method: 'post' },
     edit: { url: "", config: {}, replaceUrlParameter: { "{id}": "id" } },
     delete: { url: "", config: {}, replaceUrlParameter: { "{id}": "id" } }
