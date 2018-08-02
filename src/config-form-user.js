@@ -1,3 +1,5 @@
+import React from "react";
+
 const config = {
   aclId: "*",
   aclRules: {
@@ -106,7 +108,7 @@ const config = {
       titleColumnTable: "AIDEH",
       typeColumnTable: "text",
       attributeColumnTable: "id",
-      prefixColumnTable: "Rp.",
+      prefixColumnTable: "",
       allowSearch: true
     },
     {
@@ -140,7 +142,11 @@ const config = {
       prefixColumnTable: "",
       allowSearch: true
     }
-  ]
+  ],
+  export: {
+    url: "",
+    type: "csv"
+  }
 };
 
 export default config;

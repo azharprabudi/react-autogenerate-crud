@@ -10,6 +10,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 
 /* etc modules */
 import PropTypes from "prop-types";
+import OptionsConf from "../../constants/options-conf";
 
 class AlertDialog extends PureComponent {
   render() {
@@ -57,7 +58,7 @@ AlertDialog.propTypes = {
   visible: PropTypes.bool.isRequired,
   onAggree: PropTypes.func.isRequired,
   onDisaggree: PropTypes.func.isRequired,
-  type: PropTypes.oneOf(["", "alert", "confirmation"]).isRequired
+  type: PropTypes.oneOf(OptionsConf.alertValue).isRequired
 };
 
 AlertDialog.defaultProps = {

@@ -5,6 +5,7 @@ import axios from "axios";
 import has from "lodash/has";
 import PropTypes from "prop-types";
 import isArray from "lodash/isArray";
+import moment from "moment";
 
 /* custom components */
 import BaseTable from "./base-table";
@@ -13,8 +14,9 @@ import AlertDialog from "../components/etc/alert-dialog";
 import CustomSnackbar from "../components/etc/custom-snackbar";
 
 /* custom configuration */
-import OptionsConf from "../constants/options-conf";
 import Colors from "../constants/colors";
+import OptionsConf from "../constants/options-conf";
+import GenerateExportFile from "../helpers/generate-export-file";
 
 class CRUDGenerate extends Component {
   constructor(props) {
@@ -63,6 +65,35 @@ class CRUDGenerate extends Component {
     if (has(props.server, "http") && has(props.server.http, "delete")) {
       this.checkboxAttributeName = props.server.http.delete.attributeName;
     }
+
+    /* initial first so can using at other method */
+    let config = {};
+    let urlExport = "";
+    const { aclRules, aclId, server, export: exportConf } = props;
+    if (has(aclRules[aclId], "export") && aclRules[aclId].export) {
+      /* get url from export config, but if not exist take it from http request read */
+      if (has(exportConf, "url") && exportConf.url !== "") {
+        urlExport = exportConf.url;
+        config =
+          has(exportConf, "config") && Object.keys(exportConf.config).length > 0
+            ? exportConf.config
+            : {};
+      } else {
+        if (has(server, "http") && has(server.http, "read")) {
+          urlExport = server.http.read.url;
+          config =
+            has(server.http, "config") &&
+            Object.keys(server.http.config).length > 0
+              ? server.http.config
+              : {};
+        }
+      }
+    }
+    this.mGenerateExportFile = new GenerateExportFile(
+      urlExport,
+      config,
+      this.columnTable
+    );
   }
 
   componentDidMount() {
@@ -83,7 +114,7 @@ class CRUDGenerate extends Component {
   };
 
   /* fetching data depend on configuration using http / firebase / graphql */
-  getDataDependOnConfig = () => {
+  getDataDependOnConfig = (limit = null, offset = null, page = null) => {
     /* check acl first */
     const { aclRules, aclId, server } = this.props;
     if (
@@ -93,12 +124,12 @@ class CRUDGenerate extends Component {
     ) {
       /* check user already using http to get data or not */
       if (has(server, "http") && has(server.http, "read")) {
-        this.getDataFromHTTPServer();
+        this.getDataFromHTTPServer(limit, offset, page);
       }
     }
   };
 
-  deleteDataDependOnConfig = (isBulk = false, params = {}) => () => {
+  deleteDataDependOnConfig = (isBulk = false, params = {}) => {
     /* check acl first */
     const { aclRules, aclId, server } = this.props;
     if (
@@ -144,7 +175,7 @@ class CRUDGenerate extends Component {
     return url;
   };
 
-  getDataFromHTTPServer = async (limit = null, offset = null, page = null) => {
+  getDataFromHTTPServer = async (limit, offset, page) => {
     try {
       /*
       get data from url has been specify in the configuration of crud generation
@@ -486,7 +517,7 @@ class CRUDGenerate extends Component {
 
       let isContinue = true; // just flag
       if (has(dlt, "callbackBeforeDelete")) {
-        response = await dlt.callbackBeforeDelete(urlDltRow, params.id);
+        const response = await dlt.callbackBeforeDelete(urlDltRow, params.id);
         if (has(response, "isContinue") && !response.isContinue) {
           if (has(response.error) && response.error !== "") {
             throw new Error(response.error);
@@ -599,16 +630,56 @@ class CRUDGenerate extends Component {
       offset -= limit;
     }
 
-    this.configGetDataFromServer(null, offset, page);
+    this.getDataDependOnConfig(null, offset, page);
   };
 
   /* doing limitation of how much row will be render */
   onChangeRowsPerPage = event => {
-    this.configGetDataFromServer(event.target.value);
+    this.getDataDependOnConfig(event.target.value);
+  };
+
+  /* listener for export whenever the button is clicked */
+  onClickExport = type => async () => {
+    try {
+      const data = await this.mGenerateExportFile.getFile(type);
+      if (has(data, "error")) {
+        throw new Error(data.error);
+      }
+      if (type === "csv") {
+        const encodeData = encodeURI(data);
+        this.linkExport.setAttribute("href", encodeData);
+        this.linkExport.setAttribute(
+          "download",
+          `${this.props.title}-${moment().format("DDMMYYYY")}.csv`
+        );
+        this.linkExport.click();
+      } else {
+        alert("still on going");
+      }
+    } catch (e) {
+      this.setState({
+        ...this.state,
+        snackbarInfo: {
+          visible: true,
+          type: "error",
+          message: isArray(data.error)
+            ? JSON.stringify(data.error)
+            : data.error.toString()
+        }
+      });
+    }
   };
 
   render() {
-    const { aclId, aclRules, fields, server, table, loading } = this.props;
+    const {
+      aclId,
+      aclRules,
+      fields,
+      server,
+      table,
+      loading,
+      export: exportConf
+    } = this.props;
     const {
       data,
       loading: isLoading,
@@ -628,7 +699,14 @@ class CRUDGenerate extends Component {
     } = this.state;
     return (
       <Fragment>
-        {/* <FormDialog
+        <a
+          href=""
+          ref={ref => {
+            this.linkExport = ref;
+          }}
+          style={{ display: "none" }}
+        />
+        <FormDialog
           fields={fields}
           server={server}
           title={formTitle}
@@ -637,7 +715,7 @@ class CRUDGenerate extends Component {
           onClose={this.onDialogClose("form", "cancel")}
           onClickButtonClose={this.onDialogClose("form", "cancel")}
           onClickButtonSubmit={this.onDialogClose("form", "submit")}
-        /> */}
+        />
         <BaseTable
           data={data}
           sort={sort}
@@ -660,6 +738,9 @@ class CRUDGenerate extends Component {
           onToggleFormDialog={this.onToggleFormDialog}
           onOrderingColumnTable={this.onOrderingColumnTable}
           checkboxAttributeName={this.checkboxAttributeName}
+          export={exportConf}
+          onClickExportCsv={this.onClickExport("csv")}
+          onClickExportExcel={this.onClickExport("excel")}
         />
         <CustomSnackbar
           type={type}
@@ -712,9 +793,7 @@ CRUDGenerate.propTypes = {
         url: PropTypes.string.isRequired,
         method: PropTypes.oneOf(OptionsConf.methodValue).isRequired,
         query: PropTypes.object,
-        config: PropTypes.object,
-        callbackBeforeRead: PropTypes.func,
-        callbackAfterRead: PropTypes.func
+        config: PropTypes.object
       }),
       update: PropTypes.shape({
         url: PropTypes.string.isRequired,
@@ -778,7 +857,12 @@ CRUDGenerate.propTypes = {
       prefixColumnTable: PropTypes.string
     })
   ).isRequired,
-  initialLimit: PropTypes.oneOf(OptionsConf.limitValue).isRequired
+  initialLimit: PropTypes.oneOf(OptionsConf.limitValue).isRequired,
+  export: PropTypes.shape({
+    url: PropTypes.string,
+    config: PropTypes.object,
+    type: PropTypes.oneOf(OptionsConf.typeExportValue).isRequired
+  })
 };
 
 CRUDGenerate.defaultProps = {
@@ -804,6 +888,10 @@ CRUDGenerate.defaultProps = {
     row: {
       additionalButtons: {}
     }
+  },
+  export: {
+    url: "",
+    type: "both"
   }
 };
 

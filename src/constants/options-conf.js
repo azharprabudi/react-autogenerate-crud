@@ -25,5 +25,8 @@ export default {
     "time",
     "datetime",
     "longtext"
-  ]
+  ],
+  typeExportValue: ["csv", "excel"],
+  snackbarValue: ["error", "success", "warning", "info"],
+  alertValue: ["", "alert", "confirmation"]
 };

@@ -7,6 +7,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Paper from "@material-ui/core/Paper";
 import TablePagination from "@material-ui/core/TablePagination";
 import Button from "@material-ui/core/Button";
+import green from "@material-ui/core/colors/green";
 
 /* etc modules */
 import has from "lodash/has";
@@ -50,6 +51,10 @@ const styles = theme => ({
     backgroundColor: Colors.red,
     color: "white"
   },
+  buttonExport: {
+    backgroundColor: green[500],
+    color: "white"
+  },
   wrapper: {
     borderRadius: 5,
     borderWidth: 1,
@@ -65,7 +70,7 @@ class BaseTable extends PureComponent {
   constructor(props) {
     super(props);
 
-    const { table, aclSelected } = props;
+    const { table, aclSelected, export: exportConf } = props;
 
     /* this additional button added from user configuration at parent component */
     let buttonTopTable = has(table, "buttonTopTable")
@@ -75,9 +80,10 @@ class BaseTable extends PureComponent {
     /* if there any configuration for button add new like change color, size and etc just replace it in configuration, this just working on delete and add button */
     let buttonCreate = {};
     let buttonDelete = {};
-    let buttonExport = {};
+    let buttonExport = { csv: {}, excel: {} };
     let buttonImport = {};
 
+    /* check acl for button add */
     if (has(aclSelected, "create") && aclSelected.create) {
       buttonCreate = {
         label: "Add New",
@@ -94,6 +100,41 @@ class BaseTable extends PureComponent {
       buttonTopTable = omit(buttonTopTable, "create");
     }
 
+    if (has(aclSelected, "export") && aclSelected.export) {
+      let baseExportButton = {
+        label: "",
+        class: props.classes.buttonExport,
+        onClick: () => {},
+        size: "medium",
+        variant: "contained",
+        style: {},
+        href: "",
+        type: "button",
+        iconName: "CloudDownload"
+      };
+
+      if (exportConf.type === "csv") {
+        buttonExport.csv = {
+          ...baseExportButton,
+          label: "CSV",
+          onClick: props.onClickExportCsv,
+          ...buttonTopTable.exportCsv
+        };
+        buttonTopTable = omit(buttonTopTable, "exportCsv");
+      }
+
+      if (exportConf.type === "excel") {
+        buttonExport.excel = {
+          ...baseExportButton,
+          label: "Excel",
+          onClick: props.onClickExportExcel,
+          ...buttonTopTable.exportExcel
+        };
+        buttonTopTable = omit(buttonTopTable, "exportExcel");
+      }
+    }
+
+    /* check acl for button delete */
     if (has(aclSelected, "delete") && aclSelected.delete) {
       buttonDelete = {
         label: "Delete",
@@ -112,6 +153,8 @@ class BaseTable extends PureComponent {
 
     this.button = {
       create: buttonCreate,
+      exportCsv: buttonExport.csv,
+      exportExcel: buttonExport.excel,
       delete: buttonDelete,
       ...buttonTopTable
     };
@@ -162,7 +205,7 @@ class BaseTable extends PureComponent {
         buttons = [
           ...buttons,
           <Button
-            key={item.label}
+            key={index}
             size={item.size}
             style={item.style}
             variant={item.variant}
@@ -319,7 +362,12 @@ BaseTable.propTypes = {
   onClickDeleteRowItem: PropTypes.func.isRequired,
   onChangeRowsPerPage: PropTypes.func.isRequired,
   onToggleFormDialog: PropTypes.func.isRequired,
-  onOrderingColumnTable: PropTypes.func.isRequired
+  onOrderingColumnTable: PropTypes.func.isRequired,
+  export: PropTypes.shape({
+    url: PropTypes.string,
+    config: PropTypes.object,
+    type: PropTypes.oneOf(OptionsConf.typeExportValue).isRequired
+  }).isRequired
 };
 
 export default withStyles(styles)(BaseTable);

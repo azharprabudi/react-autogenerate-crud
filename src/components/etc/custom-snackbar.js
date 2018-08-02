@@ -17,6 +17,9 @@ import amber from "@material-ui/core/colors/amber";
 import classNames from "classnames";
 import PropTypes from "prop-types";
 
+/* my modules */
+import OptionsConf from "../../constants/options-conf";
+
 const iconDependOnType = {
   error: ErrorIcon,
   success: CheckCircleIcon,
@@ -94,7 +97,7 @@ class CustomSnackbar extends PureComponent {
 }
 
 CustomSnackbar.propTypes = {
-  type: PropTypes.oneOf(["error", "success", "warning", "info"]).isRequired,
+  type: PropTypes.oneOf(OptionsConf.snackbarValue).isRequired,
   message: PropTypes.string.isRequired,
   onClickSnackbar: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,

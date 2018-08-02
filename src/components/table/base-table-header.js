@@ -53,9 +53,9 @@ class BaseTableHeader extends Component {
             )}
             {columns.map(
               ({
-                attributeName,
                 typeColumnTable,
                 titleColumnTable,
+                attributeColumnTable,
                 ...others
               }) => (
                 <TableCell key={titleColumnTable}>
@@ -64,8 +64,8 @@ class BaseTableHeader extends Component {
                   others.typeColumnTable !== "custom" ? (
                     <TableSortLabel
                       direction={sort}
-                      active={orderBy === attributeName}
-                      onClick={this.onClickSortLabel(attributeName)}
+                      active={orderBy === attributeColumnTable}
+                      onClick={this.onClickSortLabel(attributeColumnTable)}
                     >
                       <Typography variant={"subheading"}>
                         <b>{titleColumnTable.toUpperCase()}</b>

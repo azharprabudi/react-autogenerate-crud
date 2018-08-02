@@ -3,6 +3,10 @@ export const thousandSeparator = (nominal, prefix = "") => {
     nominal = nominal.toString();
   }
 
+  if (!/^\d+$/g.test(nominal)) {
+    return nominal;
+  }
+
   let i = 0;
   let initialLengthStr = -3;
   let nominalArr = nominal.split("");
