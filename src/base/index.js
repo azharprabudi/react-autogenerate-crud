@@ -94,6 +94,27 @@ class CRUDGenerate extends Component {
       config,
       this.columnTable
     );
+
+    /* get setting configuration server */
+    this.addConfigurationServer = {};
+    this.editConfigurationServer = {};
+
+    if (has(server, "http") && Object.keys(server.http).length > 0) {
+      if (has(server.http, "create")) {
+        this.addConfigurationServer = server.http.create;
+      }
+      if (has(server.http, "update")) {
+        this.editConfigurationServer = server.http.update;
+      }
+    }
+
+    /* get filter fileds */
+    this.fields = props.fields.map(field => ({
+      ...field,
+      details: field.details.filter(
+        item => !has(item, "mergingColumn") || item.mergingColumn === false
+      )
+    }));
   }
 
   componentDidMount() {
@@ -105,9 +126,11 @@ class CRUDGenerate extends Component {
     const columns = [];
     const { fields } = this.props;
     for (let i = 0; i <= fields.length - 1; i++) {
-      let itemColumn = fields[i];
-      if (has(itemColumn, "showOnTable") && itemColumn.showOnTable) {
-        columns.push(itemColumn);
+      for (let j = 0; j <= fields[i].details.length - 1; j++) {
+        let field = fields[i].details[j];
+        if (has(field, "showOnTable") && field.showOnTable) {
+          columns.push(field);
+        }
       }
     }
     return columns;
@@ -654,7 +677,7 @@ class CRUDGenerate extends Component {
         );
         this.linkExport.click();
       } else {
-        alert("still on going");
+        alert("Excel not available currently");
       }
     } catch (e) {
       this.setState({
@@ -671,15 +694,7 @@ class CRUDGenerate extends Component {
   };
 
   render() {
-    const {
-      aclId,
-      aclRules,
-      fields,
-      server,
-      table,
-      loading,
-      export: exportConf
-    } = this.props;
+    const { aclId, aclRules, table, loading, export: exportConf } = this.props;
     const {
       data,
       loading: isLoading,
@@ -707,11 +722,12 @@ class CRUDGenerate extends Component {
           style={{ display: "none" }}
         />
         <FormDialog
-          fields={fields}
-          server={server}
+          fields={this.fields}
           title={formTitle}
           params={formParams}
           visible={formVisible}
+          addConfigurationServer={this.addConfigurationServer}
+          editConfigurationServer={this.editConfigurationServer}
           onClose={this.onDialogClose("form", "cancel")}
           onClickButtonClose={this.onDialogClose("form", "cancel")}
           onClickButtonSubmit={this.onDialogClose("form", "submit")}
@@ -828,33 +844,40 @@ CRUDGenerate.propTypes = {
   }).isRequired,
   fields: PropTypes.arrayOf(
     PropTypes.shape({
-      component: PropTypes.oneOf(OptionsConf.componentValue).isRequired,
+      title: PropTypes.string.isRequired,
       groupName: PropTypes.string.isRequired,
-      componentAttribute: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        label: PropTypes.string.isRequired,
-        type: PropTypes.string.isRequired,
-        style: PropTypes.object,
-        onAdd: PropTypes.shape({
-          disabled: PropTypes.bool.isRequired,
-          readonly: PropTypes.bool.isRequired
-        }),
-        onEdit: PropTypes.shape({
-          disabled: PropTypes.bool.isRequired,
-          readonly: PropTypes.bool.isRequired
+      type: PropTypes.oneOf(OptionsConf.typeFormValue).isRequired,
+      details: PropTypes.arrayOf(
+        PropTypes.shape({
+          component: PropTypes.oneOf(OptionsConf.componentValue).isRequired,
+          componentAttribute: PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+            label: PropTypes.string.isRequired,
+            type: PropTypes.string.isRequired,
+            style: PropTypes.object,
+            onAdd: PropTypes.shape({
+              disabled: PropTypes.bool.isRequired,
+              readonly: PropTypes.bool.isRequired
+            }),
+            onEdit: PropTypes.shape({
+              disabled: PropTypes.bool.isRequired,
+              readonly: PropTypes.bool.isRequired
+            })
+          }).isRequired,
+          validation: PropTypes.string,
+          callbackValidation: PropTypes.object,
+          showOnTable: PropTypes.bool,
+          mergingColumn: PropTypes.bool,
+          sortColumnTable: PropTypes.bool,
+          titleColumnTable: PropTypes.string.isRequired,
+          typeColumnTable: PropTypes.oneOf(OptionsConf.typeColumnValue)
+            .isRequired,
+          attributeColumnTable: PropTypes.string.isRequired,
+          allowSearch: PropTypes.bool,
+          prefixColumnTable: PropTypes.string
         })
-      }).isRequired,
-      validation: PropTypes.string,
-      callbackValidation: PropTypes.object,
-      showOnTable: PropTypes.bool,
-      mergingColumn: PropTypes.bool,
-      sortColumnTable: PropTypes.bool,
-      titleColumnTable: PropTypes.string.isRequired,
-      typeColumnTable: PropTypes.oneOf(OptionsConf.typeColumnValue).isRequired,
-      attributeColumnTable: PropTypes.string.isRequired,
-      allowSearch: PropTypes.bool,
-      prefixColumnTable: PropTypes.string
+      )
     })
   ).isRequired,
   initialLimit: PropTypes.oneOf(OptionsConf.limitValue).isRequired,

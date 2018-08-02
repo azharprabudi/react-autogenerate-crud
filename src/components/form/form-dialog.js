@@ -17,6 +17,7 @@ import upperFirst from "lodash/upperFirst";
 /* my modules */
 import BaseForm from "../../base/base-form";
 import Colors from "../../constants/colors";
+import OptionsConf from "../../constants/options-conf";
 
 const styles = theme => ({
   appBar: {
@@ -35,13 +36,15 @@ const styles = theme => ({
 class FormDialog extends Component {
   render() {
     const {
+      fields,
       classes,
       onClose,
       visible,
       title,
       params,
-      serverRequest,
-      onClickButtonClose
+      onClickButtonClose,
+      addConfigurationServer,
+      updateConfigurationServer
     } = this.props;
     return (
       <Dialog fullScreen open={visible} onClose={onClose}>
@@ -64,8 +67,9 @@ class FormDialog extends Component {
         </AppBar>
         <BaseForm
           params={params}
-          fields={this.fields}
-          serverRequest={this.props.serverRequest}
+          fields={fields}
+          addConfigurationServer={addConfigurationServer}
+          updateConfigurationServer={updateConfigurationServer}
         />
       </Dialog>
     );
@@ -77,8 +81,27 @@ FormDialog.propTypes = {
   params: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  fields: PropTypes.array.isRequired,
-  serverRequest: PropTypes.object.isRequired,
+  addConfigurationServer: PropTypes.shape({
+    url: PropTypes.string.isRequired,
+    method: PropTypes.oneOf(OptionsConf.methodValue),
+    config: PropTypes.object,
+    callbackBeforeCreate: PropTypes.func,
+    callbackAfterCreate: PropTypes.func
+  }),
+  updateConfigurationServer: PropTypes.shape({
+    url: PropTypes.string.isRequired,
+    get: PropTypes.shape({
+      url: PropTypes.string.isRequired,
+      method: PropTypes.oneOf(OptionsConf.methodValue)
+    }),
+    method: PropTypes.oneOf(OptionsConf.methodValue),
+    config: PropTypes.object,
+    replaceUrl: PropTypes.string,
+    attributeName: PropTypes.string,
+    dataFromProps: PropTypes.bool,
+    callbackBeforeUpdate: PropTypes.func,
+    callbackAfterUpdate: PropTypes.func
+  }),
   onClickButtonClose: PropTypes.func.isRequired,
   onClickButtonSubmit: PropTypes.func.isRequired
 };

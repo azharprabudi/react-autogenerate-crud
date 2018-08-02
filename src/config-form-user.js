@@ -81,66 +81,71 @@ const config = {
   },
   fields: [
     {
-      component: "Input",
+      title: "Utama",
+      type: "standar",
       groupName: "Main",
-      componentAttribute: {
-        id: "id",
-        name: "id",
-        label: "Id",
-        style: {},
-        type: "text",
-        onAdd: {
-          disabled: false,
-          readonly: false
+      details: [
+        {
+          component: "Input",
+          componentAttribute: {
+            id: "id",
+            name: "id",
+            label: "Id",
+            style: {},
+            type: "text",
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "required|minLength[5]|callback_checkName",
+          callbackValidation: {
+            checkName: () => true
+          },
+          showOnTable: true,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "AIDEH",
+          typeColumnTable: "text",
+          attributeColumnTable: "id",
+          prefixColumnTable: "",
+          allowSearch: true
         },
-        onEdit: {
-          disabled: false,
-          readonly: false
+        {
+          component: "Input",
+          componentAttribute: {
+            id: "name",
+            name: "name",
+            label: "name",
+            style: {},
+            type: "text",
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "required|minLength[5]|callback_checkName",
+          callbackValidation: {
+            checkName: () => true
+          },
+          showOnTable: true,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "NAME",
+          typeColumnTable: "text",
+          attributeColumnTable: "name",
+          prefixColumnTable: "",
+          allowSearch: true
         }
-      },
-      validation: "required|minLength[5]|callback_checkName",
-      callbackValidation: {
-        checkName: () => true
-      },
-      showOnTable: true,
-      mergingColumn: false,
-      sortColumnTable: true,
-      titleColumnTable: "AIDEH",
-      typeColumnTable: "text",
-      attributeColumnTable: "id",
-      prefixColumnTable: "",
-      allowSearch: true
-    },
-    {
-      component: "Input",
-      groupName: "Main",
-      componentAttribute: {
-        id: "name",
-        name: "name",
-        label: "name",
-        style: {},
-        type: "text",
-        onAdd: {
-          disabled: false,
-          readonly: false
-        },
-        onEdit: {
-          disabled: false,
-          readonly: false
-        }
-      },
-      validation: "required|minLength[5]|callback_checkName",
-      callbackValidation: {
-        checkName: () => true
-      },
-      showOnTable: true,
-      mergingColumn: false,
-      sortColumnTable: true,
-      titleColumnTable: "NAME",
-      typeColumnTable: "text",
-      attributeColumnTable: "name",
-      prefixColumnTable: "",
-      allowSearch: true
+      ]
     }
   ],
   export: {

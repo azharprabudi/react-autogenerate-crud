@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 
 /* my modules */
 import validators from "../helpers/validators";
+import OptionsConf from "../constants/options-conf";
 import BaseFormStandar from "../components/form/base-form-standar";
 import BaseFormDetails from "../components/form/base-form-details";
 
@@ -238,11 +239,28 @@ class BaseForm extends Component {
 
 BaseForm.propTypes = {
   params: PropTypes.object.isRequired,
-  callbackBeforeEditForm: PropTypes.func,
-  formOptions: PropTypes.array.isRequired,
-  callbackBeforeSubmitForm: PropTypes.func,
-  editConfiguration: PropTypes.object.isRequired,
-  addNewConfiguration: PropTypes.object.isRequired
+  fields: PropTypes.array.isRequired,
+  addConfigurationServer: PropTypes.shape({
+    url: PropTypes.string.isRequired,
+    method: PropTypes.oneOf(OptionsConf.methodValue),
+    config: PropTypes.object,
+    callbackBeforeCreate: PropTypes.func,
+    callbackAfterCreate: PropTypes.func
+  }),
+  updateConfigurationServer: PropTypes.shape({
+    url: PropTypes.string.isRequired,
+    get: PropTypes.shape({
+      url: PropTypes.string.isRequired,
+      method: PropTypes.oneOf(OptionsConf.methodValue)
+    }),
+    method: PropTypes.oneOf(OptionsConf.methodValue),
+    config: PropTypes.object,
+    replaceUrl: PropTypes.string,
+    attributeName: PropTypes.string,
+    dataFromProps: PropTypes.bool,
+    callbackBeforeUpdate: PropTypes.func,
+    callbackAfterUpdate: PropTypes.func
+  })
 };
 
 export default withStyles(styles)(BaseForm);

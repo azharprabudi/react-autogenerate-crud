@@ -28,5 +28,6 @@ export default {
   ],
   typeExportValue: ["csv", "excel"],
   snackbarValue: ["error", "success", "warning", "info"],
-  alertValue: ["", "alert", "confirmation"]
+  alertValue: ["", "alert", "confirmation"],
+  typeFormValue: ["standard", "details"]
 };
