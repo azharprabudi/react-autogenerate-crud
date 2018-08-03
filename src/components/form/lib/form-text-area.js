@@ -21,22 +21,30 @@ class FormTextArea extends PureComponent {
       helperText,
       name,
       id,
-      style
+      style,
+      disabled,
+      extension,
+      readonly
     } = this.props;
     return (
       <TextField
         fullWidth
         id={id}
+        rows={rows}
         name={name}
         label={label}
         value={value}
+        error={error}
+        style={style}
         type={"text"}
-        rows={rows}
+        InputProps={{
+          ...extension,
+          readOnly: readonly
+        }}
         multiline={true}
         margin={"normal"}
-        error={error}
+        disabled={disabled}
         helperText={helperText}
-        style={style}
         onChange={this.onChange}
       />
     );
@@ -49,19 +57,19 @@ FormTextArea.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
+  readonly: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired,
+  extension: PropTypes.object.isRequired,
+  value: PropTypes.any.isRequired,
+  error: PropTypes.bool.isRequired,
+  helperText: PropTypes.string.isRequired,
   /* no required */
   style: PropTypes.object,
-  value: PropTypes.string,
-  rows: PropTypes.number,
-  error: PropTypes.bool,
-  helperText: PropTypes.string
+  rows: PropTypes.number
 };
 
 FormTextArea.defaultProps = {
-  value: "",
   rows: 4,
-  error: false,
-  helperText: "",
   style: {}
 };
 

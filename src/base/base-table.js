@@ -62,7 +62,7 @@ const styles = theme => ({
     borderStyle: "solid"
   },
   icon: {
-    marginHorizontal: theme.spacing.unit
+    marginRight: 5
   }
 });
 

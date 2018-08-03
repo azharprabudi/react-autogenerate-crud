@@ -229,7 +229,7 @@ const config = {
           allowSearch: true
         },
         {
-          component: "InputNominal",
+          component: "TextArea",
           componentAttribute: {
             id: "address",
             name: "address",
@@ -238,6 +238,42 @@ const config = {
             type: "text",
             extension: {
               prefix: "rp"
+            },
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "required",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "Address",
+          typeColumnTable: "text",
+          attributeColumnTable: "address",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "Select",
+          componentAttribute: {
+            id: "gender",
+            name: "gender",
+            label: "Gender",
+            style: {},
+            type: "text",
+            extension: {
+              customSource: {
+                url: "https://jsonplaceholder.typicode.com/users",
+                method: "get",
+                config: {}
+              },
+              idAttributeName: "id",
+              labelAttributeName: "name"
             },
             onAdd: {
               disabled: false,

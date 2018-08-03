@@ -74,10 +74,11 @@ class FormInput extends PureComponent {
       disabled,
       label,
       helperText,
-      readOnly,
+      readonly,
       required,
       error,
-      style
+      style,
+      extension
     } = this.props;
     return (
       <TextField
@@ -90,13 +91,14 @@ class FormInput extends PureComponent {
         required={required}
         fullWidth={true}
         InputProps={{
-          disabled,
-          readOnly,
           style,
-          startAdornment: this.getContentStartAdornment()
+          readOnly: readonly,
+          startAdornment: this.getContentStartAdornment(),
+          ...extension
         }}
         label={label}
         error={error}
+        disabled={disabled}
         helperText={helperText}
       />
     );
@@ -107,9 +109,12 @@ FormInput.propTypes = {
   /* required */
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.any.isRequired,
   onChange: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
+  readonly: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired,
+  extension: PropTypes.object.isRequired,
   /* no required */
   error: PropTypes.bool,
   class: PropTypes.any,

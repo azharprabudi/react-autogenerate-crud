@@ -5,6 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
 /* etc modules */
+import has from "lodash/has";
 import PropTypes from "prop-types";
 
 /* my modules */
@@ -35,7 +36,7 @@ class BaseFormStandar extends Component {
     if (typeof lib[component] !== "undefined") {
       const SelectedComponent = lib[component];
       const { value, validationStatus, validationText } = this.props.state[
-        componentAttribute.name
+        name
       ];
 
       let readonly = false;
@@ -81,7 +82,7 @@ class BaseFormStandar extends Component {
           extension={extension}
           error={!validationStatus}
           helperText={validationText}
-          onChange={this.onChange(componentAttribute.name)}
+          onChange={this.onChange(name)}
         />
       );
     }

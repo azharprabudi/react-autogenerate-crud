@@ -4,6 +4,7 @@ import React, { PureComponent } from "react";
 import TextField from "@material-ui/core/TextField";
 
 /* etc modules */
+import has from "lodash/has";
 import PropTypes from "prop-types";
 
 /* my modules */
@@ -15,7 +16,18 @@ class FormInputNominal extends PureComponent {
   };
 
   render() {
-    const { label, id, name, style, value, extension } = this.props;
+    const {
+      label,
+      id,
+      name,
+      style,
+      value,
+      extension,
+      readonly,
+      disabled,
+      error,
+      helperText
+    } = this.props;
     return (
       <TextField
         id={id}
@@ -26,11 +38,15 @@ class FormInputNominal extends PureComponent {
         InputProps={{
           inputComponent: NumberFormatCustom,
           inputProps: {
-            prefix: "Rp."
-          }
+            prefix: has(extension, "prefix") ? extension.prefix : ""
+          },
+          readOnly: readonly
         }}
         value={value}
         style={style}
+        disabled={disabled}
+        error={error}
+        helperText={helperText}
         onChange={this.onChange}
       />
     );
@@ -42,8 +58,11 @@ FormInputNominal.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.any.isRequired,
   onChange: PropTypes.func.isRequired,
+  readonly: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired,
+  extension: PropTypes.object.isRequired,
   /* not required */
   error: PropTypes.bool,
   style: PropTypes.object,

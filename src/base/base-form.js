@@ -40,7 +40,8 @@ class BaseForm extends Component {
 
     /* flag to show this is on edit mode or not */
     this.isEdit =
-      has(params, BaseForm.ID_FORM) && params[BaseForm.ID_FORM] !== "";
+      has(props.params, BaseForm.ID_FORM) &&
+      props.params[BaseForm.ID_FORM] !== "";
   }
 
   componentDidMount() {
