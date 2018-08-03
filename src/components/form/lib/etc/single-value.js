@@ -8,7 +8,7 @@ const SingleValue = props => (
     className={props.selectProps.classes.singleValue}
     {...props.innerProps}
   >
-    {props.children}
+    1123
   </Typography>
 );
 

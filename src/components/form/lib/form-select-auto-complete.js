@@ -125,23 +125,14 @@ class FormSelectAutoComplete extends PureComponent {
       helperText,
       classes
     } = this.props;
-    console.log(value);
     return (
       <Select
-        id={id}
-        name={name}
-        label={label}
-        value={value}
-        style={style}
         classes={classes}
-        isDisabled={disabled}
-        components={components}
-        error={error}
-        readonly={readonly}
-        helperText={helperText}
-        onChange={this.onChange}
         options={this.state.data}
-        placeholder={"Choose one"}
+        components={components}
+        value={value}
+        onChange={this.onChange}
+        placeholder="Search a country (start with a)"
       />
     );
   }
