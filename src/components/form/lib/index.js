@@ -7,9 +7,6 @@ import FormSelect from "./form-select";
 import FormSelectMultiple from "./form-select-multiple";
 import FormSelectAutoComplete from "./form-select-auto-complete";
 import FormSelectMultipleAutoComplete from "./form-select-multiple-auto-complete";
-import FormDateTimePicker from "./form-date-time-picker";
-import FormDatePicker from "./form-date-picker";
-import FormTimePicker from "./form-time-picker";
 import FormFileUploader from "./form-file-uploader";
 
 const lib = {
@@ -22,9 +19,6 @@ const lib = {
   SelectMultiple: FormSelectMultiple,
   SelectAutoComplete: FormSelectAutoComplete,
   SelectMultipleAutoComplete: FormSelectMultipleAutoComplete,
-  DateTimePicker: FormDateTimePicker,
-  DatePicker: FormDatePicker,
-  TimePicker: FormTimePicker,
   FileUploader: FormFileUploader
 };
 
@@ -39,9 +33,6 @@ export const libDefaultvalue = {
   SelectMultiple: [],
   SelectAutoComplete: "",
   SelectMultipleAutoComplete: [],
-  DateTimePicker: "",
-  DatePicker: "",
-  TimePicker: "",
   FileUploader: ""
 };
 

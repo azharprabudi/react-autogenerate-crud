@@ -122,7 +122,15 @@ FormInput.propTypes = {
   style: PropTypes.object,
   required: PropTypes.bool,
   helperText: PropTypes.string,
-  type: PropTypes.oneOf(["text", "password", "number", "hidden"]),
+  type: PropTypes.oneOf([
+    "text",
+    "password",
+    "number",
+    "hidden",
+    "date",
+    "time",
+    "datetime-local"
+  ]),
   inputProps: PropTypes.object
 };
 

@@ -259,10 +259,10 @@ const config = {
           allowSearch: true
         },
         {
-          component: "SelectMultiple",
+          component: "Radio",
           componentAttribute: {
             id: "gender",
-            name: "gender",
+            name: "gender[]",
             label: "Gender",
             style: {},
             type: "text",
