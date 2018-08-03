@@ -11,6 +11,7 @@ import PropTypes from "prop-types";
 /* my modules */
 import validators from "../helpers/validators";
 import OptionsConf from "../constants/options-conf";
+import { libDefaultvalue } from "../components/form/lib/index";
 import BaseFormStandar from "../components/form/base-form-standar";
 import BaseFormDetails from "../components/form/base-form-details";
 
@@ -115,7 +116,7 @@ class BaseForm extends Component {
             form[groupName][field.componentAttribute.name] = {
               value: has(data, field.attributeColumnTable)
                 ? data[field.attributeColumnTable]
-                : "",
+                : libDefaultvalue[field.component],
               validationStatus: true,
               validationText: ""
             };
@@ -141,7 +142,7 @@ class BaseForm extends Component {
                 form[groupName][j][field.componentAttribute.name] = {
                   value: has(formDetails[j], field.attributeColumnTable)
                     ? formDetails[j][field.attributeColumnTable]
-                    : "",
+                    : libDefaultvalue[field.component],
                   validationStatus: true,
                   validationText: ""
                 };
@@ -154,7 +155,7 @@ class BaseForm extends Component {
             const field = details[j];
             if (!has(field, "marginColumn") || field.mergingColumn === false) {
               form[groupName][0][field.componentAttribute.name] = {
-                value: "",
+                value: libDefaultvalue[field.component],
                 validationStatus: true,
                 validationText: ""
               };

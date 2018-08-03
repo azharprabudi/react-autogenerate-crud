@@ -6,14 +6,13 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
-import { withStyles } from "@material-ui/core/styles";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 /* etc modules */
 import axios from "axios";
 import has from "lodash/has";
 import PropTypes from "prop-types";
 import isArray from "lodash/isArray";
-import { FormHelperText } from "@material-ui/core";
 
 class FormSelect extends PureComponent {
   constructor(props) {

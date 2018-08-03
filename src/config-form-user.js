@@ -259,7 +259,7 @@ const config = {
           allowSearch: true
         },
         {
-          component: "Select",
+          component: "SelectMultiple",
           componentAttribute: {
             id: "gender",
             name: "gender",

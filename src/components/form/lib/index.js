@@ -26,4 +26,19 @@ const lib = {
   FileUploader: FormFileUploader
 };
 
+export const libDefaultvalue = {
+  Input: "",
+  TextArea: "",
+  InputNominal: "",
+  InputAutoComplete: "",
+  Radio: "",
+  Checkbox: "",
+  Select: "",
+  SelectMultiple: [],
+  DateTimePicker: "",
+  DatePicker: "",
+  TimePicker: "",
+  FileUploader: ""
+};
+
 export default lib;
