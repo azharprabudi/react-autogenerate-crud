@@ -682,12 +682,12 @@ class CRUDGenerate extends Component {
       }
       if (type === "csv") {
         const encodeData = encodeURI(data);
-        this.linkExport.setAttribute("href", encodeData);
-        this.linkExport.setAttribute(
+        this.refExportBtn.setAttribute("href", encodeData);
+        this.refExportBtn.setAttribute(
           "download",
           `${this.props.title}-${moment().format("DDMMYYYY")}.csv`
         );
-        this.linkExport.click();
+        this.refExportBtn.click();
       } else {
         alert("Excel not available currently");
       }
@@ -697,9 +697,7 @@ class CRUDGenerate extends Component {
         snackbarInfo: {
           visible: true,
           type: "error",
-          message: isArray(data.error)
-            ? JSON.stringify(data.error)
-            : data.error.toString()
+          message: isArray(e.data) ? JSON.stringify(e.data) : e.data.toString()
         }
       });
     }
@@ -729,7 +727,7 @@ class CRUDGenerate extends Component {
         <a
           href=""
           ref={ref => {
-            this.linkExport = ref;
+            this.refExportBtn = ref;
           }}
           style={{ display: "none" }}
         />

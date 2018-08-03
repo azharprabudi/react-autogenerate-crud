@@ -23,6 +23,7 @@
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.6",
+    "fs-web": "^1.0.1",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
@@ -33,7 +34,8 @@
     "react-number-format": "^3.5.0",
     "react-select": "^2.0.0",
     "react-text-mask": "^5.4.3",
-    "validate.js": "^0.12.0"
+    "validate.js": "^0.12.0",
+    "xlsx": "^0.13.3"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

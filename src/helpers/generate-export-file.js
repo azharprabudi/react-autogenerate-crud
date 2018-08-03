@@ -29,16 +29,15 @@ class GenerateCsv {
         throw new Error("Failed get data from server");
       }
       if (type === "csv") {
-        return this.getCsvContentFile(data.data);
+        return this.getContentCsv(data.data);
       }
     } catch (e) {
       return { error: true, data: e };
     }
   }
 
-  getCsvContentFile(data) {
-    let csvContentFile = "data:text/csv;charset=utf-8,";
-
+  getContentCsv(data) {
+    let contentCsv = "data:text/csv;charset=utf-8,";
     for (let iData = 0; iData < data.length; iData++) {
       let header = [];
       let row = [];
@@ -56,11 +55,11 @@ class GenerateCsv {
 
       // add header to csv file
       if (header.length > 0) {
-        csvContentFile += `${header.join(",")}\r\n`;
+        contentCsv += `${header.join(",")}\r\n`;
       }
-      csvContentFile += `${row.join(",")}\r\n`;
+      contentCsv += `${row.join(",")}\r\n`;
     }
-    return csvContentFile;
+    return contentCsv;
   }
 }
 
