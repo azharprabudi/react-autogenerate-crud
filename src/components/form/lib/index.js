@@ -1,11 +1,12 @@
 import FormInput from "./form-input";
 import FormTextArea from "./form-text-area";
 import FormInputNominal from "./form-input-nominal";
-import FormInputAutoComplete from "./form-input-auto-complete";
 import FormRadio from "./form-radio";
 import FormCheckbox from "./form-checkbox";
 import FormSelect from "./form-select";
 import FormSelectMultiple from "./form-select-multiple";
+import FormSelectAutoComplete from "./form-select-auto-complete";
+import FormSelectMultipleAutoComplete from "./form-select-multiple-auto-complete";
 import FormDateTimePicker from "./form-date-time-picker";
 import FormDatePicker from "./form-date-picker";
 import FormTimePicker from "./form-time-picker";
@@ -15,11 +16,12 @@ const lib = {
   Input: FormInput,
   TextArea: FormTextArea,
   InputNominal: FormInputNominal,
-  InputAutoComplete: FormInputAutoComplete,
   Radio: FormRadio,
   Checkbox: FormCheckbox,
   Select: FormSelect,
   SelectMultiple: FormSelectMultiple,
+  SelectAutoComplete: FormSelectAutoComplete,
+  SelectMultipleAutoComplete: FormSelectMultipleAutoComplete,
   DateTimePicker: FormDateTimePicker,
   DatePicker: FormDatePicker,
   TimePicker: FormTimePicker,
@@ -32,9 +34,11 @@ export const libDefaultvalue = {
   InputNominal: "",
   InputAutoComplete: "",
   Radio: "",
-  Checkbox: "",
+  Checkbox: [],
   Select: "",
   SelectMultiple: [],
+  SelectAutoComplete: "",
+  SelectMultipleAutoComplete: [],
   DateTimePicker: "",
   DatePicker: "",
   TimePicker: "",
