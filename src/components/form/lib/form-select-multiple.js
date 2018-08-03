@@ -41,6 +41,7 @@ class FormSelectMultiple extends PureComponent {
     }
   }
 
+  /* get the data from server, if the user doest provide the data from props and choose the custom source */
   getCustomSourceData = async () => {
     try {
       const { extension } = this.props;
@@ -65,8 +66,14 @@ class FormSelectMultiple extends PureComponent {
     }
   };
 
-  onChange = e => {
+  /* on change listener */
+  onChangeSelected = e => {
     this.props.onChange(e.target.value);
+  };
+
+  /* on remove listener */
+  onRemoveSelected = id => () => {
+    this.props.onChange(this.props.value.filter(propsId => propsId !== id));
   };
 
   render() {
@@ -95,7 +102,7 @@ class FormSelectMultiple extends PureComponent {
           multiple
           style={style}
           value={value}
-          onChange={this.onChange}
+          onChange={this.onChangeSelected}
           input={<Input id={id} name={name} readOnly={readonly} />}
           renderValue={selected => (
             <div className={classes.chips}>
@@ -107,7 +114,12 @@ class FormSelectMultiple extends PureComponent {
                   ? dataSelected[extension.labelAttributeName]
                   : "";
                 return (
-                  <Chip key={value} label={label} className={classes.chip} />
+                  <Chip
+                    key={value}
+                    label={label}
+                    className={classes.chip}
+                    onDelete={this.onRemoveSelected(value)}
+                  />
                 );
               })}
             </div>
