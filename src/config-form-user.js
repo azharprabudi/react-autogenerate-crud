@@ -257,7 +257,7 @@ const config = {
           allowSearch: true
         },
         {
-          component: "SelectMultiple",
+          component: "SelectMultipleAutoComplete",
           componentAttribute: {
             id: "gender",
             name: "gender",

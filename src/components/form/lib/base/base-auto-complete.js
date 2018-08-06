@@ -10,12 +10,13 @@ import has from "lodash/has";
 import Select from "react-select";
 import PropTypes from "prop-types";
 import isArray from "lodash/isArray";
+import isEqual from "lodash/isEqual";
 
 /* my modules */
 import Option from "../etc/option";
 import Control from "../etc/control";
-import NoOptionsMessage from "../etc/no-options-message";
 import Placeholder from "../etc/placeholder";
+import NoOptionsMessage from "../etc/no-options-message";
 import ValueContainer from "../etc/value-container";
 
 const styles = theme => ({
@@ -67,6 +68,7 @@ class BaseAutoComplete extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      selected: props.multi ? [] : { label: "", value: "" },
       data: has(props.extension, "data") ? props.extension.data : []
     };
   }
@@ -77,9 +79,15 @@ class BaseAutoComplete extends PureComponent {
     }
   }
 
+  componentDidUpdate(previousProps) {
+    if (isEqual(previousProps.value !== this.props.value) && this.initialize) {
+      // cek point dimari
+    }
+  }
+
   getCustomSourceData = async () => {
     try {
-      const { extension } = this.props;
+      const { extension, isEdit, multi, value } = this.props;
       const url = has(extension.customSource, "url")
         ? extension.customSource.url
         : "";
@@ -90,10 +98,34 @@ class BaseAutoComplete extends PureComponent {
       if (!has(data, "data")) {
         throw new Error(data);
       }
+
+      let { selected } = this.state;
+      if (isEdit) {
+        console.log(multi);
+        console.log(this.props);
+        if (multi) {
+          selected = value.map(item => {
+            const tmpSelected = data.data.find(
+              itemData => itemData[extension.idAttributeName] == item
+            );
+            console.log(tmpSelected);
+            return {
+              value: tmpSelected[extension.idAttributeName],
+              label: tmpSelected[extension.labelAttributeName]
+            };
+          });
+        } else {
+          selected = data.data.find(
+            item => item[extension.idAttributeName] == value
+          );
+        }
+      }
+
       this.setState({
+        selected,
         data: data.data.map(data => ({
-          label: data[extension.labelAttributeName],
-          value: data[extension.idAttributeName]
+          value: data[extension.idAttributeName],
+          label: data[extension.labelAttributeName]
         }))
       });
     } catch (e) {
@@ -103,6 +135,10 @@ class BaseAutoComplete extends PureComponent {
 
   onChange = value => {
     this.props.onChange(value);
+    this.setState({
+      ...this.state,
+      selected: this.state.data.find(item => item.value == value)
+    });
   };
 
   render() {
@@ -121,7 +157,6 @@ class BaseAutoComplete extends PureComponent {
       <Select
         id={id}
         name={name}
-        value={value}
         label={label}
         error={error}
         style={styles}
@@ -132,6 +167,7 @@ class BaseAutoComplete extends PureComponent {
         helperText={helperText}
         onChange={this.onChange}
         options={this.state.data}
+        value={this.state.selected}
         placeholder={`Search your ${label} here`}
       />
     );
