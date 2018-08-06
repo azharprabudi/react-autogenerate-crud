@@ -48,13 +48,10 @@ class FormSelect extends PureComponent {
       const url = has(extension.customSource, "url")
         ? extension.customSource.url
         : "";
-      const method = has(extension.customSource, "method")
-        ? extension.customSource.method
-        : "get";
       const config = has(extension.customSource, "config")
         ? extension.customSource.config
         : {};
-      const data = await axios[method](url, config);
+      const data = await axios.get(url, config);
       if (!has(data, "data")) {
         throw new Error(data);
       }

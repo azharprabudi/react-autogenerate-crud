@@ -6,9 +6,9 @@ import PropTypes from "prop-types";
 /* my modules */
 import BaseSelect from "./base/base-select";
 
-const FormSelect = props => <BaseSelect {...props} multiple={true} />;
+const FormSelectMultiple = props => <BaseSelect {...props} multiple={true} />;
 
-FormSelect.propTypes = {
+FormSelectMultiple.propTypes = {
   /* required */
   id: PropTypes.string.isRequired,
   value: PropTypes.any.isRequired,
@@ -30,4 +30,4 @@ FormSelect.propTypes = {
   style: PropTypes.object
 };
 
-export default FormSelect;
+export default FormSelectMultiple;

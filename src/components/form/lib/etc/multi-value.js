@@ -2,6 +2,10 @@ import React from "react";
 
 /* material modules */
 import Chip from "@material-ui/core/Chip";
+import DeleteIcon from "@material-ui/icons/Delete";
+
+/* etc modules */
+import classNames from "classnames";
 
 const MultiValue = props => (
   <Chip
@@ -10,8 +14,8 @@ const MultiValue = props => (
     className={classNames(props.selectProps.classes.chip, {
       [props.selectProps.classes.chipFocused]: props.isFocused
     })}
-    onDelete={event => {
-      props.removeProps.onClick();
+    onDelete={e => {
+      console.log(e);
       props.removeProps.onMouseDown(event);
     }}
   />

@@ -25,7 +25,6 @@ const config = {
       },
       read: {
         url: "https://jsonplaceholder.typicode.com/users",
-        method: "get",
         query: {
           limit: "_limit",
           page: "_page",
@@ -39,7 +38,6 @@ const config = {
         url: "https://jsonplaceholder.typicode.com/users/{id}",
         get: {
           url: "https://jsonplaceholder.typicode.com/users/{id}",
-          method: "get",
           config: {},
           replaceUrl: "{id}",
           attributeName: "id"
@@ -259,7 +257,7 @@ const config = {
           allowSearch: true
         },
         {
-          component: "Radio",
+          component: "SelectAsyncMultipleAutoComplete",
           componentAttribute: {
             id: "gender",
             name: "gender[]",
@@ -268,9 +266,9 @@ const config = {
             type: "text",
             extension: {
               customSource: {
-                url: "https://jsonplaceholder.typicode.com/users",
-                method: "get",
-                config: {}
+                url: "https://jsonplaceholder.typicode.com/users?name={value}",
+                config: {},
+                replaceUrl: "{value}"
               },
               idAttributeName: "id",
               labelAttributeName: "name"

@@ -30,6 +30,7 @@
     "react": "^16.4.1",
     "react-color": "^2.14.1",
     "react-dom": "^16.4.1",
+    "react-draft-wysiwyg": "^1.12.13",
     "react-dropzone": "^4.2.13",
     "react-number-format": "^3.5.0",
     "react-select": "^2.0.0",

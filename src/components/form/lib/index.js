@@ -8,6 +8,9 @@ import FormSelectMultiple from "./form-select-multiple";
 import FormSelectAutoComplete from "./form-select-auto-complete";
 import FormSelectMultipleAutoComplete from "./form-select-multiple-auto-complete";
 import FormFileUploader from "./form-file-uploader";
+import FormSelectAsyncAutoComplete from "./form-select-async-auto-complete";
+import FormSelectAsyncMultipleAutoComplete from "./form-select-async-multiple-auto-complete";
+import FormWysiwyg from "./form-wysiwyg";
 
 const lib = {
   Input: FormInput,
@@ -19,6 +22,9 @@ const lib = {
   SelectMultiple: FormSelectMultiple,
   SelectAutoComplete: FormSelectAutoComplete,
   SelectMultipleAutoComplete: FormSelectMultipleAutoComplete,
+  SelectAsyncAutoComplete: FormSelectAsyncAutoComplete,
+  SelectAsyncMultipleAutoComplete: FormSelectAsyncMultipleAutoComplete,
+  CustomEditor: FormWysiwyg,
   FileUploader: FormFileUploader
 };
 
@@ -26,13 +32,16 @@ export const libDefaultvalue = {
   Input: "",
   TextArea: "",
   InputNominal: "",
-  InputAutoComplete: "",
-  Radio: "",
+  InputAutoComplete: { label: "", value: "" },
+  Radio: { label: "", value: "" },
   Checkbox: [],
-  Select: "",
+  Select: { label: "", value: "" },
   SelectMultiple: [],
-  SelectAutoComplete: "",
+  SelectAutoComplete: { label: "", value: "" },
   SelectMultipleAutoComplete: [],
+  SelectAsyncAutoComplete: { label: "", value: "" },
+  SelectAsyncMultipleAutoComplete: [],
+  CustomEditor: "",
   FileUploader: ""
 };
 

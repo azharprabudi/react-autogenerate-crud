@@ -30,11 +30,10 @@ class FormCheckbox extends PureComponent {
     try {
       const { customSource } = this.props.extension;
       const url = has(customSource, "url") ? customSource.url : "";
-      const method = has(customSource, "method") ? customSource.method : "get";
       const config = has(customSource, "config") ? customSource.config : {};
 
       /* fetch data from server */
-      const data = await axios[method](url, config);
+      const data = await axios.get(url, config);
       if (!has(data, "data")) {
         throw new Error(data);
       }

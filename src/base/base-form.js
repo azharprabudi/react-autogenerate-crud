@@ -7,6 +7,7 @@ import { withStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import has from "lodash/has";
 import PropTypes from "prop-types";
+import isObject from "lodash/isObject";
 
 /* my modules */
 import validators from "../helpers/validators";
@@ -14,6 +15,7 @@ import OptionsConf from "../constants/options-conf";
 import { libDefaultvalue } from "../components/form/lib/index";
 import BaseFormStandar from "../components/form/base-form-standar";
 import BaseFormDetails from "../components/form/base-form-details";
+import { isString } from "util";
 
 const styles = theme => ({
   container: {
@@ -73,9 +75,6 @@ class BaseForm extends Component {
     const config = has(updateConfigurationServer, "config")
       ? updateConfigurationServer.config
       : {};
-    const method = has(updateConfigurationServer, "method")
-      ? updateConfigurationServer.method
-      : "get";
     let url = has(updateConfigurationServer, "url")
       ? updateConfigurationServer.url
       : "";
@@ -85,7 +84,7 @@ class BaseForm extends Component {
       url = url.replace(updateConfigurationServer.replaceUrl, id);
     }
 
-    const data = await axios[method](url, config);
+    const data = await axios.get(url, config);
     if (has(data, "data")) {
       this.setState({
         ...this.state,
@@ -265,11 +264,18 @@ class BaseForm extends Component {
 
   /* handling on change value in form */
   onChangeBaseFormStandar = groupName => async (stateName, value) => {
-    const { validationText, validationStatus } = await this.doValidatingInput(
-      groupName,
-      stateName,
-      value
-    );
+    let validationText = "";
+    let validationStatus = true;
+
+    if (isString(value)) {
+      const resultValidation = await this.doValidatingInput(
+        groupName,
+        stateName,
+        value
+      );
+      validationText = resultValidation.validationText;
+      validationStatus = resultValidation.validationStatus;
+    }
 
     this.setState({
       ...this.state,

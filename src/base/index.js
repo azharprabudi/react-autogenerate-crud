@@ -233,12 +233,11 @@ class CRUDGenerate extends Component {
 
       /* required data when get data from server */
       let configRead = has(read, "config") ? read.config : {};
-      let methodRead = has(read, "method") ? read.method : "get";
       let urlRead = this.getHTTPUrl(read, limit, offset, page);
 
       /* start fetching data */
       await this.setLoadingProms(true);
-      let { data } = await axios[methodRead](urlRead, configRead);
+      let { data } = await axios.get(urlRead, configRead);
 
       /* finish fetch data and set data into state */
       this.setState({
@@ -823,7 +822,6 @@ CRUDGenerate.propTypes = {
       }),
       read: PropTypes.shape({
         url: PropTypes.string.isRequired,
-        method: PropTypes.oneOf(OptionsConf.methodValue).isRequired,
         query: PropTypes.object,
         config: PropTypes.object
       }),
@@ -831,7 +829,6 @@ CRUDGenerate.propTypes = {
         url: PropTypes.string.isRequired,
         get: PropTypes.shape({
           url: PropTypes.string.isRequired,
-          method: PropTypes.oneOf(OptionsConf.methodValue).isRequired,
           config: PropTypes.object,
           replaceUrl: PropTypes.string,
           attributeName: PropTypes.string

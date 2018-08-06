@@ -1,16 +1,16 @@
-import React, { PureComponent } from "react";
+import React from "react";
 
 /* etc modules */
 import PropTypes from "prop-types";
 
 /* my modules */
-import BaseAutoComplete from "./base/base-auto-complete";
+import BaseAsyncAutoComplete from "./base/base-async-auto-complete";
 
-const FormSelectAutoComplete = props => (
-  <BaseAutoComplete {...props} multi={false} />
+const FormSelectAsyncAutoComplete = props => (
+  <BaseAsyncAutoComplete {...props} multi={false} />
 );
 
-FormSelectAutoComplete.propTypes = {
+FormSelectAsyncAutoComplete.propTypes = {
   /* required */
   id: PropTypes.string.isRequired,
   value: PropTypes.any.isRequired,
@@ -31,7 +31,8 @@ FormSelectAutoComplete.propTypes = {
   label: PropTypes.string.isRequired,
   helperText: PropTypes.string.isRequired,
   /* non required */
+  multi: PropTypes.bool,
   style: PropTypes.object
 };
 
-export default FormSelectAutoComplete;
+export default FormSelectAsyncAutoComplete;
