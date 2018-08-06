@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 /* my modules */
 import BaseSelect from "./base/base-select";
 
-const FormSelect = props => <BaseSelect {...props} multiple={false} />;
+const FormSelect = props => <BaseSelect {...props} multi={false} />;
 
 FormSelect.propTypes = {
   /* required */

@@ -69,7 +69,7 @@ class FormCheckbox extends PureComponent {
       <div style={{ marginTop: 18, marginBottom: 6 }}>
         <InputLabel>{label}</InputLabel>
         {this.state.data.map(item => (
-          <div>
+          <div key={item[extension.idAttributeName]}>
             <FormControlLabel
               control={
                 <Checkbox
@@ -77,12 +77,8 @@ class FormCheckbox extends PureComponent {
                   id={`id-${item[extension.idAttributeName]}`}
                   disabled={disabled}
                   onChange={this.onChange}
-                  key={item[extension.idAttributeName]}
                   value={item[extension.idAttributeName].toString()}
-                  checked={
-                    value.indexOf(item[extension.idAttributeName].toString()) >
-                    -1
-                  }
+                  checked={value.indexOf(item[extension.idAttributeName]) > -1}
                   style={style}
                 />
               }

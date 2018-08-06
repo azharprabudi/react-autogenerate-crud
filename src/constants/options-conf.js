@@ -6,7 +6,7 @@ export default {
     "InputNominal",
     "InputSeparator",
     "Radio",
-    "CheckBox",
+    "Checkbox",
     "Select",
     "SelectMultiple",
     "SelectAutoComplete",

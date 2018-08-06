@@ -2,7 +2,6 @@ import React, { PureComponent } from "react";
 
 /* material ui modules */
 import { withStyles } from "@material-ui/core/styles";
-import { emphasize } from "@material-ui/core/styles/colorManipulator";
 
 /* etc modules */
 import axios from "axios";
@@ -14,11 +13,9 @@ import AsyncSelect from "react-select/lib/Async";
 /* my modules */
 import Option from "../etc/option";
 import Control from "../etc/control";
-import NoOptionsMessage from "../etc/no-options-message";
 import Placeholder from "../etc/placeholder";
-import SingleValue from "../etc/single-value";
-import MultiValue from "../etc/multi-value";
 import ValueContainer from "../etc/value-container";
+import NoOptionsMessage from "../etc/no-options-message";
 
 const styles = theme => ({
   input: {
@@ -31,17 +28,6 @@ const styles = theme => ({
     display: "flex",
     flex: 1,
     alignItems: "center"
-  },
-  chip: {
-    margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`
-  },
-  chipFocused: {
-    backgroundColor: emphasize(
-      theme.palette.type === "light"
-        ? theme.palette.grey[300]
-        : theme.palette.grey[700],
-      0.08
-    )
   },
   noOptionsMessage: {
     fontSize: 16,
@@ -62,8 +48,6 @@ const components = {
   Control,
   NoOptionsMessage,
   Placeholder,
-  SingleValue,
-  MultiValue,
   ValueContainer
 };
 
@@ -145,7 +129,6 @@ class BaseAsyncAutoComplete extends PureComponent {
         label={label}
         error={error}
         cacheOptions
-        value={this.props.value}
         isMulti={multi}
         defaultOptions
         placeholder={""}
@@ -153,6 +136,7 @@ class BaseAsyncAutoComplete extends PureComponent {
         disabled={disabled}
         helperText={helperText}
         components={components}
+        value={this.props.value}
         onChange={this.props.onChange}
         loadOptions={this.loadOptions}
         onInputChange={this.handleInputChange}

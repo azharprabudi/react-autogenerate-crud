@@ -1,31 +1,18 @@
 import React, { PureComponent } from "react";
 
 /* material ui modules */
-import Chip from "@material-ui/core/Chip";
 import Input from "@material-ui/core/Input";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import { withStyles } from "@material-ui/core/styles";
 
 /* etc modules */
 import axios from "axios";
 import has from "lodash/has";
 import PropTypes from "prop-types";
 import isArray from "lodash/isArray";
-import find from "lodash/find";
-
-const styles = theme => ({
-  chips: {
-    display: "flex",
-    flexWrap: "wrap"
-  },
-  chip: {
-    margin: theme.spacing.unit / 4
-  }
-});
 
 class FormSelect extends PureComponent {
   constructor(props) {
@@ -44,7 +31,7 @@ class FormSelect extends PureComponent {
   /* get the data from server, if the user doest provide the data from props and choose the custom source */
   getCustomSourceData = async () => {
     try {
-      const { extension } = this.props;
+      const { isEdit, extension, value } = this.props;
       const url = has(extension.customSource, "url")
         ? extension.customSource.url
         : "";
@@ -55,8 +42,12 @@ class FormSelect extends PureComponent {
       if (!has(data, "data")) {
         throw new Error(data);
       }
+
       this.setState({
-        data: data.data
+        data: data.data.map(item => ({
+          value: item[extension.idAttributeName],
+          label: item[extension.labelAttributeName]
+        }))
       });
     } catch (e) {
       alert(isArray(e) ? JSON.stringify(e) : e.toString());
@@ -68,24 +59,16 @@ class FormSelect extends PureComponent {
     this.props.onChange(e.target.value);
   };
 
-  /* on remove listener */
-  onRemoveSelected = id => () => {
-    this.props.onChange(this.props.value.filter(propsId => propsId !== id));
-  };
-
   render() {
     const {
       id,
       name,
-      value,
       style,
       error,
       label,
-      classes,
       disabled,
       readonly,
-      multiple,
-      extension,
+      multi,
       helperText
     } = this.props;
     return (
@@ -98,40 +81,10 @@ class FormSelect extends PureComponent {
         <InputLabel htmlFor={id}>{label}</InputLabel>
         <Select
           style={style}
-          value={value}
-          multiple={multiple}
+          multiple={multi}
+          value={this.props.value}
           onChange={this.onChangeSelected}
           input={<Input id={id} name={name} readOnly={readonly} />}
-          renderValue={selected => {
-            if (!multiple) {
-              const dataSelected = find(this.state.data, {
-                [extension.idAttributeName]: value
-              });
-              return has(dataSelected, extension.labelAttributeName)
-                ? dataSelected[extension.labelAttributeName]
-                : "";
-            }
-            return (
-              <div className={classes.chips}>
-                {selected.map(value => {
-                  const dataSelected = find(this.state.data, {
-                    [extension.idAttributeName]: value
-                  });
-                  const label = has(dataSelected, extension.labelAttributeName)
-                    ? dataSelected[extension.labelAttributeName]
-                    : "";
-                  return (
-                    <Chip
-                      key={value}
-                      label={label}
-                      className={classes.chip}
-                      onDelete={this.onRemoveSelected(value)}
-                    />
-                  );
-                })}
-              </div>
-            );
-          }}
           MenuProps={{
             PaperProps: {
               style: {
@@ -141,12 +94,9 @@ class FormSelect extends PureComponent {
             }
           }}
         >
-          {this.state.data.map(item => (
-            <MenuItem
-              key={item[extension.idAttributeName]}
-              value={item[extension.idAttributeName]}
-            >
-              {item[extension.labelAttributeName]}
+          {this.state.data.map(({ label, value }) => (
+            <MenuItem key={value} value={value}>
+              {label}
             </MenuItem>
           ))}
         </Select>
@@ -176,12 +126,12 @@ FormSelect.propTypes = {
   helperText: PropTypes.string.isRequired,
   /* non required */
   style: PropTypes.object,
-  multiple: PropTypes.bool
+  multi: PropTypes.bool
 };
 
 FormSelect.defaultProps = {
   style: {},
-  multiple: false
+  multi: false
 };
 
-export default withStyles(styles)(FormSelect);
+export default FormSelect;

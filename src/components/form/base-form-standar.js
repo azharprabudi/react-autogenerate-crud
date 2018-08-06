@@ -81,6 +81,7 @@ class BaseFormStandar extends Component {
           disabled={disabled}
           extension={extension}
           error={!validationStatus}
+          isEdit={this.props.isEdit}
           helperText={validationText}
           onChange={this.onChange(name)}
         />

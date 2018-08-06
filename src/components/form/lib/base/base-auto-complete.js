@@ -16,8 +16,6 @@ import Option from "../etc/option";
 import Control from "../etc/control";
 import NoOptionsMessage from "../etc/no-options-message";
 import Placeholder from "../etc/placeholder";
-import SingleValue from "../etc/single-value";
-import MultiValue from "../etc/multi-value";
 import ValueContainer from "../etc/value-container";
 
 const styles = theme => ({
@@ -62,8 +60,6 @@ const components = {
   Control,
   NoOptionsMessage,
   Placeholder,
-  SingleValue,
-  MultiValue,
   ValueContainer
 };
 
@@ -136,7 +132,6 @@ class BaseAutoComplete extends PureComponent {
         helperText={helperText}
         onChange={this.onChange}
         options={this.state.data}
-        onRemoveSelected={() => alert(1)}
         placeholder={`Search your ${label} here`}
       />
     );

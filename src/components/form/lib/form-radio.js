@@ -59,8 +59,8 @@ class FormRadio extends PureComponent {
         <RadioGroup
           id={id}
           name={name}
-          value={value}
           style={style}
+          value={value.toString()}
           onChange={this.onChange}
         >
           {this.state.data.map(item => (

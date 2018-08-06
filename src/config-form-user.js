@@ -37,10 +37,10 @@ const config = {
       update: {
         url: "https://jsonplaceholder.typicode.com/users/{id}",
         get: {
-          url: "https://jsonplaceholder.typicode.com/users/{id}",
-          config: {},
-          replaceUrl: "{id}",
-          attributeName: "id"
+          url: "http://127.0.0.1:9090/test",
+          config: {}
+          // replaceUrl: "{id}",
+          // attributeName: "id"
         },
         config: {},
         method: "patch",
@@ -257,18 +257,18 @@ const config = {
           allowSearch: true
         },
         {
-          component: "SelectAsyncMultipleAutoComplete",
+          component: "SelectMultiple",
           componentAttribute: {
             id: "gender",
-            name: "gender[]",
+            name: "gender",
             label: "Gender",
             style: {},
             type: "text",
             extension: {
               customSource: {
-                url: "https://jsonplaceholder.typicode.com/users?name={value}",
-                config: {},
-                replaceUrl: "{value}"
+                url: "https://jsonplaceholder.typicode.com/users",
+                config: {}
+                // replaceUrl: "{value}"
               },
               idAttributeName: "id",
               labelAttributeName: "name"
@@ -286,9 +286,9 @@ const config = {
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "Address",
+          titleColumnTable: "Gender",
           typeColumnTable: "text",
-          attributeColumnTable: "address",
+          attributeColumnTable: "gender",
           prefixColumnTable: "",
           allowSearch: true
         }
