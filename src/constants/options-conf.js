@@ -28,7 +28,8 @@ export default {
     "longtext"
   ],
   typeExportValue: ["csv", "excel"],
-  snackbarValue: ["error", "success", "warning", "info"],
+  typeFormValue: ["standard", "details"],
   alertValue: ["", "alert", "confirmation"],
-  typeFormValue: ["standard", "details"]
+  formatImage: ["base64", "formData", "binaryString"],
+  snackbarValue: ["error", "success", "warning", "info"]
 };

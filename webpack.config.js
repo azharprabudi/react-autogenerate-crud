@@ -15,6 +15,10 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"]
+      },
+      {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
@@ -28,7 +32,7 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: [".js"]
+    extensions: [".js", ".css"]
   },
   devServer: {
     port: 3000,

@@ -330,6 +330,47 @@ const config = {
           attributeColumnTable: "image",
           prefixColumnTable: "",
           allowSearch: true
+        },
+        {
+          component: "CustomEditor",
+          componentAttribute: {
+            id: "content",
+            name: "content",
+            label: "content",
+            style: {},
+            type: "text",
+            extension: {
+              editorConf: {
+                img: {
+                  uploadUrl: "https://api.imgur.com/3/image",
+                  method: "post",
+                  config: {
+                    headers: {
+                      Authorization: "Client-ID 8d26ccd12712fca"
+                    }
+                  },
+                  type: "formData"
+                }
+              }
+            },
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "required",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "Content",
+          typeColumnTable: "text",
+          attributeColumnTable: "content",
+          prefixColumnTable: "",
+          allowSearch: true
         }
       ]
     }

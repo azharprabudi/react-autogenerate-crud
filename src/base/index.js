@@ -872,6 +872,30 @@ CRUDGenerate.propTypes = {
             label: PropTypes.string.isRequired,
             type: PropTypes.string.isRequired,
             style: PropTypes.object,
+            extension: PropTypes.shape({
+              customSource: PropTypes.shape({
+                url: PropTypes.string.isRequired,
+                config: PropTypes.object,
+                initialUrl: PropTypes.string,
+                replaceUrl: PropTypes.object
+              }),
+              imgConf: PropTypes.shape({
+                minSize: PropTypes.number,
+                maxSize: PropTypes.number,
+                allowTypes: PropTypes.string
+              }),
+              editorConf: PropTypes.shape({
+                img: PropTypes.shape({
+                  uploadUrl: PropTypes.string.isRequired,
+                  method: PropTypes.oneOf(OptionsConf.methodValue).isRequired,
+                  config: PropTypes.object,
+                  type: PropTypes.oneOf(OptionsConf.formatImage).isRequired
+                })
+              }),
+              prefix: PropTypes.string,
+              idAttributeName: PropTypes.string,
+              labelAttributeName: PropTypes.string
+            }),
             onAdd: PropTypes.shape({
               disabled: PropTypes.bool.isRequired,
               readonly: PropTypes.bool.isRequired

@@ -88,15 +88,7 @@ class FormFileUploader extends PureComponent {
   };
 
   render() {
-    const {
-      label,
-      id,
-      name,
-      disabled,
-      readonly,
-      extension,
-      classes
-    } = this.props;
+    const { label, id, name, disabled, readonly, classes } = this.props;
     return (
       <div style={{ marginTop: 16, marginBottom: 8 }}>
         <InputLabel>{label}</InputLabel>
@@ -150,7 +142,14 @@ FormFileUploader.propTypes = {
   disabled: PropTypes.bool.isRequired,
   classes: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired
+  value: PropTypes.string.isRequired,
+  extension: PropTypes.shape({
+    imageConf: PropTypes.shape({
+      minSize: PropTypes.number.isRequired,
+      maxSize: PropTypes.number.isRequired,
+      allowTypes: PropTypes.string.isRequired
+    })
+  })
 };
 
 export default withStyles(styles)(FormFileUploader);
