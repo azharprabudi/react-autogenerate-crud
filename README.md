@@ -209,8 +209,8 @@ And also, this project already has features including:
         <tr>
             <td>7</td>
             <td>fields</td>
-            <td>Object</td>
-            <td>{}</td>
+            <td>Array</td>
+            <td>[]</td>
             <td>Yes</td>
             <td>See full documentation <a href="./documentation/fields/README.md">here</a></td>
         </tr>
