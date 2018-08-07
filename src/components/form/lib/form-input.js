@@ -110,6 +110,7 @@ FormInput.propTypes = {
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.any.isRequired,
+  isEdit: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
   readonly: PropTypes.bool.isRequired,

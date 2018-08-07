@@ -14,6 +14,7 @@ FormSelectAsyncMultipleAutoComplete.propTypes = {
   /* required */
   id: PropTypes.string.isRequired,
   value: PropTypes.any.isRequired,
+  isEdit: PropTypes.bool.isRequired,
   disabled: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
   extension: PropTypes.shape({

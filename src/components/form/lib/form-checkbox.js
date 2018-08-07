@@ -109,6 +109,7 @@ FormCheckbox.propTypes = {
     idAttributeName: PropTypes.string.isRequired,
     labelAttributeName: PropTypes.string.isRequired
   }).isRequired,
+  isEdit: PropTypes.bool.isRequired,
   helperText: PropTypes.string.isRequired,
   /* non required */
   style: PropTypes.object

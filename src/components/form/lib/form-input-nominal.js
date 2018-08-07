@@ -59,6 +59,7 @@ FormInputNominal.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   value: PropTypes.any.isRequired,
+  isEdit: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
   readonly: PropTypes.bool.isRequired,
   disabled: PropTypes.bool.isRequired,

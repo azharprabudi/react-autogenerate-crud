@@ -28,6 +28,7 @@ FormSelectAsyncAutoComplete.propTypes = {
   }).isRequired,
   error: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
+  isEdit: PropTypes.bool.isRequired,
   label: PropTypes.string.isRequired,
   helperText: PropTypes.string.isRequired,
   /* non required */

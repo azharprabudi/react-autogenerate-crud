@@ -251,6 +251,7 @@ BaseAsyncAutoComplete.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
+  isEdit: PropTypes.bool.isRequired,
   helperText: PropTypes.string.isRequired,
   /* non required */
   multi: PropTypes.bool,

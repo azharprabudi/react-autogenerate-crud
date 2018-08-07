@@ -16,6 +16,7 @@ FormSelectMultipleAutoComplete.propTypes = {
   value: PropTypes.any.isRequired,
   disabled: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
+  isEdit: PropTypes.bool.isRequired,
   extension: PropTypes.shape({
     data: PropTypes.array,
     customSource: PropTypes.shape({

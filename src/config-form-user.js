@@ -296,6 +296,40 @@ const config = {
           attributeColumnTable: "gender",
           prefixColumnTable: "",
           allowSearch: true
+        },
+        {
+          component: "FileUploader",
+          componentAttribute: {
+            id: "image",
+            name: "image",
+            label: "Image",
+            style: {},
+            type: "text",
+            extension: {
+              imgConf: {
+                minSize: 0,
+                maxSize: 5000000,
+                allowTypes: "image/jpg"
+              }
+            },
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "required",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "Image",
+          typeColumnTable: "text",
+          attributeColumnTable: "image",
+          prefixColumnTable: "",
+          allowSearch: true
         }
       ]
     }

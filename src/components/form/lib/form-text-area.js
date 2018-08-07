@@ -62,6 +62,7 @@ FormTextArea.propTypes = {
   extension: PropTypes.object.isRequired,
   value: PropTypes.any.isRequired,
   error: PropTypes.bool.isRequired,
+  isEdit: PropTypes.bool.isRequired,
   helperText: PropTypes.string.isRequired,
   /* no required */
   style: PropTypes.object,

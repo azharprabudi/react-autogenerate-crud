@@ -188,6 +188,7 @@ BaseAutoComplete.propTypes = {
     idAttributeName: PropTypes.string.isRequired,
     labelAttributeName: PropTypes.string.isRequired
   }).isRequired,
+  isEdit: PropTypes.bool.isRequired,
   error: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
