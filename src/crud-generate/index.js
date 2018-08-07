@@ -8,15 +8,15 @@ import isArray from "lodash/isArray";
 import moment from "moment";
 
 /* custom components */
-import BaseTable from "./base-table";
-import FormDialog from "../components/form/form-dialog";
-import AlertDialog from "../components/etc/alert-dialog";
-import CustomSnackbar from "../components/etc/custom-snackbar";
+import BaseTable from "./base/base-table";
+import FormDialog from "./components/form/form-dialog";
+import AlertDialog from "./components/etc/alert-dialog";
+import CustomSnackbar from "./components/etc/custom-snackbar";
 
 /* custom configuration */
-import Colors from "../constants/colors";
-import OptionsConf from "../constants/options-conf";
-import GenerateExportFile from "../helpers/generate-export-file";
+import Colors from "./constants/colors";
+import OptionsConf from "./constants/options-conf";
+import GenerateExportFile from "./helpers/generate-export-file";
 
 class CRUDGenerate extends Component {
   constructor(props) {

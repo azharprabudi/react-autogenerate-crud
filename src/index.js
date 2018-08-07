@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import ReactDOM from "react-dom";
-import CRUDGenerate from "./base";
+import CRUDGenerate from "./crud-generate";
 import config from "./config-form-user";
 
 class Index extends Component {

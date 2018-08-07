@@ -1,10 +1,10 @@
 ## React Auto Generate CRUD ##
 
-<b>Specially thanks for our team, there are :</b>
+<b>Specially thanks for the best team ever, there are :</b>
 
 1. Hartanto Boy
 2. Boby Harmoko
-3. And me
+3. And me (Azhar Prabudi)
 
 
 To keep it up this project, for purpose to decrease the development time when using react in backend. Almost in backend, there are some CRUD module and could it be take a long time to make CRUD, CRUD, CRUD again. And i hope this library helpfull for other people same like us :).
