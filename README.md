@@ -222,6 +222,14 @@ This project is made open source to help other people who use react in developin
             <td>Yes</td>
             <td>See full documentation <a href="./documentation/export/README.md">here</a></td>
         </tr>
+        <tr>
+            <td>9</td>
+            <td>loading</td>
+            <td>Object</td>
+            <td>{}</td>
+            <td>No</td>
+            <td>See full documentation <a href="./documentation/loading/README.md">here</a></td>
+        </tr>
     </tbody>
 </table>
 
