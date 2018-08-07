@@ -257,7 +257,7 @@ const config = {
           allowSearch: true
         },
         {
-          component: "SelectMultipleAutoComplete",
+          component: "SelectAsyncMultipleAutoComplete",
           componentAttribute: {
             id: "gender",
             name: "gender",
@@ -266,9 +266,14 @@ const config = {
             type: "text",
             extension: {
               customSource: {
-                url: "https://jsonplaceholder.typicode.com/users",
-                config: {}
-                // replaceUrl: "{value}"
+                url: "https://jsonplaceholder.typicode.com/users?name={name}",
+                config: {},
+                initialUrl:
+                  "https://jsonplaceholder.typicode.com/users?id={id}", // this used on select async
+                replaceUrl: {
+                  initial: "{id}",
+                  url: "{name}"
+                } // this useed on select async
               },
               idAttributeName: "id",
               labelAttributeName: "name"

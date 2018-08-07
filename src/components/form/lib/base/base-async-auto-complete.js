@@ -8,6 +8,7 @@ import axios from "axios";
 import has from "lodash/has";
 import PropTypes from "prop-types";
 import isArray from "lodash/isArray";
+import isEqual from "lodash/isEqual";
 import AsyncSelect from "react-select/lib/Async";
 
 /* my modules */
@@ -52,8 +53,85 @@ const components = {
 };
 
 class BaseAsyncAutoComplete extends PureComponent {
-  state = {
-    query: ""
+  constructor(props) {
+    super(props);
+    this.state = {
+      query: "",
+      selected: props.multi ? [] : { label: "", value: "" }
+    };
+    this.initialize = true;
+  }
+
+  componentDidUpdate(previousProps) {
+    if (
+      this.initialize &&
+      this.props.isEdit &&
+      isEqual(previousProps.value, this.props.value) === false
+    ) {
+      this.initialize = false;
+      this.getValueFromProps(this.props.value);
+    }
+  }
+
+  getValueFromProps = async value => {
+    try {
+      const { multi, extension } = this.props;
+      let selected = null;
+      if (multi) {
+        let data = [];
+        for (let i = 0; i < value.length; i++) {
+          let result = await this.initialFetchToServer(value[i]);
+          data.push({
+            value: result[extension.idAttributeName],
+            label: result[extension.labelAttributeName]
+          });
+        }
+        selected = data;
+      } else {
+        let result = await this.initialFetchToServer(value);
+        selected = {
+          value: result[extension.idAttributeName],
+          label: result[extension.labelAttributeName]
+        };
+      }
+      this.setState({
+        ...this.state,
+        selected
+      });
+    } catch (e) {
+      alert(isArray(e) ? JSON.stringify(e) : e.toString());
+    }
+  };
+
+  initialFetchToServer = async value => {
+    try {
+      const { extension } = this.props;
+
+      let url = has(extension.customSource, "initialUrl")
+        ? extension.customSource.initialUrl
+        : "";
+      const config = has(extension.customSource, "config")
+        ? extension.customSource.config
+        : {};
+
+      /* check if there a query exist and then show it */
+      const replaceUrl = has(extension.customSource, "replaceUrl")
+        ? extension.customSource.replaceUrl
+        : "";
+
+      /* replace url if exist */
+      if (has(replaceUrl, "initial")) {
+        url = url.replace(replaceUrl.initial, value);
+      }
+
+      const result = await axios.get(url, config);
+      if (!has(result, "data") || result.data.length < 1) {
+        throw new Error(result);
+      }
+      return result.data[0];
+    } catch (e) {
+      return e;
+    }
   };
 
   loadOptions = (value, callback) => {
@@ -80,8 +158,8 @@ class BaseAsyncAutoComplete extends PureComponent {
       const replaceUrl = has(extension.customSource, "replaceUrl")
         ? extension.customSource.replaceUrl
         : "";
-      if (replaceUrl !== "") {
-        url = url.replace(replaceUrl, value);
+      if (has(replaceUrl, "url")) {
+        url = url.replace(replaceUrl.url, value);
       }
 
       const data = await axios.get(url, config);
@@ -108,7 +186,15 @@ class BaseAsyncAutoComplete extends PureComponent {
   };
 
   onChange = value => {
-    this.props.onChange(value);
+    this.setState({
+      ...this.state,
+      selected: value
+    });
+    /*
+    just return id to the user
+    */
+    let returnValue = this.props.multi ? value.map(item => item.value) : value;
+    this.props.onChange(returnValue);
   };
 
   render() {
@@ -136,8 +222,8 @@ class BaseAsyncAutoComplete extends PureComponent {
         disabled={disabled}
         helperText={helperText}
         components={components}
-        value={this.props.value}
-        onChange={this.props.onChange}
+        onChange={this.onChange}
+        value={this.state.selected}
         loadOptions={this.loadOptions}
         onInputChange={this.handleInputChange}
       />

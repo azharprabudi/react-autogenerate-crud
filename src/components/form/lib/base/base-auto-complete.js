@@ -10,14 +10,13 @@ import has from "lodash/has";
 import Select from "react-select";
 import PropTypes from "prop-types";
 import isArray from "lodash/isArray";
-import isEqual from "lodash/isEqual";
 
 /* my modules */
 import Option from "../etc/option";
 import Control from "../etc/control";
 import Placeholder from "../etc/placeholder";
-import NoOptionsMessage from "../etc/no-options-message";
 import ValueContainer from "../etc/value-container";
+import NoOptionsMessage from "../etc/no-options-message";
 
 const styles = theme => ({
   input: {
@@ -79,15 +78,9 @@ class BaseAutoComplete extends PureComponent {
     }
   }
 
-  componentDidUpdate(previousProps) {
-    if (isEqual(previousProps.value !== this.props.value) && this.initialize) {
-      // cek point dimari
-    }
-  }
-
   getCustomSourceData = async () => {
     try {
-      const { extension, isEdit, multi, value } = this.props;
+      const { extension, isEdit, multi } = this.props;
       const url = has(extension.customSource, "url")
         ? extension.customSource.url
         : "";
@@ -99,25 +92,26 @@ class BaseAutoComplete extends PureComponent {
         throw new Error(data);
       }
 
-      let { selected } = this.state;
+      let selected = null;
       if (isEdit) {
-        console.log(multi);
-        console.log(this.props);
         if (multi) {
-          selected = value.map(item => {
-            const tmpSelected = data.data.find(
-              itemData => itemData[extension.idAttributeName] == item
+          selected = this.props.value.map(item => {
+            let result = data.data.find(
+              findItem => findItem[extension.idAttributeName] === item
             );
-            console.log(tmpSelected);
             return {
-              value: tmpSelected[extension.idAttributeName],
-              label: tmpSelected[extension.labelAttributeName]
+              value: result[extension.idAttributeName],
+              label: result[extension.labelAttributeName]
             };
           });
         } else {
-          selected = data.data.find(
-            item => item[extension.idAttributeName] == value
+          let result = data.data.find(
+            findItem => findItem[extension.idAttributeName] === this.props.value
           );
+          selected = {
+            value: result[extension.idAttributeName],
+            label: result[extension.labelAttributeName]
+          };
         }
       }
 
@@ -134,11 +128,15 @@ class BaseAutoComplete extends PureComponent {
   };
 
   onChange = value => {
-    this.props.onChange(value);
     this.setState({
       ...this.state,
-      selected: this.state.data.find(item => item.value == value)
+      selected: value
     });
+    /* just return the id to the props   */
+    let returnValue = this.props.multi
+      ? value.map(({ value }) => value)
+      : value.value;
+    this.props.onChange(returnValue);
   };
 
   render() {
