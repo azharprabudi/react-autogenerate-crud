@@ -28,7 +28,7 @@ This project is made open source to help other people who use react in developin
 16. "react-text-mask": "^ 5.4.3",
 17. "validate.js": "^ 0.12.0"
 
-And also, this project already has features including:
+## And also, this project already has features including: ##
 
 <table>
     <thead>
