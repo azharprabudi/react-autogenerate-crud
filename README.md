@@ -129,7 +129,103 @@ And also, this project already has features including:
 
 <b>Click <a href="./src/index.js">here</a> to know, how to use this generator</b>
 
-<b>Below is a documentation of this project</b>
+## Below is a documentation of this project ##
+
+<table>
+    <thead>
+        <tr>
+            <td>No</td>
+            <td>Props Name</td>
+            <td>Type</td>
+            <td>Default</td>
+            <td>Required</td>
+            <td>Description</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>aclId</td>
+            <td>String</td>
+            <td>*</td>
+            <td>No</td>
+            <td>aclId is used to provide each user with an access limit to the actions that can be carried out in this generator, namely, add, update, delete</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>aclRules</td>
+            <td>Object</td>
+            <td>
+                <pre>
+                   <code>
+{
+    "*": {
+        create: true (required),
+        read: true (required),
+        update: true (required),
+        delete: true (required),
+        export: true (required),
+        import: true (required)
+    }
+}
+                    </code>
+               </pre>
+            </td>
+            <td>No</td>
+            <td>From the aclId given above, from here it can be seen that the user can only access several modules or everything</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>initialLimit</td>
+            <td>Number</td>
+            <td>10</td>
+            <td>No</td>
+            <td>Every time a table is created, the data limit displayed and requested by the server uses this number, but this number can change if the limit per page in the table view is changed</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>title</td>
+            <td>String</td>
+            <td>''</td>
+            <td>Yes</td>
+            <td>Title of table</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>server</td>
+            <td>Object</td>
+            <td>{}</td>
+            <td>Yes</td>
+            <td>See full documentation at <a href="./documentation/server/README.md">here</a></td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>table</td>
+            <td>Object</td>
+            <td>{}</td>
+            <td>No</td>
+            <td>See full documentation <a href="./documentation/table/README.md">here</a></td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td>fields</td>
+            <td>Object</td>
+            <td>{}</td>
+            <td>Yes</td>
+            <td>See full documentation <a href="./documentation/fields/README.md">here</a></td>
+        </tr>
+        <tr>
+            <td>8</td>
+            <td>export</td>
+            <td>Object</td>
+            <td>{}</td>
+            <td>Yes</td>
+            <td>See full documentation <a href="./documentation/export/README.md">here</a></td>
+        </tr>
+    </tbody>
+</table>
+
+<b>Click <a href="./src/config-form-user.js">here</a> to see the configuration</b>
 
 
 ## If you interest, give us your star for this project :) ##
