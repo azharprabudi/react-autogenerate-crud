@@ -1,105 +1,136 @@
 ## React Auto Generate CRUD ##
 
-<b>Specially thanks for the best team ever, there are :</b>
+Thank you very much to the best team I have ever had, they are:
 
-1. Hartanto Boy
+1. Hartanto Boby
 2. Boby Harmoko
-3. And me (Azhar Prabudi)
+3. And me
 
+This project is made open source to help other people who use react in developing their backend, because we think the process of making CRUD to master data is very time consuming and especially it is done many times.
 
-To keep it up this project, for purpose to decrease the development time when using react in backend. Almost in backend, there are some CRUD module and could it be take a long time to make CRUD, CRUD, CRUD again. And i hope this library helpfull for other people same like us :).
+<b>This project uses several dependencies:</b>
 
-<b>This project currently using <a href="https://material-ui.com/">material-ui</a>, i am not consider to using another framework css, cause i think this one is good enough</b>
+1. "@ material-ui / core": "^ 1.4.1",
+2. "@ material-ui / icons": "^ 2.0.0",
+3. "axios": "^ 0.18.0",
+4. "classnames": "^ 2.2.6",
+5. "draft-js": "^ 0.10.5",
+6. "draftjs-to-html": "^ 0.8.4",
+7. "html-to-draftjs": "^ 1.4.0",
+8. "immutable": "^ 3.8.2",
+9. "lodash": "^ 4.17.10",
+10. "moment": "^ 2.22.2",
+11. "prop-types": "^ 15.6.2",
+12. "react-draft-wysiwyg": "^ 1.12.13",
+13. "react-dropzone": "^ 4.2.13",
+14. "react-number-format": "^ 3.5.0",
+15. "react-select": "^ 2.0.0",
+16. "react-text-mask": "^ 5.4.3",
+17. "validate.js": "^ 0.12.0"
 
+And also, this project already has features including:
 
-<b>There are avaiable feature for this project :</b>
 <table>
     <thead>
         <tr>
-            <td>Module</td>
-            <td>Feature</td>
+            <td>No.</td>
+            <td>Name</td>
             <td>Status</td>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td rowspan="10">View</td>
-            <td>Generate Table</td>
+            <td>1</td>
+            <td>Access Control Level (CRUD)</td>
             <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
-            <td>Fetching Data For Table</td>
-            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
-        </tr>
-        <tr>
-            <td>Title Table</td>
-            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
-        </tr>
-        <tr>
-            <td>Sorting Column</td>
-            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
-        </tr>
-        <tr>
-            <td>Checkbox All Item</td>
-            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
-        </tr>
-        <tr>
-            <td>Checkbox Multiple Item</td>
-            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
-        </tr>
-        <tr>
+            <td>2</td>
             <td>Pagination</td>
             <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
-            <td>Change Row Limit</td>
+            <td>3</td>
+            <td>Limitation</td>
             <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
-            <td>Button At Top Table</td>
+            <td>4</td>
+            <td>Auto generate table (depending on the configuration column you want to display)</td>
             <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
-            <td>Button At Body Table Each Row</td>
+            <td>5</td>
+            <td>Merging the column table</td>
             <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
-            <td rowspan="2">Form Add / Edit</td>
-            <td>Generate Form</td>
-            <td>Not Yet</td>
-        </tr>
-        <tr>
-            <td>Submit Data Add And Edit</td>
-            <td>Not Yet</td>
-        </tr>
-        <tr>
-            <td rowspan="3">Search</td>
-            <td>Generate Form Search</td>
-            <td>Not Yet</td>
-        </tr>
-        <tr>
-            <td>Fetch Data Depend On Search</td>
-            <td>Not Yet</td>
-        </tr>
-        <tr>
-            <td>Clear Search</td>
-            <td>Not Yet</td>
-        </tr>
-        <tr>
-            <td rowspan="2">Delete</td>
-            <td>Delete bulk</td>
+            <td>6</td>
+            <td>Sorting column ASC & DESC</td>
             <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
-            <td>Delete each row item</td>
+            <td>7</td>
+            <td>Delete Bulk & Single Item</td>
             <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+        </tr>
+        <tr>
+            <td>8</td>
+            <td>Add an additional button top of table</td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+        </tr>
+        <tr>
+            <td>9</td>
+            <td>Add an additional button at each row</td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+        </tr>
+        <tr>
+            <td>10</td>
+            <td>Auto generate form (depend on the configuration)</td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+        </tr>
+        <tr>
+            <td>11</td>
+            <td>Export data to CSV</td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+        </tr>
+        <tr>
+            <td>12</td>
+            <td>Autoload data in edit mode</td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
+        </tr>
+        <tr>
+            <td>13</td>
+            <td>Export data to excel</td>
+            <td>Not Yet</td>
+        </tr>
+        <tr>
+            <td>14</td>
+            <td>Form details</td>
+            <td>Not Yet</td>
+        </tr>
+        <tr>
+            <td>15</td>
+            <td>Submit for edit data, and add new</td>
+            <td>Not Yet</td>
+        </tr>
+        <tr>
+            <td>16</td>
+            <td>Search</td>
+            <td>Not Yet</td>
+        </tr>
+        <tr>
+            <td>17</td>
+            <td>Sorting using api</td>
+            <td>Not Yet</td>
         </tr>
     </tbody>
 </table>
 
-<b>This project still ongoing, but if you want to try you can clone this repo, and just npm install it in your directory project, or if you want to check the example code visit this <a href="/src/index.js">link</a></b>
+<b>Click <a href="./src/index.js">here</a> to know, how to use this generator</b>
 
-## See the complete documentation below
+## Below is a documentation of this project ##
+
 <table>
     <thead>
         <tr>
@@ -114,87 +145,87 @@ To keep it up this project, for purpose to decrease the development time when us
     <tbody>
         <tr>
             <td>1</td>
-            <td>title</td>
-            <td>String</td> 
-            <td>none</td>
-            <td>YES</td>
-            <td>Title will show at the top of the table</td>
+            <td>aclId</td>
+            <td>String</td>
+            <td>*</td>
+            <td>No</td>
+            <td>aclId is used to provide each user with an access limit to the actions that can be carried out in this generator, namely, add, update, delete</td>
         </tr>
         <tr>
             <td>2</td>
-            <td>limit</td>
-            <td>Number</td> 
-            <td>10 (Number of [5, 10, 15, 25, 50, 100])</td>
-            <td>NO</td>
-            <td>Initial limit for the table</td>
+            <td>aclRules</td>
+            <td>Object</td>
+            <td>
+                <pre>
+                   <code>
+{
+    "*": {
+        create: true (required),
+        read: true (required),
+        update: true (required),
+        delete: true (required),
+        export: true (required),
+        import: true (required)
+    }
+}
+                    </code>
+               </pre>
+            </td>
+            <td>No</td>
+            <td>From the aclId given above, from here it can be seen that the user can only access several modules or everything</td>
         </tr>
         <tr>
             <td>3</td>
-            <td>checkboxOpitions</td>
-            <td>Object</td> 
-            <td>
-                <pre>
-                    <code>
-{
-    enable: false,
-    objName: ""
-}
-                    </code>
-                </pre>
-            </td>
-            <td>NO</td>
-            <td>Read full documentation about checkboxOpitions <a href="/documentation/checkboxOptions.md">Here</a></td>
+            <td>initialLimit</td>
+            <td>Number</td>
+            <td>10</td>
+            <td>No</td>
+            <td>Every time a table is created, the data limit displayed and requested by the server uses this number, but this number can change if the limit per page in the table view is changed</td>
         </tr>
         <tr>
             <td>4</td>
-            <td>fetchOptions</td>
-            <td>Object</td>
-            <td>none</td>
-            <td>YES</td>
-            <td>Read full documentation about fetchOptions <a href="/documentation/fetchOptions.md">Here</a></td>
+            <td>title</td>
+            <td>String</td>
+            <td>''</td>
+            <td>Yes</td>
+            <td>Title of table</td>
         </tr>
         <tr>
             <td>5</td>
-            <td>tableOptions</td>
+            <td>server</td>
             <td>Object</td>
-            <td>none</td>
-            <td>YES</td>
-            <td>Read full documentation about tableOptions <a href="/documentation/tableOptions.md">Here</a></td>
+            <td>{}</td>
+            <td>Yes</td>
+            <td>See full documentation at <a href="./documentation/server/README.md">here</a></td>
         </tr>
         <tr>
             <td>6</td>
-            <td>formOptions</td>
+            <td>table</td>
             <td>Object</td>
-            <td>none</td>
-            <td>YES</td>
-            <td>Read full documentation about formOptions <a href="/documentation/formOptions.md">Here</a></td>
+            <td>{}</td>
+            <td>No</td>
+            <td>See full documentation <a href="./documentation/table/README.md">here</a></td>
         </tr>
         <tr>
             <td>7</td>
-            <td>searchOptions</td>
-            <td>Object</td>
-            <td>none</td>
-            <td>YES</td>
-            <td>Read full documentation about searchOptions <a href="/documentation/searchOptions.md">Here</a></td>
+            <td>fields</td>
+            <td>Array</td>
+            <td>[]</td>
+            <td>Yes</td>
+            <td>See full documentation <a href="./documentation/fields/README.md">here</a></td>
         </tr>
         <tr>
             <td>8</td>
-            <td>loadingOptions</td>
+            <td>export</td>
             <td>Object</td>
-            <td>
-                <pre>
-                    <code>
-{
-    color: "primary",
-    size: 30
-}
-                    </code>
-                </pre>
-            </td>
-            <td>NO</td>
-            <td>Read full documentation about loadingOptions <a href="/documentation/loadingOptions.md">Here</a></td>
+            <td>{}</td>
+            <td>Yes</td>
+            <td>See full documentation <a href="./documentation/export/README.md">here</a></td>
         </tr>
     </tbody>
 </table>
 
-## Give us your star for this project :) ##
+<b>Click <a href="./src/config-form-user.js">here</a> to see the configuration</b>
+
+
+## If you interest, give us your star for this project :) ##
