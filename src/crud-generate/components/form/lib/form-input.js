@@ -9,6 +9,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import { withStyles } from "@material-ui/core/styles";
 
 /* etc modules */
+import moment from "moment";
 import has from "lodash/has";
 import PropTypes from "prop-types";
 
@@ -65,6 +66,18 @@ class FormInput extends PureComponent {
     this.props.onChange(e.target.value);
   };
 
+  getRealValue = value => {
+    if (this.props.type === "date") {
+      return moment(value).format("YYYY-MM-DD");
+    } else if (this.props.type === "time") {
+      return moment(value).format("kk:mm");
+    } else if (this.props.type === "datetime-local") {
+      return moment(value).format("YYYY-MM-DDTkk:mm");
+    } else {
+      return value;
+    }
+  };
+
   render() {
     const {
       id,
@@ -85,7 +98,7 @@ class FormInput extends PureComponent {
         id={id}
         name={name}
         type={this.state.showPassword ? "text" : type}
-        value={value}
+        value={this.getRealValue(value)}
         margin={"normal"}
         onChange={this.onChange}
         required={required}

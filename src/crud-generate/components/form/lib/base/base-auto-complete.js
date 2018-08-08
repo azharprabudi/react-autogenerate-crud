@@ -10,6 +10,7 @@ import has from "lodash/has";
 import Select from "react-select";
 import PropTypes from "prop-types";
 import isArray from "lodash/isArray";
+import isEqual from "lodash/isEqual";
 
 /* my modules */
 import Option from "../etc/option";
@@ -68,19 +69,75 @@ class BaseAutoComplete extends PureComponent {
     super(props);
     this.state = {
       selected: props.multi ? [] : { label: "", value: "" },
-      data: has(props.extension, "data") ? props.extension.data : []
+      data: has(props.extension, "data")
+        ? props.extension.data.map(item => ({
+            value: item[props.extension.idAttributeName],
+            label: item[props.extension.labelAttributeName]
+          }))
+        : []
     };
+
+    this.initialize = true;
   }
 
   componentDidMount() {
-    if (has(this.props.extension, "customSource")) {
+    if (has(this.props.extension, "customSource") && !this.props.isEdit) {
       this.getCustomSourceData();
+    }
+  }
+
+  componentDidUpdate(previousProps) {
+    if (
+      this.initialize &&
+      this.props.isEdit &&
+      isEqual(this.props.value, previousProps.value) === false
+    ) {
+      /* conditional when edit, user have to fetch data when the customSource attribute found in the configuration and vice cersa */
+      if (has(this.props.extension, "customSource")) {
+        this.getCustomSourceData();
+      } else if (has(this.props.extension, "data")) {
+        this.setSelectedState(this.state.data);
+      }
+
+      this.initialize = false;
     }
   }
 
   getCustomSourceData = async () => {
     try {
-      const { extension, isEdit, multi } = this.props;
+      const data = await this.doGetCustomSourceData();
+      if (!this.props.isEdit) {
+        this.setState({
+          ...this.state,
+          data
+        });
+      } else {
+        this.setSelectedState(data);
+      }
+    } catch (e) {
+      alert(isArray(e) ? JSON.stringify(e) : e.toString());
+    }
+  };
+
+  setSelectedState = data => {
+    let selected = null;
+    const { multi, value } = this.props;
+    if (multi) {
+      selected = value.map(item =>
+        data.find(findItem => findItem.value == item)
+      );
+    } else {
+      selected = data.find(findItem => findItem.value == value);
+    }
+    this.setState({
+      data,
+      selected
+    });
+  };
+
+  doGetCustomSourceData = async () => {
+    try {
+      const { extension } = this.props;
       const url = has(extension.customSource, "url")
         ? extension.customSource.url
         : "";
@@ -91,39 +148,12 @@ class BaseAutoComplete extends PureComponent {
       if (!has(data, "data")) {
         throw new Error(data);
       }
-
-      let selected = null;
-      if (isEdit) {
-        if (multi) {
-          selected = this.props.value.map(item => {
-            let result = data.data.find(
-              findItem => findItem[extension.idAttributeName] === item
-            );
-            return {
-              value: result[extension.idAttributeName],
-              label: result[extension.labelAttributeName]
-            };
-          });
-        } else {
-          let result = data.data.find(
-            findItem => findItem[extension.idAttributeName] === this.props.value
-          );
-          selected = {
-            value: result[extension.idAttributeName],
-            label: result[extension.labelAttributeName]
-          };
-        }
-      }
-
-      this.setState({
-        selected,
-        data: data.data.map(data => ({
-          value: data[extension.idAttributeName],
-          label: data[extension.labelAttributeName]
-        }))
-      });
+      return data.data.map(item => ({
+        value: item[extension.idAttributeName],
+        label: item[extension.labelAttributeName]
+      }));
     } catch (e) {
-      alert(isArray(e) ? JSON.stringify(e) : e.toString());
+      return e;
     }
   };
 
@@ -162,11 +192,11 @@ class BaseAutoComplete extends PureComponent {
         disabled={disabled}
         components={components}
         isMulti={multi}
+        placeholder={""}
         helperText={helperText}
         onChange={this.onChange}
         options={this.state.data}
         value={this.state.selected}
-        placeholder={`Search your ${label} here`}
       />
     );
   }

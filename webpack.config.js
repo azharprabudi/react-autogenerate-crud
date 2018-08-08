@@ -35,7 +35,7 @@ module.exports = {
     extensions: [".js", ".css"]
   },
   devServer: {
-    port: 3000,
+    port: 9000,
     hot: true,
     noInfo: false
   },

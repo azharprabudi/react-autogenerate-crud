@@ -217,9 +217,9 @@ class BaseAsyncAutoComplete extends PureComponent {
         cacheOptions
         isMulti={multi}
         defaultOptions
-        placeholder={""}
         classes={classes}
         disabled={disabled}
+        placeholder={""}
         helperText={helperText}
         components={components}
         onChange={this.onChange}

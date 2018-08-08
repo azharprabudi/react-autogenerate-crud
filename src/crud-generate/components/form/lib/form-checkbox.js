@@ -47,9 +47,10 @@ class FormCheckbox extends PureComponent {
 
   onChange = e => {
     let { value } = e.target;
-    value = value.toString();
-    if (this.props.value.indexOf(value) > -1) {
-      this.props.onChange(this.props.value.filter(val => val !== value));
+    if (this.props.value.filter(filtItem => filtItem == value).length > 0) {
+      this.props.onChange(
+        this.props.value.filter(filtItem => filtItem != value)
+      );
     } else {
       this.props.onChange([...this.props.value, value]);
     }
@@ -78,7 +79,11 @@ class FormCheckbox extends PureComponent {
                   disabled={disabled}
                   onChange={this.onChange}
                   value={item[extension.idAttributeName].toString()}
-                  checked={value.indexOf(item[extension.idAttributeName]) > -1}
+                  checked={
+                    value.filter(
+                      filtItem => filtItem == item[extension.idAttributeName]
+                    ).length > 0
+                  }
                   style={style}
                 />
               }

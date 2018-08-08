@@ -1,5 +1,3 @@
-import React from "react";
-
 const config = {
   aclId: "*",
   aclRules: {
@@ -17,14 +15,14 @@ const config = {
   server: {
     http: {
       create: {
-        url: "https://jsonplaceholder.typicode.com/users",
+        url: "http://localhost:3000/article",
         method: "post",
         config: {},
         callbackBeforeCreate: () => {},
         callbackAfterCreate: () => {}
       },
       read: {
-        url: "https://jsonplaceholder.typicode.com/users",
+        url: "http://localhost:3000/article",
         query: {
           limit: "_limit",
           page: "_page",
@@ -35,12 +33,12 @@ const config = {
         callbackAfterRead: () => {}
       },
       update: {
-        url: "https://jsonplaceholder.typicode.com/users/{id}",
+        url: "http://localhost:3000/article/{id}",
         get: {
-          url: "http://127.0.0.1:9090/test",
-          config: {}
-          // replaceUrl: "{id}",
-          // attributeName: "id"
+          url: "http://localhost:3000/article/{id}",
+          config: {},
+          replaceUrl: "{id}",
+          attributeName: "id"
         },
         config: {},
         method: "patch",
@@ -51,11 +49,11 @@ const config = {
         callbackAfterUpdate: () => {}
       },
       delete: {
-        url: "https://jsonplaceholder.typicode.com/users/{id}",
+        url: "http://localhost:3000/article/{id}",
         bulk: {
           enable: true,
           method: "get",
-          url: "https://jsonplaceholder.typicode.com/users/{id}",
+          url: "http://localhost:3000/article/{id}",
           callbackBeforeDeleteBulk: () => {},
           callbackAfterDeleteBulk: () => {}
         },
@@ -82,17 +80,16 @@ const config = {
   },
   fields: [
     {
-      title: "Utama",
+      title: "General",
       type: "standard",
       groupName: "Main",
       details: [
         {
           component: "Input",
           componentAttribute: {
-            id: "name",
-            name: "name",
-            label: "Name",
-            style: {},
+            id: "inputStandar",
+            name: "inputStandar",
+            label: "Input Standar",
             type: "text",
             onAdd: {
               disabled: false,
@@ -103,28 +100,22 @@ const config = {
               readonly: false
             }
           },
-          validation: "required|minLength[5]|callback_checkName",
-          callbackValidation: {
-            checkName: value => {
-              return /^[a-zA-Z]+$/.test(value);
-            }
-          },
+          validation: "",
           showOnTable: true,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "Name",
+          titleColumnTable: "Id",
           typeColumnTable: "text",
-          attributeColumnTable: "name",
+          attributeColumnTable: "id",
           prefixColumnTable: "",
           allowSearch: true
         },
         {
           component: "Input",
           componentAttribute: {
-            id: "username",
-            name: "username",
-            label: "Username",
-            style: {},
+            id: "inputValidation",
+            name: "inputValidation",
+            label: "Input Validation",
             type: "text",
             onAdd: {
               disabled: false,
@@ -139,19 +130,18 @@ const config = {
           showOnTable: true,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "Username",
+          titleColumnTable: "Title",
           typeColumnTable: "text",
-          attributeColumnTable: "username",
+          attributeColumnTable: "title",
           prefixColumnTable: "",
           allowSearch: true
         },
         {
           component: "Input",
           componentAttribute: {
-            id: "email",
-            name: "email",
-            label: "Email",
-            style: {},
+            id: "inputCustomValidation",
+            name: "inputCustomValidation",
+            label: "Input Custom Validation",
             type: "text",
             onAdd: {
               disabled: false,
@@ -162,23 +152,30 @@ const config = {
               readonly: false
             }
           },
-          validation: "required|email",
-          showOnTable: true,
+          validation: "required|callback_check",
+          validationCallback: {
+            check: value => {
+              if (/^\S*$/.test(value)) {
+                return { validation: true, message: "" };
+              }
+              return { validation: false, message: "don't allow space" };
+            }
+          },
+          showOnTable: false,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "Email",
+          titleColumnTable: "Title",
           typeColumnTable: "text",
-          attributeColumnTable: "email",
+          attributeColumnTable: "title",
           prefixColumnTable: "",
           allowSearch: true
         },
         {
-          component: "Input",
+          component: "InputNominal",
           componentAttribute: {
-            id: "phone",
-            name: "phone",
-            label: "Phone",
-            style: {},
+            id: "inputNominal",
+            name: "inputNominal",
+            label: "Input Nominal",
             type: "text",
             onAdd: {
               disabled: false,
@@ -189,23 +186,100 @@ const config = {
               readonly: false
             }
           },
-          validation: "required",
+          validation: "",
           showOnTable: true,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "Phone",
+          titleColumnTable: "Viewers",
           typeColumnTable: "text",
-          attributeColumnTable: "phone",
+          attributeColumnTable: "viewers",
           prefixColumnTable: "",
           allowSearch: true
         },
         {
           component: "Input",
           componentAttribute: {
-            id: "website",
-            name: "website",
-            label: "Website",
-            style: {},
+            id: "inputDate",
+            name: "inputDate",
+            label: "Input Date",
+            type: "date",
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "",
+          showOnTable: true,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "created",
+          typeColumnTable: "text",
+          attributeColumnTable: "createdAt",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "Input",
+          componentAttribute: {
+            id: "inputTime",
+            name: "inputTime",
+            label: "Input Time",
+            type: "time",
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "created",
+          typeColumnTable: "text",
+          attributeColumnTable: "createdAt",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "Input",
+          componentAttribute: {
+            id: "inputDateTime",
+            name: "inputDateTime",
+            label: "Input Date Time",
+            type: "datetime-local",
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "created",
+          typeColumnTable: "text",
+          attributeColumnTable: "createdAt",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "FileUploader",
+          componentAttribute: {
+            id: "inputFile",
+            name: "inputFile",
+            label: "Upload File",
             type: "text",
             onAdd: {
               disabled: false,
@@ -216,26 +290,124 @@ const config = {
               readonly: false
             }
           },
-          validation: "required",
+          extension: {
+            uploaderConf: {
+              minSize: 0,
+              maxSize: 3000000,
+              allowTypes: "image/jpg"
+            }
+          },
+          validation: "",
           showOnTable: true,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "Website",
+          titleColumnTable: "created",
           typeColumnTable: "text",
-          attributeColumnTable: "website",
+          attributeColumnTable: "image",
           prefixColumnTable: "",
           allowSearch: true
         },
         {
           component: "TextArea",
           componentAttribute: {
-            id: "address",
-            name: "address",
-            label: "Address",
-            style: {},
+            id: "textareaContent",
+            name: "textareaContent",
+            label: "TextArea Content",
+            type: "text",
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "Content",
+          typeColumnTable: "text",
+          attributeColumnTable: "content",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "CustomEditor",
+          componentAttribute: {
+            id: "customEditorContent",
+            name: "customEditorContent",
+            label: "Custom Editor Content",
+            type: "text",
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            },
+            extension: {
+              editorConf: {
+                img: {
+                  uploadUrl: "https://api.imgur.com/3/image",
+                  method: "post",
+                  config: {
+                    headers: {
+                      Authorization: "Client-ID 8d26ccd12712fca"
+                    }
+                  },
+                  type: "formData"
+                }
+              }
+            }
+          },
+          validation: "",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "Content",
+          typeColumnTable: "text",
+          attributeColumnTable: "content",
+          prefixColumnTable: "",
+          allowSearch: true
+        }
+      ]
+    },
+    {
+      title: "Own Data",
+      type: "standard",
+      groupName: "own",
+      details: [
+        {
+          component: "Radio",
+          componentAttribute: {
+            id: "radioOwnData",
+            name: "radioOwnData",
+            label: "Category Article",
             type: "text",
             extension: {
-              prefix: "rp"
+              data: [
+                {
+                  id: 1,
+                  name: "Politik"
+                },
+                {
+                  id: 2,
+                  name: "Ekonomi"
+                },
+                {
+                  id: 3,
+                  name: "Otomotif"
+                },
+                {
+                  id: 4,
+                  name: "Education"
+                }
+              ],
+              idAttributeName: "id",
+              labelAttributeName: "name"
             },
             onAdd: {
               disabled: false,
@@ -250,30 +422,258 @@ const config = {
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "Address",
+          titleColumnTable: "Article Category Radio",
           typeColumnTable: "text",
-          attributeColumnTable: "address",
+          attributeColumnTable: "categoryArticleId",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+
+        {
+          component: "Checkbox",
+          componentAttribute: {
+            id: "checkboxOwnData",
+            name: "checkboxOwnData",
+            label: "Checkbox",
+            type: "text",
+            extension: {
+              data: [
+                {
+                  id: 1,
+                  name: "Baru"
+                },
+                {
+                  id: 2,
+                  name: "2018Informasi"
+                },
+                {
+                  id: 3,
+                  name: "Trending Topic"
+                },
+                {
+                  id: 4,
+                  name: "Ramaikan"
+                }
+              ],
+              idAttributeName: "id",
+              labelAttributeName: "name"
+            },
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "required",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "Tag",
+          typeColumnTable: "text",
+          attributeColumnTable: "tag",
           prefixColumnTable: "",
           allowSearch: true
         },
         {
-          component: "SelectAsyncMultipleAutoComplete",
+          component: "Select",
           componentAttribute: {
-            id: "gender",
-            name: "gender",
-            label: "Gender",
-            style: {},
+            id: "selectOwnData",
+            name: "selectOwnData",
+            label: "Select",
+            type: "text",
+            extension: {
+              data: [
+                {
+                  id: 1,
+                  name: "Tidak Aktif"
+                },
+                {
+                  id: 2,
+                  name: "Aktif"
+                }
+              ],
+              idAttributeName: "id",
+              labelAttributeName: "name"
+            },
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "required",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "",
+          typeColumnTable: "text",
+          attributeColumnTable: "isDelete",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "SelectAutoComplete",
+          componentAttribute: {
+            id: "selectAutoCompleteOwnData",
+            name: "selectAutoCompleteOwnData",
+            label: "Select Auto Complete",
+            type: "text",
+            extension: {
+              data: [
+                {
+                  id: 1,
+                  name: "Azhar Prabudi"
+                },
+                {
+                  id: 2,
+                  name: "Boby Harmoko"
+                },
+                {
+                  id: 3,
+                  name: "Boby Hartanto"
+                }
+              ],
+              idAttributeName: "id",
+              labelAttributeName: "name"
+            },
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "required",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "",
+          typeColumnTable: "text",
+          attributeColumnTable: "creator",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "SelectMultiple",
+          componentAttribute: {
+            id: "selectMultipleOwnData",
+            name: "selectMultipleOwnData",
+            label: "Select Multiple",
+            type: "text",
+            extension: {
+              data: [
+                {
+                  id: 1,
+                  name: "Baru"
+                },
+                {
+                  id: 2,
+                  name: "2018Informasi"
+                },
+                {
+                  id: 3,
+                  name: "Trending Topic"
+                },
+                {
+                  id: 4,
+                  name: "Ramaikan"
+                }
+              ],
+              idAttributeName: "id",
+              labelAttributeName: "name"
+            },
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "required",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "",
+          typeColumnTable: "text",
+          attributeColumnTable: "tag",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "SelectMultipleAutoComplete",
+          componentAttribute: {
+            id: "selectMultipleAutoCompleteOwnData",
+            name: "selectMultipleAutoCompleteOwnData",
+            label: "Select Multiple AutoComplete",
+            type: "text",
+            extension: {
+              data: [
+                {
+                  id: 1,
+                  name: "Baru"
+                },
+                {
+                  id: 2,
+                  name: "2018Informasi"
+                },
+                {
+                  id: 3,
+                  name: "Trending Topic"
+                },
+                {
+                  id: 4,
+                  name: "Ramaikan"
+                }
+              ],
+              idAttributeName: "id",
+              labelAttributeName: "name"
+            },
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "required",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "",
+          typeColumnTable: "text",
+          attributeColumnTable: "tag",
+          prefixColumnTable: "",
+          allowSearch: true
+        }
+      ]
+    },
+    {
+      title: "API Data",
+      type: "standard",
+      groupName: "api",
+      details: [
+        {
+          component: "Radio",
+          componentAttribute: {
+            id: "radioApiData",
+            name: "radioApiData",
+            label: "Category Article",
             type: "text",
             extension: {
               customSource: {
-                url: "https://jsonplaceholder.typicode.com/users?name={name}",
-                config: {},
-                initialUrl:
-                  "https://jsonplaceholder.typicode.com/users?id={id}", // this used on select async
-                replaceUrl: {
-                  initial: "{id}",
-                  url: "{name}"
-                } // this useed on select async
+                url: "http://localhost:3000/category-article"
               },
               idAttributeName: "id",
               labelAttributeName: "name"
@@ -291,26 +691,26 @@ const config = {
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "Gender",
+          titleColumnTable: "Article Category Radio",
           typeColumnTable: "text",
-          attributeColumnTable: "gender",
+          attributeColumnTable: "categoryArticleId",
           prefixColumnTable: "",
           allowSearch: true
         },
+
         {
-          component: "FileUploader",
+          component: "Checkbox",
           componentAttribute: {
-            id: "image",
-            name: "image",
-            label: "Image",
-            style: {},
+            id: "checkboxApiData",
+            name: "checkboxApiData",
+            label: "Checkbox",
             type: "text",
             extension: {
-              imgConf: {
-                minSize: 0,
-                maxSize: 5000000,
-                allowTypes: "image/jpg"
-              }
+              customSource: {
+                url: "http://localhost:3000/tag"
+              },
+              idAttributeName: "id",
+              labelAttributeName: "name"
             },
             onAdd: {
               disabled: false,
@@ -325,33 +725,96 @@ const config = {
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "Image",
+          titleColumnTable: "Tag",
           typeColumnTable: "text",
-          attributeColumnTable: "image",
+          attributeColumnTable: "tag",
           prefixColumnTable: "",
           allowSearch: true
         },
         {
-          component: "CustomEditor",
+          component: "Select",
           componentAttribute: {
-            id: "content",
-            name: "content",
-            label: "content",
-            style: {},
+            id: "selectApiData",
+            name: "selectApiData",
+            label: "Select",
             type: "text",
             extension: {
-              editorConf: {
-                img: {
-                  uploadUrl: "https://api.imgur.com/3/image",
-                  method: "post",
-                  config: {
-                    headers: {
-                      Authorization: "Client-ID 8d26ccd12712fca"
-                    }
-                  },
-                  type: "formData"
+              customSource: {
+                url: "http://localhost:3000/status"
+              },
+              idAttributeName: "id",
+              labelAttributeName: "name"
+            },
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "required",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "",
+          typeColumnTable: "text",
+          attributeColumnTable: "isDelete",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "SelectAutoComplete",
+          componentAttribute: {
+            id: "selectAutoCompleteApiData",
+            name: "selectAutoCompleteApiData",
+            label: "Select Auto Complete",
+            type: "text",
+            extension: {
+              customSource: {
+                url: "http://localhost:3000/user"
+              },
+              idAttributeName: "id",
+              labelAttributeName: "name"
+            },
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "required",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "",
+          typeColumnTable: "text",
+          attributeColumnTable: "creator",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "SelectAsyncAutoComplete",
+          componentAttribute: {
+            id: "selectAsyncAutoCompleteApiData",
+            name: "selectAsyncAutoCompleteApiData",
+            label: "Select Async Auto Complete",
+            type: "text",
+            extension: {
+              customSource: {
+                initialUrl: "http://localhost:3000/user?id={id}",
+                url: "http://localhost:3000/user?name={name}",
+                replaceUrl: {
+                  initial: "{id}",
+                  url: "{name}"
                 }
-              }
+              },
+              idAttributeName: "id",
+              labelAttributeName: "name"
             },
             onAdd: {
               disabled: false,
@@ -366,9 +829,113 @@ const config = {
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "Content",
+          titleColumnTable: "",
           typeColumnTable: "text",
-          attributeColumnTable: "content",
+          attributeColumnTable: "creator",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "SelectMultiple",
+          componentAttribute: {
+            id: "selectMultipleApiData",
+            name: "selectMultipleApiData",
+            label: "Select Multiple",
+            type: "text",
+            extension: {
+              customSource: {
+                url: "http://localhost:3000/tag"
+              },
+              idAttributeName: "id",
+              labelAttributeName: "name"
+            },
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "required",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "",
+          typeColumnTable: "text",
+          attributeColumnTable: "tag",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "SelectMultipleAutoComplete",
+          componentAttribute: {
+            id: "selectMultipleAutoCompleteOwnData",
+            name: "selectMultipleAutoCompleteOwnData",
+            label: "Select Multiple AutoComplete",
+            type: "text",
+            extension: {
+              customSource: {
+                url: "http://localhost:3000/tag"
+              },
+              idAttributeName: "id",
+              labelAttributeName: "name"
+            },
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "required",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "",
+          typeColumnTable: "text",
+          attributeColumnTable: "tag",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "SelectAsyncMultipleAutoComplete",
+          componentAttribute: {
+            id: "selectAsyncMultipleAutoCompleteOwnData",
+            name: "selectAsyncMultipleAutoCompleteOwnData",
+            label: "Select Async Multiple AutoComplete",
+            type: "text",
+            extension: {
+              customSource: {
+                initialUrl: "http://localhost:3000/tag?id={id}",
+                url: "http://localhost:3000/tag?name={name}",
+                replaceUrl: {
+                  initial: "{id}",
+                  url: "{name}"
+                }
+              },
+              idAttributeName: "id",
+              labelAttributeName: "name"
+            },
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "required",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "",
+          typeColumnTable: "text",
+          attributeColumnTable: "tag",
           prefixColumnTable: "",
           allowSearch: true
         }

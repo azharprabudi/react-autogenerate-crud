@@ -21,6 +21,7 @@ import isEqual from "lodash/isEqual";
 
 const styles = theme => ({
   container: {
+    width: "90%",
     marginTop: 16,
     marginBottom: 8
   },
@@ -31,12 +32,12 @@ const styles = theme => ({
   wrapperEditor: {
     border: 1,
     padding: 8,
-    borderColor: "rgba(0,0,0,0.3)",
+    borderColor: "rgba(0,0,0,0.2)",
     borderStyle: "solid"
   },
   wrapperToolbar: {
     border: 1,
-    borderColor: "rgba(0,0,0,0.3)",
+    borderColor: "rgba(0,0,0,0.2)",
     borderStyle: "solid"
   }
 });

@@ -50,17 +50,17 @@ class FormFileUploader extends PureComponent {
     this.maxSize = 5000000;
     this.allowTypes = "image/jpeg, image/jpg, image/png";
 
-    if (has(props.extension, "imageConf")) {
-      if ((props.extension.imageConf, "minSize")) {
-        this.minSize = props.extension.imageConf.minSize;
+    if (has(props.extension, "uploaderConf")) {
+      if ((props.extension.uploaderConf, "minSize")) {
+        this.minSize = props.extension.uploaderConf.minSize;
       }
 
-      if ((props.extension.imageConf, "maxSize")) {
-        this.maxSize = props.extension.imageConf.maxSize;
+      if ((props.extension.uploaderConf, "maxSize")) {
+        this.maxSize = props.extension.uploaderConf.maxSize;
       }
 
-      if ((props.extension.imageConf, "allowTypes")) {
-        this.allowTypes = props.extension.imageConf.allowTypes;
+      if ((props.extension.uploaderConf, "allowTypes")) {
+        this.allowTypes = props.extension.uploaderConf.allowTypes;
       }
     }
   }
@@ -144,7 +144,7 @@ FormFileUploader.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
   extension: PropTypes.shape({
-    imageConf: PropTypes.shape({
+    uploaderConf: PropTypes.shape({
       minSize: PropTypes.number.isRequired,
       maxSize: PropTypes.number.isRequired,
       allowTypes: PropTypes.string.isRequired

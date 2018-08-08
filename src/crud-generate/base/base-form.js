@@ -202,12 +202,12 @@ class BaseForm extends Component {
       let itemValidator = validationArr[iteration];
       /* there two type custom validation, one is depend on crud generator and the other one is custom callback validation have to promise function */
       if (itemValidator.indexOf("callback") > -1) {
-        const functionName = itemValidator.substr(17 - 8);
+        const functionName = itemValidator.substr(9);
         if (
-          has(selectedInput, "callback") &&
-          has(selectedInput.callback, functionName)
+          has(selectedInput, "validationCallback") &&
+          has(selectedInput.validationCallback, functionName)
         ) {
-          let { validation, message } = await selectedInput.callback[
+          let { validation, message } = await selectedInput.validationCallback[
             functionName
           ](value);
           if (validation === false) {

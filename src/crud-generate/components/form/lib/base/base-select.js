@@ -18,7 +18,12 @@ class FormSelect extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data: has(props.extension, "data") ? props.extension.data : []
+      data: has(props.extension, "data")
+        ? props.extension.data.map(item => ({
+            value: item[props.extension.idAttributeName],
+            label: item[props.extension.labelAttributeName]
+          }))
+        : []
     };
   }
 
@@ -93,6 +98,7 @@ class FormSelect extends PureComponent {
               }
             }
           }}
+          placeholder={""}
         >
           {this.state.data.map(({ label, value }) => (
             <MenuItem key={value} value={value}>

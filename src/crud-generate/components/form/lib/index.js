@@ -32,7 +32,6 @@ export const libDefaultvalue = {
   Input: "",
   TextArea: "",
   InputNominal: "",
-  InputAutoComplete: "",
   Radio: "",
   Checkbox: [],
   Select: "",
