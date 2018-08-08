@@ -185,7 +185,6 @@ table={{
     <td>No</td>
     <td>This configuration same like buttonTopTable, the existing attribute name butotn each row there are ['update', 'delete']</td>
   </tr>
-  <tr>
 </tbody>
 </table>
 
