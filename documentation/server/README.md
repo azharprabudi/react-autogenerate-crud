@@ -97,7 +97,7 @@ This configuration is used to retrieve real data that is on the server, unfortun
     <td>Func</td>
     <td>() => {}</td>
     <td>No</td>
-    <td>Callback before the form is submitted</td>
+    <td>Callback before the form will be submitted</td>
   </tr>
   <tr>
     <td>5</td>
@@ -142,14 +142,13 @@ This configuration is used to retrieve real data that is on the server, unfortun
     <td>Yes</td>
     <td>
       Attributes that must be filled in this object are limit (String), page (String), search (Object). Limit and page are filled in, so that tables can perform pagination, so that the url when processing data requests for tables, will be added according to the data provided in the query. Example:
-<br></br>
-  
+
 ```javascript
 {
   limit: '_xLimit',
   page: '_xPage',
 }
-http: // localhost / user? _xLimit = 10 & _xPage = 1
+http://localhost:3000/user?_xLimit=10&_xPage=1
 ```
   </td>
   </tr>
@@ -159,7 +158,17 @@ http: // localhost / user? _xLimit = 10 & _xPage = 1
     <td>Object</td>
     <td>{}</td>
     <td>No</td>
-    <td>Configuration of http request, such as authorization (example: {headers: {authorization: ''}}), you can see a full documentation at <a href="https://github.com/axios/axios">here</a></td>
+    <td>Configuration of http request, such as authorization. Example:
+
+```javascript
+{
+  headers: {
+    authorization: ''
+  }
+}
+```
+you can see a full documentation at <a href="https://github.com/axios/axios">here</a>
+  </td>
   </tr>
 </tbody>
 </table>
@@ -187,26 +196,15 @@ http: // localhost / user? _xLimit = 10 & _xPage = 1
     <td>String</td>
     <td>''</td>
     <td>Yes</td>
-    <td>Url when the form submitted</td>
+    <td>Url when the form want to update</td>
   </tr>
   <tr>
     <td>2</td>
-    <td>query</td>
+    <td>get</td>
     <td>Object</td>
     <td>{}</td>
-    <td>Yes</td>
-    <td>
-      Attributes that must be filled in this object are limit (String), page (String), search (Object). Limit and page are filled in, so that tables can perform pagination, so that the url when processing data requests for tables, will be added according to the data provided in the query. Example:
-<br></br>
-  
-```javascript
-{
-  limit: '_xLimit',
-  page: '_xPage',
-}
-http: // localhost / user? _xLimit = 10 & _xPage = 1
-```
-  </td>
+    <td>No</td>
+    <td>See full documentation <a href="#get">here</a></td>
   </tr>
   <tr>
     <td>3</td>
@@ -215,6 +213,54 @@ http: // localhost / user? _xLimit = 10 & _xPage = 1
     <td>{}</td>
     <td>No</td>
     <td>Configuration of http request, such as authorization (example: {headers: {authorization: ''}}), you can see a full documentation at <a href="https://github.com/axios/axios">here</a></td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>method</td>
+    <td>String</td>
+    <td>''</td>
+    <td>Yes</td>
+    <td>Method http request, choose one of ['post', 'get', 'delete', 'patch']</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>replaceUrl</td>
+    <td>String</td>
+    <td>''</td>
+    <td>No</td>
+    <td>If there is a unique value you want to give at your url, please include it in here. For example you have an url like this http://localhost/user?id=2, 2 at the url is dynamic number, that can be change depend on data on server. So you have to type like this in your url http://localhost/user?id={id}. And {id} have to fill in your replace url, so the url will be replaced depend configuration</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>attributeName</td>
+    <td>String</td>
+    <td>''</td>
+    <td>No</td>
+    <td>This is useful for replacing replaceUrl when get data from server, example you get data from server {id: 2}, then you just fill attributeName with id, so the replaceUrl will replace with the value at id attribute</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>dataFromProps</td>
+    <td>Boolean</td>
+    <td>No</td>
+    <td>Yes</td>
+    <td>If so, then you don't need to retrieve data on the server when in edit mode. Only use data received at the time of get, and when you enter it does not eat it will retrieve data from the server with the get configuration above</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>callbackBeforeUpdate</td>
+    <td>Func</td>
+    <td>() => {}</td>
+    <td>No</td>
+    <td>Callback before form will be updated</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>callbackAfterUpdate</td>
+    <td>Func</td>
+    <td>() => {}</td>
+    <td>Yes</td>
+    <td>Callback after form is updated</td>
   </tr>
 </tbody>
 </table>
