@@ -142,14 +142,16 @@ This configuration is used to retrieve real data that is on the server, unfortun
     <td>Yes</td>
     <td>
       Attributes that must be filled in this object are limit (String), page (String), search (Object). Limit and page are filled in, so that tables can perform pagination, so that the url when processing data requests for tables, will be added according to the data provided in the query. Example:
+<br></br>
+  
 ```javascript
-      {
-        limit: '_xLimit',
-        page: '_xPage',
-      }
-      http: // localhost / user? _xLimit = 10 & _xPage = 1
+{
+  limit: '_xLimit',
+  page: '_xPage',
+}
+http: // localhost / user? _xLimit = 10 & _xPage = 1
 ```
-    </td>
+  </td>
   </tr>
   <tr>
     <td>3</td>
@@ -163,6 +165,59 @@ This configuration is used to retrieve real data that is on the server, unfortun
 </table>
 
 
-<b>Back to main <a href="https://github.com/azharprabudi/react-autogenerate-crud">link</a></b>
+## update ##
+<b id="update">some attributes needed in update</b>
+
+
+<table>
+  <thead>
+    <tr>
+      <td>No</td>
+      <td>Props Name</td>
+      <td>Type</td>
+      <td>Default</td>
+      <td>Required</td>
+      <td>Description</td>
+    </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>1</td>
+    <td>url</td>
+    <td>String</td>
+    <td>''</td>
+    <td>Yes</td>
+    <td>Url when the form submitted</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>query</td>
+    <td>Object</td>
+    <td>{}</td>
+    <td>Yes</td>
+    <td>
+      Attributes that must be filled in this object are limit (String), page (String), search (Object). Limit and page are filled in, so that tables can perform pagination, so that the url when processing data requests for tables, will be added according to the data provided in the query. Example:
+<br></br>
+  
+```javascript
+{
+  limit: '_xLimit',
+  page: '_xPage',
+}
+http: // localhost / user? _xLimit = 10 & _xPage = 1
+```
+  </td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>config</td>
+    <td>Object</td>
+    <td>{}</td>
+    <td>No</td>
+    <td>Configuration of http request, such as authorization (example: {headers: {authorization: ''}}), you can see a full documentation at <a href="https://github.com/axios/axios">here</a></td>
+  </tr>
+</tbody>
+</table>
+
 
 <b>Back to main <a href="https://github.com/azharprabudi/react-autogenerate-crud">link</a></b>
