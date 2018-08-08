@@ -20,7 +20,7 @@ This configuration must be done if the user wants to add an export feature to th
     <td>String</td>
     <td>''</td>
     <td>Yes</td>
-    <td>This url must be filled in, because this module will automatically request data for the destination url and then automatically generate the received data in the form of csv / excel</td>
+    <td>This module will automatically request data for the destination url and then automatically generate the received data in the form of csv / excel. If this is loaded empty, it will automatically use the read url that has been configured in the server props</td>
   </tr>
   <tr>
     <td>2</td>
