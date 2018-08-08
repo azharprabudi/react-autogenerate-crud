@@ -1,196 +1,229 @@
 {
-    "category-article": [
-        {
-            "id": 1,
-            "name": "Politik"
-        },
-        {
-            "id": 2,
-            "name": "Ekonomi"
-        },
-        {
-            "id": 3,
-            "name": "Otomotif"
-        },
-        {
-            "id": 4,
-            "name": "Education"
-        }
-    ],
-    "article": [
-        {
-            "id": 1,
-            "categoryArticleId": 2,
-            "creator": 2,
-            "createdAt": "2018-07-16 14:20",
-            "isDelete": 1,
-            "viewers": 3000,
-            "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
-            "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
-            "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
-            "tag": [1, 4]
-        },
-        {
-            "id": 2,
-            "categoryArticleId": 2,
-            "creator": 2,
-            "createdAt": "2018-07-16 14:20",
-            "isDelete": 1,
-            "viewers": 3000,
-            "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
-            "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
-            "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
-            "tag": [1, 4]
-        },
-        {
-            "id": 3,
-            "categoryArticleId": 2,
-            "creator": 2,
-            "createdAt": "2018-07-16 14:20",
-            "isDelete": 1,
-            "viewers": 3000,
-            "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
-            "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
-            "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
-            "tag": [1, 4]
-        },
-        {
-            "id": 4,
-            "categoryArticleId": 2,
-            "creator": 2,
-            "createdAt": "2018-07-16 14:20",
-            "isDelete": 1,
-            "viewers": 3000,
-            "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
-            "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
-            "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
-            "tag": [1, 4]
-        },
-        {
-            "id": 5,
-            "categoryArticleId": 2,
-            "creator": 2,
-            "createdAt": "2018-07-16 14:20",
-            "isDelete": 1,
-            "viewers": 3000,
-            "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
-            "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
-            "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
-            "tag": [1, 4]
-        },
-        {
-            "id": 6,
-            "categoryArticleId": 2,
-            "creator": 2,
-            "createdAt": "2018-07-16 14:20",
-            "isDelete": 1,
-            "viewers": 3000,
-            "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
-            "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
-            "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
-            "tag": [1, 4]
-        },
-        {
-            "id": 7,
-            "categoryArticleId": 2,
-            "creator": 2,
-            "createdAt": "2018-07-16 14:20",
-            "isDelete": 1,
-            "viewers": 3000,
-            "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
-            "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
-            "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
-            "tag": [1, 4]
-        },
-        {
-            "id": 8,
-            "categoryArticleId": 2,
-            "creator": 2,
-            "createdAt": "2018-07-16 14:20",
-            "isDelete": 1,
-            "viewers": 3000,
-            "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
-            "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
-            "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
-            "tag": [1, 4]
-        },
-        {
-            "id": 9,
-            "categoryArticleId": 2,
-            "creator": 2,
-            "createdAt": "2018-07-16 14:20",
-            "isDelete": 1,
-            "viewers": 3000,
-            "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
-            "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
-            "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
-            "tag": [1, 4]
-        },
-        {
-            "id": 10,
-            "categoryArticleId": 2,
-            "creator": 2,
-            "createdAt": "2018-07-16 14:20",
-            "isDelete": 1,
-            "viewers": 3000,
-            "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
-            "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
-            "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
-            "tag": [1, 4]
-        },
-        {
-            "id": 11,
-            "categoryArticleId": 2,
-            "creator": 2,
-            "createdAt": "2018-07-16 14:20",
-            "isDelete": 1,
-            "viewers": 3000,
-            "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
-            "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
-            "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
-            "tag": [1, 4]
-        }
-    ],
-    "tag": [
-        {
-            "id": 1,
-            "name": "Baru"
-        },
-        {
-            "id": 2,
-            "name": "2018Informasi"
-        },
-        {
-            "id": 3,
-            "name": "Trending Topic"
-        },
-        {
-            "id": 4,
-            "name": "Ramaikan"
-        }
-    ],
-    "user": [
-        { 
-            "id": 1,
-            "name": "Azhar Prabudi"
-        },
-        { 
-            "id": 2,
-            "name": "Boby Harmoko"
-        },
-        { 
-            "id": 3,
-            "name": "Boby Hartanto"
-        }
-    ],
-    "status": [
-        {
-            "id": 1,
-            "name": "Tidak Aktif"
-        },
-        {
-            "id": 2,
-            "name": "Aktif"
-        }
-    ]
+  "category-article": [
+    {
+      "id": 1,
+      "name": "Politik"
+    },
+    {
+      "id": 2,
+      "name": "Ekonomi"
+    },
+    {
+      "id": 3,
+      "name": "Otomotif"
+    },
+    {
+      "id": 4,
+      "name": "Education"
+    }
+  ],
+  "article": [
+    {
+      "id": 1,
+      "categoryArticleId": 2,
+      "creator": 2,
+      "createdAt": "2018-07-16 14:20",
+      "isDelete": 1,
+      "viewers": 3000,
+      "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
+      "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
+      "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
+      "tag": [
+        1,
+        4
+      ]
+    },
+    {
+      "id": 2,
+      "categoryArticleId": 2,
+      "creator": 2,
+      "createdAt": "2018-07-16 14:20",
+      "isDelete": 1,
+      "viewers": 3000,
+      "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
+      "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
+      "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
+      "tag": [
+        1,
+        4
+      ]
+    },
+    {
+      "id": 3,
+      "categoryArticleId": 2,
+      "creator": 2,
+      "createdAt": "2018-07-16 14:20",
+      "isDelete": 1,
+      "viewers": 3000,
+      "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
+      "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
+      "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
+      "tag": [
+        1,
+        4
+      ]
+    },
+    {
+      "id": 4,
+      "categoryArticleId": 2,
+      "creator": 2,
+      "createdAt": "2018-07-16 14:20",
+      "isDelete": 1,
+      "viewers": 3000,
+      "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
+      "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
+      "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
+      "tag": [
+        1,
+        4
+      ]
+    },
+    {
+      "id": 5,
+      "categoryArticleId": 2,
+      "creator": 2,
+      "createdAt": "2018-07-16 14:20",
+      "isDelete": 1,
+      "viewers": 3000,
+      "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
+      "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
+      "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
+      "tag": [
+        1,
+        4
+      ]
+    },
+    {
+      "id": 6,
+      "categoryArticleId": 2,
+      "creator": 2,
+      "createdAt": "2018-07-16 14:20",
+      "isDelete": 1,
+      "viewers": 3000,
+      "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
+      "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
+      "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
+      "tag": [
+        1,
+        4
+      ]
+    },
+    {
+      "id": 7,
+      "categoryArticleId": 2,
+      "creator": 2,
+      "createdAt": "2018-07-16 14:20",
+      "isDelete": 1,
+      "viewers": 3000,
+      "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
+      "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
+      "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
+      "tag": [
+        1,
+        4
+      ]
+    },
+    {
+      "id": 8,
+      "categoryArticleId": 2,
+      "creator": 2,
+      "createdAt": "2018-07-16 14:20",
+      "isDelete": 1,
+      "viewers": 3000,
+      "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
+      "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
+      "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
+      "tag": [
+        1,
+        4
+      ]
+    },
+    {
+      "id": 9,
+      "categoryArticleId": 2,
+      "creator": 2,
+      "createdAt": "2018-07-16 14:20",
+      "isDelete": 1,
+      "viewers": 3000,
+      "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
+      "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
+      "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
+      "tag": [
+        1,
+        4
+      ]
+    },
+    {
+      "id": 10,
+      "categoryArticleId": 2,
+      "creator": 2,
+      "createdAt": "2018-07-16 14:20",
+      "isDelete": 1,
+      "viewers": 3000,
+      "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
+      "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
+      "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
+      "tag": [
+        1,
+        4
+      ]
+    },
+    {
+      "id": 11,
+      "categoryArticleId": 2,
+      "creator": 2,
+      "createdAt": "2018-07-16 14:20",
+      "isDelete": 1,
+      "viewers": 3000,
+      "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden",
+      "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
+      "image": "https://i1.wp.com/www.sahamok.com/wp-content/uploads/2014/06/edukasi.jpg?fit=513%2C357&ssl=1",
+      "tag": [
+        1,
+        4
+      ]
+    }
+  ],
+  "tag": [
+    {
+      "id": 1,
+      "name": "Baru"
+    },
+    {
+      "id": 2,
+      "name": "2018Informasi"
+    },
+    {
+      "id": 3,
+      "name": "Trending Topic"
+    },
+    {
+      "id": 4,
+      "name": "Ramaikan"
+    }
+  ],
+  "user": [
+    {
+      "id": 1,
+      "name": "Azhar Prabudi"
+    },
+    {
+      "id": 2,
+      "name": "Boby Harmoko"
+    },
+    {
+      "id": 3,
+      "name": "Boby Hartanto"
+    }
+  ],
+  "status": [
+    {
+      "id": 1,
+      "name": "Tidak Aktif"
+    },
+    {
+      "id": 2,
+      "name": "Aktif"
+    }
+  ]
 }
