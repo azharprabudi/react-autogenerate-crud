@@ -453,5 +453,64 @@ you can see a full documentation at <a href="https://github.com/axios/axios">her
 </tbody>
 </table>
 
+<b>This is how to use it</b>
+```javascript
+<CRUDGenerate
+{...otherProps}
+server= {{
+    http: {
+      create: {
+        url: "http://localhost:3000/article",
+        method: "post",
+        config: {},
+        callbackBeforeCreate: () => {},
+        callbackAfterCreate: () => {}
+      },
+      read: {
+        url: "http://localhost:3000/article",
+        query: {
+          limit: "_limit",
+          page: "_page",
+          search: {}
+        },
+        config: {}
+      },
+      update: {
+        url: "http://localhost:3000/article/{id}",
+        get: {
+          url: "http://localhost:3000/article/{id}",
+          config: {},
+          replaceUrl: "{id}",
+          attributeName: "id"
+        },
+        config: {},
+        method: "patch",
+        replaceUrl: "{id}",
+        attributeName: "id",
+        dataFromProps: false,
+        callbackBeforeUpdate: () => {},
+        callbackAfterUpdate: () => {}
+      },
+      delete: {
+        url: "http://localhost:3000/article/{id}",
+        bulk: {
+          enable: true,
+          method: "get",
+          url: "http://localhost:3000/article/{id}",
+          callbackBeforeDeleteBulk: () => {},
+          callbackAfterDeleteBulk: () => {}
+        },
+        config: {},
+        method: "delete",
+        replaceUrl: "{id}",
+        attributeName: "id",
+        callbackBeforeDelete: () => {},
+        callbackAfterDelete: () => {}
+      }
+    }
+  }}
+/>
+```
+
 
 <b>Back to main <a href="https://github.com/azharprabudi/react-autogenerate-crud">link</a></b>
