@@ -8,6 +8,12 @@ Thank you very much to the best team I have ever had, they are:
 
 This project is made open source to help other people who use react in developing their backend, because we think the process of making CRUD to master data is very time consuming and especially it is done many times.
 
+<b>To try this project, follow this instruction :</b>
+1. Clone this project or download.
+2. Open the directory project, go to folder server ({DIR_PROJECT}/server). After that, open your terminal in server directory and then type <b>npm install</b> on it. After finished, you have to type this command <b>npm run start</b>, if server already run open your browser and go to localhost:3000, if there are some dummy api from json server so thats server can be run.
+3. After that open your terminal in root directory project ({DIR_PROJECT}) and then type <b>npm install</b> on your terminal. If finished, then type <b>npm run start</b> on your terminal, wait until webpack compiling success, then open your browser type localhost:9000.
+4. Enjoy it
+
 <b>This project uses several dependencies:</b>
 
 1. "@ material-ui / core": "^ 1.4.1",
