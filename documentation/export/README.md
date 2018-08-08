@@ -28,7 +28,7 @@ This configuration must be done if the user wants to add an export feature to th
     <td>String | Choose one of ['csv', 'excel']</td>
     <td>'csv'</td>
     <td>Yes</td>
-    <td>TWhat file does the user want, whether it is csv or excel</td>
+    <td>What file does the user want, whether it is csv or excel</td>
   </tr>
 </tbody>
 </table>
