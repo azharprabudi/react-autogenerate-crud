@@ -123,7 +123,8 @@ This configuration must be done, if you want to add additional buttons that are 
 </tbody>
 </table>
 <b>Because this project using material ui, you can use their props from official website at <a href="https://material-ui.com/api/button/">here</a></b>
-<br />
+<br></br>
+<br></br>
 
 <b id="buttonTopTable">This is how to using it</b>
 ```javascript
