@@ -25,10 +25,10 @@ This configuration must be done if the user wants to add an export feature to th
   <tr>
     <td>2</td>
     <td>type</td>
-    <td>String | Choose one of ['csv', 'excel']</td>
+    <td>String</td>
     <td>'csv'</td>
     <td>Yes</td>
-    <td>What file does the user want, whether it is csv or excel</td>
+    <td>What file does the user want, whether it is csv or excel, fill the value one of ['csv', 'excel']</td>
   </tr>
 </tbody>
 </table>
