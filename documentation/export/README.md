@@ -19,15 +19,15 @@ This configuration must be done if the user wants to add an export feature to th
     <td>url</td>
     <td>String</td>
     <td>''</td>
-    <td>Yes if you used export</td>
+    <td>Yes</td>
     <td>This url must be filled in, because this module will automatically request data for the destination url and then automatically generate the received data in the form of csv / excel</td>
   </tr>
   <tr>
     <td>2</td>
     <td>type</td>
     <td>String</td>
-    <td>'csv'</td>
-    <td>Yes</td>
+    <td>csv</td>
+    <td>No</td>
     <td>What file does the user want, whether it is csv or excel, fill the value one of ['csv', 'excel']</td>
   </tr>
 </tbody>
