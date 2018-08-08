@@ -127,7 +127,7 @@ This configuration must be done, if you want to add additional buttons that are 
 <b>This is how to using it</b>
 <pre>
   <code>
-<CRUDGenerate
+"<CRUDGenerate
 {...anotherProps}
 table={{
    buttonTopTable: {
@@ -143,7 +143,7 @@ table={{
     },
    }
 }}
-/>
+/>"
   </code>
 </pre>
 
