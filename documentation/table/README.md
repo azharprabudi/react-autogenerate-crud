@@ -33,7 +33,7 @@ This configuration must be done, if you want to add additional buttons that are 
 </tbody>
 </table>
 
-## BUTTONTOPTABLE ##
+## buttonTopTable ##
 
 <b>Current Props For Each Attribute Of buttonTopTable</b> 
 <table>
@@ -125,8 +125,7 @@ This configuration must be done, if you want to add additional buttons that are 
 <b>Because this project using material ui, you can use their props from official website at <a href="https://material-ui.com/api/button/">here</a></b>
 <br />
 
-<b>This is how to using it</b>
-<div id="buttonTopTable"></div>
+<b id="buttonTopTable">This is how to using it</b>
 ```javascript
 <CRUDGenerate
 {...anotherProps}
