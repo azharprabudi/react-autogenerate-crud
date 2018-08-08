@@ -97,7 +97,7 @@ This configuration is used to retrieve real data that is on the server, unfortun
     <td>Func</td>
     <td>() => {}</td>
     <td>No</td>
-    <td>Callback before the form will be submitted</td>
+    <td>Callback before form submit</td>
   </tr>
   <tr>
     <td>5</td>
@@ -105,7 +105,7 @@ This configuration is used to retrieve real data that is on the server, unfortun
     <td>Func</td>
     <td>() => {}</td>
     <td>No</td>
-    <td>Callback after the form is submitted</td>
+    <td>Callback after form submitted</td>
   </tr>
 </tbody>
 </table>
@@ -132,7 +132,7 @@ This configuration is used to retrieve real data that is on the server, unfortun
     <td>String</td>
     <td>''</td>
     <td>Yes</td>
-    <td>Url when the form submitted</td>
+    <td>Url when want to get data for table</td>
   </tr>
   <tr>
     <td>2</td>
@@ -252,7 +252,7 @@ you can see a full documentation at <a href="https://github.com/axios/axios">her
     <td>Func</td>
     <td>() => {}</td>
     <td>No</td>
-    <td>Callback before form will be updated</td>
+    <td>Callback before form update</td>
   </tr>
   <tr>
     <td>9</td>
@@ -260,11 +260,11 @@ you can see a full documentation at <a href="https://github.com/axios/axios">her
     <td>Func</td>
     <td>() => {}</td>
     <td>Yes</td>
-    <td>Callback after form is updated</td>
+    <td>Callback after form updated</td>
   </tr>
 </tbody>
 </table>
-<br></br>
+
 <b>update.get</b>
 <table>
   <thead>
@@ -311,6 +311,147 @@ you can see a full documentation at <a href="https://github.com/axios/axios">her
     <td>This is useful for replacing replaceUrl when get data from server, example you get data from server {id: 2}, then you just fill attributeName with id, so the replaceUrl will replace with the value at id attribute</td>
   </tr>
 </tbody>
-</table>  
+</table>
+
+## delete ##
+<b id="update">some attributes needed in update</b>
+
+
+<table>
+  <thead>
+    <tr>
+      <td>No</td>
+      <td>Props Name</td>
+      <td>Type</td>
+      <td>Default</td>
+      <td>Required</td>
+      <td>Description</td>
+    </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>1</td>
+    <td>url</td>
+    <td>String</td>
+    <td>''</td>
+    <td>Yes</td>
+    <td>Url when want to delete each item</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>bulk</td>
+    <td>Object</td>
+    <td>{}</td>
+    <td>No</td>
+    <td>See full documentation <a href="#bulk">here</a></td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>config</td>
+    <td>Object</td>
+    <td>{}</td>
+    <td>No</td>
+    <td>Configuration of http request, such as authorization (example: {headers: {authorization: ''}}), you can see a full documentation at <a href="https://github.com/axios/axios">here</a></td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>method</td>
+    <td>String</td>
+    <td>''</td>
+    <td>Yes</td>
+    <td>Method http request, choose one of ['post', 'get', 'delete', 'patch']</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>replaceUrl</td>
+    <td>String</td>
+    <td>''</td>
+    <td>No</td>
+    <td>If there is a unique value you want to give at your url, please include it in here. For example you have an url like this http://localhost/user?id=2, 2 at the url is dynamic number, that can be change depend on data on server. So you have to type like this in your url http://localhost/user?id={id}. And {id} have to fill in your replace url, so the url will be replaced depend configuration</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>attributeName</td>
+    <td>String</td>
+    <td>''</td>
+    <td>No</td>
+    <td>This is useful for replacing replaceUrl when get data from server, example you get data from server {id: 2}, then you just fill attributeName with id, so the replaceUrl will replace with the value at id attribute</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>callbackBeforeUpdate</td>
+    <td>Func</td>
+    <td>() => {}</td>
+    <td>No</td>
+    <td>Callback before data delete</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>callbackAfterUpdate</td>
+    <td>Func</td>
+    <td>() => {}</td>
+    <td>Yes</td>
+    <td>Callback after data deleted</td>
+  </tr>
+</tbody>
+</table>
+
+<b>delete.bulk</b>
+
+<table>
+  <thead>
+    <tr>
+      <td>No</td>
+      <td>Props Name</td>
+      <td>Type</td>
+      <td>Default</td>
+      <td>Required</td>
+      <td>Description</td>
+    </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>1</td>
+    <td>enable</td>
+    <td>Boolean</td>
+    <td>''</td>
+    <td>Yes</td>
+    <td>If true, the form will used bulk delete</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>method</td>
+    <td>String</td>
+    <td>''</td>
+    <td>Yes</td>
+    <td>Method http request, choose one of ['post', 'get', 'delete', 'patch']</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>url</td>
+    <td>String</td>
+    <td>''</td>
+    <td>No</td>
+    <td>Link where the collection of item will be deleted</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>callbackBeforeDeleteBulk</td>
+    <td>Func</td>
+    <td>() => {}</td>
+    <td>No</td>
+    <td>Callback before bulk data delete</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>callbackBeforeDeleteBulk</td>
+    <td>Func</td>
+    <td>() => {}</td>
+    <td>No</td>
+    <td>Callback after bulk data deleted</td>
+  </tr>
+</tbody>
+</table>
+
 
 <b>Back to main <a href="https://github.com/azharprabudi/react-autogenerate-crud">link</a></b>
