@@ -16,8 +16,8 @@ This project is made open source to help other people who use react in developin
 
 <b>This project uses several dependencies:</b>
 
-1. "@ material-ui / core": "^ 1.4.1",
-2. "@ material-ui / icons": "^ 2.0.0",
+1. "@material-ui / core": "^ 1.4.1",
+2. "@material-ui / icons": "^ 2.0.0",
 3. "axios": "^ 0.18.0",
 4. "classnames": "^ 2.2.6",
 5. "draft-js": "^ 0.10.5",
@@ -112,21 +112,26 @@ This project is made open source to help other people who use react in developin
         </tr>
         <tr>
             <td>14</td>
-            <td>Form details</td>
+            <td>Import data from excel</td>
             <td>Not Yet</td>
         </tr>
         <tr>
             <td>15</td>
-            <td>Submit for edit data, and add new</td>
+            <td>Form details</td>
             <td>Not Yet</td>
         </tr>
         <tr>
             <td>16</td>
-            <td>Search</td>
+            <td>Submit for edit data, and add new</td>
             <td>Not Yet</td>
         </tr>
         <tr>
             <td>17</td>
+            <td>Search</td>
+            <td>Not Yet</td>
+        </tr>
+        <tr>
+            <td>18</td>
             <td>Sorting using api</td>
             <td>Not Yet</td>
         </tr>
