@@ -125,7 +125,7 @@ This configuration must be done, if you want to add additional buttons that are 
 <b>Because this project using material ui, you can use their props from official website at <a href="https://material-ui.com/api/button/">here</a></b>
 
 <b>This is how to using it</b>
-<pre>
+```javascript
 <CRUDGenerate
 {...anotherProps}
 table={{
@@ -143,6 +143,6 @@ table={{
    }
 }}
 />
-</pre>
+```
 
 <b>Back to main <a href="https://github.com/azharprabudi/react-autogenerate-crud">link</a></b>
