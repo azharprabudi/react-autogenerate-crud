@@ -264,6 +264,53 @@ you can see a full documentation at <a href="https://github.com/axios/axios">her
   </tr>
 </tbody>
 </table>
-
+<br></br>
+<b>update.get</b>
+<table>
+  <thead>
+    <tr>
+      <td>No</td>
+      <td>Props Name</td>
+      <td>Type</td>
+      <td>Default</td>
+      <td>Required</td>
+      <td>Description</td>
+    </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>1</td>
+    <td>url</td>
+    <td>String</td>
+    <td>''</td>
+    <td>Yes</td>
+    <td>Url when the system want to get detail data</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>config</td>
+    <td>Object</td>
+    <td>{}</td>
+    <td>Yes</td>
+    <td>Configuration of http request, such as authorization (example: {headers: {authorization: ''}}), you can see a full documentation at here</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>replaceUrl</td>
+    <td>String</td>
+    <td>''</td>
+    <td>No</td>
+    <td>If there is a unique value you want to give at your url, please include it in here. For example you have an url like this http://localhost/user?id=2, 2 at the url is dynamic number, that can be change depend on data on server. So you have to type like this in your url http://localhost/user?id={id}. And {id} have to fill in your replace url, so the url will be replaced depend configuration</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>attributeName</td>
+    <td>String</td>
+    <td>''</td>
+    <td>No</td>
+    <td>This is useful for replacing replaceUrl when get data from server, example you get data from server {id: 2}, then you just fill attributeName with id, so the replaceUrl will replace with the value at id attribute</td>
+  </tr>
+</tbody>
+</table>  
 
 <b>Back to main <a href="https://github.com/azharprabudi/react-autogenerate-crud">link</a></b>
