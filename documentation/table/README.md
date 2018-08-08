@@ -28,7 +28,7 @@ This configuration must be done, if you want to add additional buttons that are 
     <td>Object</td>
     <td>{}</td>
     <td>No</td>
-    <td>This will replace or add a button that is in each row, to use it click here, to use it click <a href="#buttonTopTable">here</a></td>
+    <td>This will replace or add a button that is in each row, to use it click here, to use it click <a href="#row">here</a></td>
   </tr>
 </tbody>
 </table>
@@ -124,7 +124,6 @@ This configuration must be done, if you want to add additional buttons that are 
 </table>
 <b>Because this project using material ui, you can use their props from official website at <a href="https://material-ui.com/api/button/">here</a></b>
 <br></br>
-<br></br>
 
 <b id="buttonTopTable">This is how to using it</b>
 ```javascript
@@ -146,5 +145,88 @@ table={{
 }}
 />
 ```
+
+## row ##
+
+<b>Current Props For Each Attribute Of row</b> 
+<table>
+  <thead>
+    <tr>
+      <td>No</td>
+      <td>Props Name</td>
+      <td>Type</td>
+      <td>Default</td>
+      <td>Required</td>
+      <td>Description</td>
+    </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>1</td>
+    <td>replaceUrl</td>
+    <td>String</td>
+    <td>''</td>
+    <td>No</td>
+    <td>If your new button, there is a link where in the link someone wants to be replaced, then enter the name you want to replace here</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>attributeName</td>
+    <td>String</td>
+    <td>''</td>
+    <td>No</td>
+    <td>This is useful for replacing replaceUrl as a value derived from the data server</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>additionalButtons</td>
+    <td>Object</td>
+    <td>{}</td>
+    <td>No</td>
+    <td>This configuration same like buttonTopTable, the existing attribute name butotn each row there are ['update', 'delete']</td>
+  </tr>
+  <tr>
+</tbody>
+</table>
+
+
+<b id="row">This is how to using it</b>
+```javascript
+<CRUDGenerate
+{...anotherProps}
+table={{
+   buttonTopTable: {
+    'create': {
+        label: "New Create", // modifiy existing button
+      },
+    'delete': {
+        label: 'New Delete' // modifiy existing button
+    },
+    'newButton': { // add new button
+        label: 'New Button',
+        onClick: () => alert(1)
+    },
+   },
+   row: {
+    replaceUrl: '{id}',
+    attributeName: 'id',
+    additionalButtons: {
+      'update': {
+        label: 'New Update'
+      },
+      'delete': {
+        label: 'New Delete'
+      },
+      'newButton': {
+        label: 'test',
+        href: 'http://localhost:4000/user/id={id}'
+      }
+    }
+   }
+}}
+/>
+```
+
+
 
 <b>Back to main <a href="https://github.com/azharprabudi/react-autogenerate-crud">link</a></b>
