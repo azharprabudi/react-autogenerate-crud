@@ -954,7 +954,7 @@ CRUDGenerate.defaultProps = {
   },
   export: {
     url: "",
-    type: "both"
+    type: "csv"
   }
 };
 

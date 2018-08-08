@@ -28,9 +28,7 @@ const config = {
           page: "_page",
           search: {}
         },
-        config: {},
-        callbackBeforeRead: () => {},
-        callbackAfterRead: () => {}
+        config: {}
       },
       update: {
         url: "http://localhost:3000/article/{id}",
