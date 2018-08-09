@@ -179,3 +179,94 @@ validationCallback={{
   </tr>
   </tbody>
 </table>
+
+<b id="componentAttribute">componentAttribute</b>
+<table>
+  <thead>
+    <tr>
+      <td>No</td>
+      <td>Props Name</td>
+      <td>Type</td>
+      <td>Default</td>
+      <td>Required</td>
+      <td>Description</td>
+    </tr>
+  </thead>
+  <tbody>
+     <tr>
+       <td>1</td>
+       <td>id</td>
+       <td>String</td>
+       <td>- (unique)</td>
+       <td>Yes</td>
+       <td>Id at your input element html</td>
+    </tr>
+    <tr>
+       <td>2</td>
+       <td>name</td>
+       <td>String</td>
+       <td>- (unique)</td>
+       <td>Yes</td>
+       <td>Name at your input element html</td>
+    </tr>
+     <tr>
+       <td>3</td>
+       <td>label</td>
+       <td>String</td>
+       <td>- (unique)</td>
+       <td>Yes</td>
+       <td>Label on top your input element html</td>
+    </tr>
+     <tr>
+       <td>4</td>
+       <td>type</td>
+       <td>String</td>
+       <td>- (unique)</td>
+       <td>Yes</td>
+       <td>Choose one of ['text', 'password', 'number', 'hidden', 'date', 'time', 'datetime-local']</td>
+    </tr>
+    <tr>
+       <td>5</td>
+       <td>extension</td>
+       <td>Object</td>
+       <td>-</td>
+       <td>No</td>
+      <td>See full documentation <a href="#extension">here</a></td>
+    </tr>
+    <tr>
+       <td>6</td>
+       <td>onAdd</td>
+       <td>Object</td>
+       <td>-</td>
+       <td>No</td>
+       <td>
+        
+```javascript
+  onAdd: {
+    disabled: false, // status when onAdd
+    readonly: false, // status when onAdd
+  }
+```
+         
+  </td>
+    </tr>
+    <tr>
+       <td>7</td>
+       <td>onEdit</td>
+       <td>Object</td>
+       <td>-</td>
+       <td>No</td>
+       <td>
+        
+```javascript
+  onEdit: {
+    disabled: false, // status when onAdd
+    readonly: false, // status when onAdd
+  }
+```
+         
+  </td>
+    </tr>
+  </tbody>
+</table>
+
