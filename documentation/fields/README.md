@@ -272,7 +272,33 @@ validationCallback={{
 
 <b id="extension">extension</b>
 
-<b>Remember if your component one of ['Radio', 'Checkbox', 'Select', 'SelectMultiple', 'SelectAutoComplete', 'SelectMultiAutoComplete', 'SelectAsyncAutoComplete', 'SelectAsyncMultiAutoComplete'] used attributed at the below</b>
+This section just focus on InputNominal Component
+
+<table>
+  <thead>
+    <tr>
+      <td>No</td>
+      <td>Props Name</td>
+      <td>Type</td>
+      <td>Default</td>
+      <td>Required</td>
+      <td>Description</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>prefix</td>
+      <td>String</td>
+      <td>-</td>
+      <td>No</td>
+      <td>Prefix used at your input component</td>
+    </tr>
+  </tbody>
+</table>
+
+
+This section below for your component one of ['Radio', 'Checkbox', 'Select', 'SelectMultiple', 'SelectAutoComplete', 'SelectMultiAutoComplete', 'SelectAsyncAutoComplete', 'SelectAsyncMultiAutoComplete'] used attributed at the below
 
 <table>
   <thead>
@@ -334,4 +360,113 @@ customSource: {
     </tr>
   </tbody>
 </table>
+
+This section just focus on FileUploader Component
+
+At this section, you have to add attribute name. That is uploaderConf, so its like this
+
+```javascript
+  customSource:{
+    uploaderConf: {
+      // here
+    }
+  }
+```
+
+And there are some attribute can be used at uploaderConf
+
+<table>
+  <thead>
+    <tr>
+      <td>No</td>
+      <td>Props Name</td>
+      <td>Type</td>
+      <td>Default</td>
+      <td>Required</td>
+      <td>Description</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>minSize</td>
+      <td>Number (bytes)</td>
+      <td>-</td>
+      <td>No</td>
+      <td>Minimum size of upload file</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>maxSize</td>
+      <td>Number (bytes)</td>
+      <td>-</td>
+      <td>No</td>
+      <td>Maximum size of upload file</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>allowTypes</td>
+      <td>String</td>
+      <td>-</td>
+      <td>No</td>
+      <td>List file is allowed, you can see more at <a href="https://github.com/react-dropzone/react-dropzone">here</a></td>
+    </tr>
+  </tbody>
+</table>
+
+This section just focus on CustomEditor Component
+
+At this section, you have to add attribute name. That is editorConf, so its like this
+
+```javascript
+  customSource:{
+    editorConf: {
+      // here
+    }
+  }
+```
+
+And there are some attribute can be used at editorConf
+
+<table>
+  <thead>
+    <tr>
+      <td>No</td>
+      <td>Props Name</td>
+      <td>Type</td>
+      <td>Default</td>
+      <td>Required</td>
+      <td>Description</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>img</td>
+      <td>Object</td>
+      <td>-</td>
+      <td>No</td>
+      <td>
+        
+```javascript
+editorConf: {
+  img: {
+    uploadUrl: 'https://api.uploadimage.com/',
+    method: 'post',
+    config: {},
+    type: 'formData', // choose one of ['formData', 'base64', 'binaryString']
+  }
+}
+```
+
+</td>
+    </tr>
+  </tbody>
+</table>
+
+
+## YOU CAN SEE FULL EXAMPLE AT <a href="https://github.com/azharprabudi/react-autogenerate-crud/blob/master/src/config-form-user.js">HERE</a> ##
+
+<b>Back to main <a href="https://github.com/azharprabudi/react-autogenerate-crud">link</a></b>
+
 
