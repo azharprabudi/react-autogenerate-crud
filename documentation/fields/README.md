@@ -105,5 +105,77 @@ validationCallback={{
 ```   
    </td>
   </tr>
+  <tr>
+    <td>5</td>
+    <td>showOnTable</td>
+    <td>Boolean</td>
+    <td>False</td>
+    <td>No</td>
+    <td>Set to true if you want to show this attribute to column table</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>mergingColumn</td>
+    <td>Boolean</td>
+    <td>False</td>
+    <td>No</td>
+    <td>If you want to combine two or more value in one column, set this to true and <b>you must set typeColumnTable to be custom (if you are using merging column, this column just show on table, and not created a form input then cannot be sort)</b></td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>sortColumnTable</td>
+    <td>Boolean</td>
+    <td>False</td>
+    <td>No</td>
+    <td>Sorting value from table</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>titleColumnTable</td>
+    <td>String</td>
+    <td>''</td>
+    <td>No</td>
+    <td>Title of column table</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>typeColumnTable</td>
+    <td>String</td>
+    <td>''</td>
+    <td>No</td>
+    <td>Choose one of ['text', 'custom', 'image', 'nominal', 'date', 'time', 'datetime', 'longtext'], to specify what the value in this column</td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>onCustomValue</td>
+    <td>Func</td>
+    <td>-</td>
+    <td>No</td>
+    <td>You can return value or component to show on column table</td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td>attributeColumnTable</td>
+    <td>String</td>
+    <td>-</td>
+    <td>No</td>
+    <td>This in what the attribute data from server, want to show on table</td>
+  </tr>
+  <tr>
+    <td>12</td>
+    <td>prefixColumnTable</td>
+    <td>String</td>
+    <td>-</td>
+    <td>No</td>
+    <td>Add prefix to value at each column</td>
+  </tr>
+  <tr>
+    <td>13</td>
+    <td>allowSearch</td>
+    <td>Boolean</td>
+    <td>-</td>
+    <td>No</td>
+    <td>If you set true, this attribute will add to search form (merging column is not included)</td>
+  </tr>
   </tbody>
 </table>
