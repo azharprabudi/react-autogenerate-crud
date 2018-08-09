@@ -175,7 +175,7 @@ export default {
   validEmail: isEmail,
   minLength: isMin,
   maxLength: isMax,
-  mathces: isEqual,
+  matches: isEqual,
   integer: isInteger,
   aplhabet: isAlphabet,
   gt: greaterThan,

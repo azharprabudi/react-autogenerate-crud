@@ -243,7 +243,7 @@ class BaseForm extends Component {
             break;
           }
         } else if (
-          itemValidatorArr.length === 6 &&
+          itemValidatorArr.length === 5 &&
           has(validators, itemValidatorArr[0])
         ) {
           let { validation, message } = validators[itemValidatorArr[0]](

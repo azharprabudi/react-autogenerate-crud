@@ -182,6 +182,9 @@ const config = {
             onEdit: {
               disabled: false,
               readonly: false
+            },
+            extension: {
+              prefix: "rp"
             }
           },
           validation: "",
@@ -189,7 +192,7 @@ const config = {
           mergingColumn: false,
           sortColumnTable: true,
           titleColumnTable: "Viewers",
-          typeColumnTable: "text",
+          typeColumnTable: "nominal",
           attributeColumnTable: "viewers",
           prefixColumnTable: "",
           allowSearch: true
@@ -215,7 +218,7 @@ const config = {
           mergingColumn: false,
           sortColumnTable: true,
           titleColumnTable: "created",
-          typeColumnTable: "text",
+          typeColumnTable: "datetime",
           attributeColumnTable: "createdAt",
           prefixColumnTable: "",
           allowSearch: true
@@ -300,7 +303,7 @@ const config = {
           mergingColumn: false,
           sortColumnTable: true,
           titleColumnTable: "created",
-          typeColumnTable: "text",
+          typeColumnTable: "image",
           attributeColumnTable: "image",
           prefixColumnTable: "",
           allowSearch: true
