@@ -102,8 +102,8 @@ validationCallback={{
     return {message: '', validation: true}
   }
 }}
-```
-      </td>
+```   
+   </td>
   </tr>
   </tbody>
 </table>
