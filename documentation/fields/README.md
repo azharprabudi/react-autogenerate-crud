@@ -270,3 +270,68 @@ validationCallback={{
   </tbody>
 </table>
 
+<b id="extension">extension</b>
+
+<b>Remember if your component one of ['Radio', 'Checkbox', 'Select', 'SelectMultiple', 'SelectAutoComplete', 'SelectMultiAutoComplete', 'SelectAsyncAutoComplete', 'SelectAsyncMultiAutoComplete'] used attributed at the below</b>
+
+<table>
+  <thead>
+    <tr>
+      <td>No</td>
+      <td>Props Name</td>
+      <td>Type</td>
+      <td>Default</td>
+      <td>Required</td>
+      <td>Description</td>
+    </tr>
+  </thead>
+  <tbody>
+     <tr>
+       <td>1</td>
+       <td>data</td>
+       <td>Array</td>
+       <td>-</td>
+       <td>No</td>
+       <td>If you want to use existing data in your storage not in server storage, fill this with your own data</td>
+    </tr>
+     <tr>
+       <td>2</td>
+       <td>customSource</td>
+       <td>Object</td>
+       <td>-</td>
+       <td>No</td>
+       <td>Used this if you want to get data from server, example :
+
+```javascript
+customSource: {
+  initialUrl: 'http://localhost.com/user?id={id} // add initialUrl if you are using selectAsyncAutoComplete / selectAsyncMultipleAutoComplete
+  url: 'http://localhost.com/user', // get all user, but if you are using selectAsyncAutoComplete / selectAsyncMultipleAutoComplete just type like this 'http://localhost.com/user?name={name}' so every time you type, it automaticly get data to resemble what you wrote
+  config: {}, // same as previously
+  replaceUrl: { // using it if you are using selectAsyncAutoComplete / selectAsyncMultipleAutoComplete
+    initial: '{id}',
+    url: '{name}'
+  }
+}
+```
+
+</td>
+    </tr>
+    <tr>
+       <td>3</td>
+       <td>idAttributeName</td>
+       <td>String</td>
+       <td>-</td>
+       <td>No</td>
+       <td>This is the attribute name of the data obtained, and must be unique (example: id)</td>
+    </tr>
+    <tr>
+       <td>4</td>
+       <td>labelAttributeName</td>
+       <td>String</td>
+       <td>-</td>
+       <td>No</td>
+       <td>This is the attribute name of the data obtained, and want to show up to user</td>
+    </tr>
+  </tbody>
+</table>
+
