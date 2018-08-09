@@ -33,4 +33,20 @@ This configuration is only you who color the loading icon or a different size th
 </tbody>
 </table>
 
+<b>This is how to using it</b>
+
+```javascript
+<CRUDGenerate
+{...otherProps}
+loading={{
+  color: 'red',
+  size: 35
+}}
+/>
+```
+
+
+## YOU CAN SEE FULL EXAMPLE CONFIGURATION AT <a href="https://github.com/azharprabudi/react-autogenerate-crud/blob/master/src/config-form-user.js">HERE</a> ##
+
+
 <b>Back to main <a href="https://github.com/azharprabudi/react-autogenerate-crud">link</a></b>

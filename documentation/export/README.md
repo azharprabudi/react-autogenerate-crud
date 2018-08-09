@@ -33,4 +33,18 @@ This configuration must be done if the user wants to add an export feature to th
 </tbody>
 </table>
 
+<b>This is how to using it</b>
+```javascript
+<CRUDGenerate
+{...otherProps}
+export={{
+  url: 'http://yourapi.com/data-export-csv',
+  type: 'csv'
+}}
+/>
+```
+
+## YOU CAN SEE FULL EXAMPLE CONFIGURATION AT <a href="https://github.com/azharprabudi/react-autogenerate-crud/blob/master/src/config-form-user.js">HERE</a> ##
+
+
 <b>Back to main <a href="https://github.com/azharprabudi/react-autogenerate-crud">link</a> 

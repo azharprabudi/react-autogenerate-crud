@@ -453,7 +453,7 @@ you can see a full documentation at <a href="https://github.com/axios/axios">her
 </tbody>
 </table>
 
-<b>This is how to use it</b>
+<b>This is how to using it</b>
 ```javascript
 <CRUDGenerate
 {...otherProps}
@@ -511,6 +511,10 @@ server= {{
   }}
 />
 ```
+
+
+## YOU CAN SEE FULL EXAMPLE CONFIGURATION AT <a href="https://github.com/azharprabudi/react-autogenerate-crud/blob/master/src/config-form-user.js">HERE</a> ##
+
 
 
 <b>Back to main <a href="https://github.com/azharprabudi/react-autogenerate-crud">link</a></b>
