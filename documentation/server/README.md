@@ -453,7 +453,7 @@ you can see a full documentation at <a href="https://github.com/axios/axios">her
 </tbody>
 </table>
 
-<b>This is how to use it</b>
+<b>This is how to using it</b>
 ```javascript
 <CRUDGenerate
 {...otherProps}
