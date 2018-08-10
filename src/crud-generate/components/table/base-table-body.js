@@ -15,7 +15,6 @@ import moment from "moment";
 import omit from "lodash/omit";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import uniqueId from "lodash/uniqueId";
 
 /* my modules */
 import Colors from "../../constants/colors";
@@ -246,31 +245,27 @@ class BaseTableBody extends Component {
     } = this.props;
     return (
       <TableBody component="tbody">
-        {data.map(item => {
-          return (
-            <TableRow key={uniqueId(item[deleteAttributeName])} hover>
-              {checkbox && (
-                <TableCell padding={"checkbox"}>
-                  <Checkbox
-                    checked={
-                      listChecked.indexOf(item[deleteAttributeName]) > -1
-                    }
-                    style={{ color: Colors.red }}
-                    onClick={this.onClickCheckbox(item[deleteAttributeName])}
-                  />
-                </TableCell>
-              )}
-              {columns.map(itemColumn => (
-                <TableCell key={uniqueId(itemColumn.title)}>
-                  {this.renderItemEachColumn(item, itemColumn)}
-                </TableCell>
-              ))}
-              {useAdditionalButtons && (
-                <TableCell>{this.renderAdditionalButtons(item)}</TableCell>
-              )}
-            </TableRow>
-          );
-        })}
+        {data.map(item => (
+          <TableRow key={item[deleteAttributeName]} hover>
+            {checkbox && (
+              <TableCell padding={"checkbox"}>
+                <Checkbox
+                  checked={listChecked.indexOf(item[deleteAttributeName]) > -1}
+                  style={{ color: Colors.red }}
+                  onClick={this.onClickCheckbox(item[deleteAttributeName])}
+                />
+              </TableCell>
+            )}
+            {columns.map(itemColumn => (
+              <TableCell key={item[itemColumn.attributeColumnTable]}>
+                {this.renderItemEachColumn(item, itemColumn)}
+              </TableCell>
+            ))}
+            {useAdditionalButtons && (
+              <TableCell>{this.renderAdditionalButtons(item)}</TableCell>
+            )}
+          </TableRow>
+        ))}
       </TableBody>
     );
   }

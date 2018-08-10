@@ -31,6 +31,32 @@
       "tag": [
         1,
         4
+      ],
+      "comments": [
+        {
+          "id": 1,
+          "user": 1,
+          "like": 200,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow amazing sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 2,
+          "user": 2,
+          "like": 5,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow sangat keren sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 3,
+          "user": 2,
+          "like": 10,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wajah ini apakah ganteng ?</h1>",
+          "createdAt": "2018-08-19 15:30"
+        }
       ]
     },
     {
@@ -46,6 +72,32 @@
       "tag": [
         1,
         4
+      ],
+      "comments": [
+        {
+          "id": 1,
+          "user": 1,
+          "like": 200,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow amazing sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 2,
+          "user": 2,
+          "like": 5,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow sangat keren sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 3,
+          "user": 2,
+          "like": 10,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wajah ini apakah ganteng ?</h1>",
+          "createdAt": "2018-08-19 15:30"
+        }
       ]
     },
     {
@@ -61,6 +113,32 @@
       "tag": [
         1,
         4
+      ],
+      "comments": [
+        {
+          "id": 1,
+          "user": 1,
+          "like": 200,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow amazing sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 2,
+          "user": 2,
+          "like": 5,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow sangat keren sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 3,
+          "user": 2,
+          "like": 10,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wajah ini apakah ganteng ?</h1>",
+          "createdAt": "2018-08-19 15:30"
+        }
       ]
     },
     {
@@ -76,6 +154,32 @@
       "tag": [
         1,
         4
+      ],
+      "comments": [
+        {
+          "id": 1,
+          "user": 1,
+          "like": 200,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow amazing sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 2,
+          "user": 2,
+          "like": 5,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow sangat keren sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 3,
+          "user": 2,
+          "like": 10,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wajah ini apakah ganteng ?</h1>",
+          "createdAt": "2018-08-19 15:30"
+        }
       ]
     },
     {
@@ -91,6 +195,32 @@
       "tag": [
         1,
         4
+      ],
+      "comments": [
+        {
+          "id": 1,
+          "user": 1,
+          "like": 200,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow amazing sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 2,
+          "user": 2,
+          "like": 5,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow sangat keren sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 3,
+          "user": 2,
+          "like": 10,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wajah ini apakah ganteng ?</h1>",
+          "createdAt": "2018-08-19 15:30"
+        }
       ]
     },
     {
@@ -106,6 +236,32 @@
       "tag": [
         1,
         4
+      ],
+      "comments": [
+        {
+          "id": 1,
+          "user": 1,
+          "like": 200,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow amazing sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 2,
+          "user": 2,
+          "like": 5,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow sangat keren sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 3,
+          "user": 2,
+          "like": 10,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wajah ini apakah ganteng ?</h1>",
+          "createdAt": "2018-08-19 15:30"
+        }
       ]
     },
     {
@@ -121,6 +277,32 @@
       "tag": [
         1,
         4
+      ],
+      "comments": [
+        {
+          "id": 1,
+          "user": 1,
+          "like": 200,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow amazing sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 2,
+          "user": 2,
+          "like": 5,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow sangat keren sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 3,
+          "user": 2,
+          "like": 10,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wajah ini apakah ganteng ?</h1>",
+          "createdAt": "2018-08-19 15:30"
+        }
       ]
     },
     {
@@ -136,6 +318,32 @@
       "tag": [
         1,
         4
+      ],
+      "comments": [
+        {
+          "id": 1,
+          "user": 1,
+          "like": 200,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow amazing sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 2,
+          "user": 2,
+          "like": 5,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow sangat keren sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 3,
+          "user": 2,
+          "like": 10,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wajah ini apakah ganteng ?</h1>",
+          "createdAt": "2018-08-19 15:30"
+        }
       ]
     },
     {
@@ -151,6 +359,32 @@
       "tag": [
         1,
         4
+      ],
+      "comments": [
+        {
+          "id": 1,
+          "user": 1,
+          "like": 200,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow amazing sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 2,
+          "user": 2,
+          "like": 5,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow sangat keren sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 3,
+          "user": 2,
+          "like": 10,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wajah ini apakah ganteng ?</h1>",
+          "createdAt": "2018-08-19 15:30"
+        }
       ]
     },
     {
@@ -166,6 +400,32 @@
       "tag": [
         1,
         4
+      ],
+      "comments": [
+        {
+          "id": 1,
+          "user": 1,
+          "like": 200,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow amazing sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 2,
+          "user": 2,
+          "like": 5,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow sangat keren sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 3,
+          "user": 2,
+          "like": 10,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wajah ini apakah ganteng ?</h1>",
+          "createdAt": "2018-08-19 15:30"
+        }
       ]
     },
     {
@@ -181,6 +441,32 @@
       "tag": [
         1,
         4
+      ],
+      "comments": [
+        {
+          "id": 1,
+          "user": 1,
+          "like": 200,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow amazing sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 2,
+          "user": 2,
+          "like": 5,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wow sangat keren sekali</h1>",
+          "createdAt": "2018-08-19 15:30"
+        },
+        {
+          "id": 3,
+          "user": 2,
+          "like": 10,
+          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
+          "content": "<h1>Wajah ini apakah ganteng ?</h1>",
+          "createdAt": "2018-08-19 15:30"
+        }
       ]
     }
   ],

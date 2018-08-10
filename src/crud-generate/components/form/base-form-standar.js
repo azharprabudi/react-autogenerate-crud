@@ -108,6 +108,7 @@ BaseFormStandar.propTypes = {
   details: PropTypes.array.isRequired,
   state: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
+  classes: PropTypes.object.isRequired,
   isEdit: PropTypes.bool.isRequired
 };
 

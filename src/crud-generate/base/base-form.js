@@ -7,6 +7,7 @@ import { withStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import has from "lodash/has";
 import PropTypes from "prop-types";
+import uniqueId from "lodash/uniqueId";
 import isObject from "lodash/isObject";
 
 /* my modules */
@@ -38,13 +39,16 @@ class BaseForm extends Component {
         message: "",
         visible: false
       },
-      form: this.initialStateForm(props.fields)
+      form: this.initialStateForm(props.fields),
+      dataExist: {}
     };
 
     /* flag to show this is on edit mode or not */
     this.isEdit =
       has(props.params, BaseForm.ID_FORM) &&
       props.params[BaseForm.ID_FORM] !== "";
+
+    this.rowObjectData = {}; // this is used when user want to add row
   }
 
   componentDidMount() {
@@ -88,7 +92,8 @@ class BaseForm extends Component {
     if (has(data, "data")) {
       this.setState({
         ...this.state,
-        form: this.initialStateForm(fields, data.data)
+        form: this.initialStateForm(fields, data.data),
+        dataExist: data.data
       });
     }
   };
@@ -125,41 +130,66 @@ class BaseForm extends Component {
 
       /* details */
       if (type === "details") {
-        /* the attribute details can be specify just give the information about in configuration, in attribute attributeNameDetails   */
+        /* the the value data from attributeDetailsName */
+        form[groupName] = [];
         if (has(groupField, "attributeNameDetails")) {
-          const indexDetails = groupField["attributeNameDetails"];
-          const formDetails = data[indexDetails];
-          /* looping the data details */
-          for (let j = 0; j < formDetails.length; j++) {
-            form[groupName][j] = {};
-            for (let k = 0; k < details.length; k++) {
-              const field = details[k];
+          let i = 0;
+
+          const detailsData = has(data, groupField.attributeNameDetails)
+            ? data[groupField.attributeNameDetails]
+            : [];
+
+          do {
+            /* give the value object, if the value doesnt exist */
+            if (!form[groupName][i]) {
+              form[groupName][i] = {
+                uniqueId: uniqueId("row_"),
+                state: {}
+              };
+            }
+            /* set details form */
+            for (let j = 0; j < details.length; j++) {
+              const field = details[j];
               if (
                 !has(field, "mergingColumn") ||
                 field.mergingColumn === false
               ) {
-                form[groupName][j][field.componentAttribute.name] = {
-                  value: has(formDetails[j], field.attributeColumnTable)
-                    ? formDetails[j][field.attributeColumnTable]
-                    : libDefaultvalue[field.component],
+                if (
+                  !form[groupName][i]["state"][field.componentAttribute.name]
+                ) {
+                  form[groupName][i]["state"][
+                    field.componentAttribute.name
+                  ] = {};
+                }
+                form[groupName][i]["state"][field.componentAttribute.name] = {
+                  value:
+                    detailsData.length > 0 &&
+                    has(detailsData[i], field.attributeColumnTable)
+                      ? detailsData[i][field.attributeColumnTable]
+                      : libDefaultvalue[field.component],
                   validationStatus: true,
                   validationText: ""
                 };
+
+                if (!has(this.rowObjectData, field.componentAttribute.name)) {
+                  this.rowObjectData = {
+                    ...this.rowObjectData,
+                    [field.componentAttribute.name]: {
+                      value: "",
+                      validationStatus: true,
+                      validationText: ""
+                    }
+                  };
+                }
               }
             }
-          }
+
+            i++;
+          } while (i < detailsData.length);
         } else {
-          form[groupName] = [{}];
-          for (let j = 0; j < details.length; j++) {
-            const field = details[j];
-            if (!has(field, "marginColumn") || field.mergingColumn === false) {
-              form[groupName][0][field.componentAttribute.name] = {
-                value: libDefaultvalue[field.component],
-                validationStatus: true,
-                validationText: ""
-              };
-            }
-          }
+          alert(
+            "You have to specify attribute details name at this configurations"
+          );
         }
       }
     }
@@ -293,6 +323,74 @@ class BaseForm extends Component {
     });
   };
 
+  /* onchange row in details */
+  onChangeBaseFormDetails = groupName => async (id, stateName, value) => {
+    let validationText = "";
+    let validationStatus = true;
+
+    if (isString(value)) {
+      const resultValidation = await this.doValidatingInput(
+        groupName,
+        stateName,
+        value
+      );
+      validationText = resultValidation.validationText;
+      validationStatus = resultValidation.validationStatus;
+    }
+
+    this.setState({
+      ...this.state,
+      form: {
+        ...this.state.form,
+        [groupName]: this.state.form[groupName].map(({ uniqueId, state }) => {
+          if (uniqueId === id) {
+            return {
+              uniqueId,
+              state: {
+                ...state,
+                [stateName]: {
+                  value,
+                  validationText,
+                  validationStatus
+                }
+              }
+            };
+          }
+          return { uniqueId, state };
+        })
+      }
+    });
+  };
+
+  /* add row in details */
+  onClickAddRow = groupName => () => {
+    this.setState({
+      ...this.state,
+      form: {
+        ...this.state.form,
+        [groupName]: [
+          ...this.state.form[groupName],
+          { uniqueId: uniqueId("row_"), state: this.rowObjectData }
+        ]
+      }
+    });
+  };
+
+  /* remove row in details */
+  onClickRemoveRow = groupName => id => {
+    this.setState({
+      ...this.state,
+      form: {
+        ...this.state.form,
+        [groupName]: [
+          ...this.state.form[groupName].filter(
+            filtItem => filtItem.uniqueId !== id
+          )
+        ]
+      }
+    });
+  };
+
   render() {
     const { classes, fields } = this.props;
     return (
@@ -302,7 +400,7 @@ class BaseForm extends Component {
         className={classes.container}
         onSubmit={() => alert(1)}
       >
-        {fields.map(({ type, title, groupName, details }) => {
+        {fields.map(({ type, title, groupName, details, ...others }) => {
           if (type === "standard") {
             return (
               <BaseFormStandar
@@ -317,9 +415,15 @@ class BaseForm extends Component {
           } else {
             return (
               <BaseFormDetails
+                {...others}
+                key={title}
+                title={title}
+                details={details}
                 isEdit={this.isEdit}
-                key={groupForm.title}
-                {...groupForm}
+                state={this.state.form[groupName]}
+                onClickAddRow={this.onClickAddRow(groupName)}
+                onChange={this.onChangeBaseFormDetails(groupName)}
+                onClickRemoveRow={this.onClickRemoveRow(groupName)}
               />
             );
           }

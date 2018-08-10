@@ -941,6 +941,125 @@ const config = {
           allowSearch: true
         }
       ]
+    },
+    {
+      title: "Details",
+      type: "details",
+      groupName: "details_1",
+      attributeNameDetails: "comments",
+      details: [
+        {
+          component: "Input",
+          componentAttribute: {
+            id: "inputDetailsStandar",
+            name: "inputDetailsStandar",
+            label: "Input Details Standar",
+            type: "text",
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "Id",
+          typeColumnTable: "text",
+          attributeColumnTable: "id",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "Select",
+          componentAttribute: {
+            id: "selectDetailsStandar",
+            name: "selectDetailsStandar",
+            label: "Select Details Standar",
+            type: "text",
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            },
+            extension: {
+              customSource: {
+                url: "http://localhost:3000/user"
+              },
+              idAttributeName: "id",
+              labelAttributeName: "name"
+            }
+          },
+          validation: "",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "User",
+          typeColumnTable: "text",
+          attributeColumnTable: "user",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "InputNominal",
+          componentAttribute: {
+            id: "inputDetailsNominal",
+            name: "inputDetailsNominal",
+            label: "Input Details Standar",
+            type: "text",
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "Like",
+          typeColumnTable: "text",
+          attributeColumnTable: "like",
+          prefixColumnTable: "",
+          allowSearch: true
+        },
+        {
+          component: "FileUploader",
+          componentAttribute: {
+            id: "fileUploaderDetails",
+            name: "fileUploaderDetails",
+            label: "File Uploader Details",
+            type: "text",
+            onAdd: {
+              disabled: false,
+              readonly: false
+            },
+            onEdit: {
+              disabled: false,
+              readonly: false
+            }
+          },
+          validation: "",
+          showOnTable: false,
+          mergingColumn: false,
+          sortColumnTable: true,
+          titleColumnTable: "Avatar",
+          typeColumnTable: "text",
+          attributeColumnTable: "avatar",
+          prefixColumnTable: "",
+          allowSearch: true
+        }
+      ]
     }
   ],
   export: {

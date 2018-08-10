@@ -11,7 +11,6 @@ import { withStyles } from "@material-ui/core/styles";
 
 /* etc modules */
 import has from "lodash/has";
-import uniqueId from "lodash/uniqueId";
 import PropTypes from "prop-types";
 
 /* my modules */
@@ -59,7 +58,7 @@ class BaseTableHeader extends Component {
                 attributeColumnTable,
                 ...others
               }) => (
-                <TableCell key={uniqueId(titleColumnTable)}>
+                <TableCell key={attributeColumnTable}>
                   {has(others, "sortColumnTable") &&
                   others.sortColumnTable &&
                   others.typeColumnTable !== "custom" ? (
