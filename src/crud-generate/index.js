@@ -739,13 +739,6 @@ class CRUDGenerate extends Component {
     } = this.state;
     return (
       <Fragment>
-        <a
-          href=""
-          ref={ref => {
-            this.refExportBtn = ref;
-          }}
-          style={{ display: "none" }}
-        />
         <FormDialog
           fields={this.fields}
           title={formTitle}
