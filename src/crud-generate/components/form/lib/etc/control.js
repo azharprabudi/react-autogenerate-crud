@@ -30,7 +30,7 @@ const Control = props => {
     <TextField
       fullWidth
       margin={"normal"}
-      error={props.selectProps.eror}
+      error={props.selectProps.error}
       label={props.selectProps.label}
       disabled={props.selectProps.disabled}
       helperText={props.selectProps.helperText}

@@ -71,9 +71,10 @@ class FormDialog extends Component {
         <BaseForm
           params={params}
           fields={fields}
+          onClickButtonSubmit={onClickButtonSubmit}
+          onClickButtonClose={onClickButtonClose}
           createConfigurationServer={createConfigurationServer}
           updateConfigurationServer={updateConfigurationServer}
-          onClickButtonSubmit={onClickButtonSubmit}
         />
       </Dialog>
     );

@@ -98,7 +98,7 @@ const config = {
               readonly: false
             }
           },
-          validation: "",
+          validation: "required",
           showOnTable: true,
           mergingColumn: false,
           sortColumnTable: true,
@@ -187,7 +187,7 @@ const config = {
               prefix: "rp"
             }
           },
-          validation: "",
+          validation: "required",
           showOnTable: true,
           mergingColumn: false,
           sortColumnTable: true,
@@ -213,7 +213,7 @@ const config = {
               readonly: false
             }
           },
-          validation: "",
+          validation: "required",
           showOnTable: true,
           mergingColumn: false,
           sortColumnTable: true,
@@ -239,7 +239,7 @@ const config = {
               readonly: false
             }
           },
-          validation: "",
+          validation: "required",
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: true,
@@ -265,7 +265,7 @@ const config = {
               readonly: false
             }
           },
-          validation: "",
+          validation: "required",
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: true,
@@ -298,7 +298,7 @@ const config = {
               allowTypes: "image/jpg"
             }
           },
-          validation: "",
+          validation: "required",
           showOnTable: true,
           mergingColumn: false,
           sortColumnTable: true,
@@ -324,7 +324,7 @@ const config = {
               readonly: false
             }
           },
-          validation: "",
+          validation: "required",
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: true,
@@ -364,7 +364,7 @@ const config = {
               }
             }
           },
-          validation: "",
+          validation: "required",
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: true,
@@ -964,7 +964,7 @@ const config = {
               readonly: false
             }
           },
-          validation: "",
+          validation: "required",
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: true,
@@ -997,7 +997,7 @@ const config = {
               labelAttributeName: "name"
             }
           },
-          validation: "",
+          validation: "required",
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: true,
@@ -1023,7 +1023,7 @@ const config = {
               readonly: false
             }
           },
-          validation: "",
+          validation: "required",
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: true,
@@ -1049,7 +1049,7 @@ const config = {
               readonly: false
             }
           },
-          validation: "",
+          validation: "required",
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: true,

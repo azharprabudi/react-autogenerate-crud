@@ -3,6 +3,7 @@ import React, { PureComponent } from "react";
 /* material ui modules */
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import red from "@material-ui/core/colors/red";
 
 /* etc modules */
 import has from "lodash/has";
@@ -91,7 +92,9 @@ class FormCheckbox extends PureComponent {
             />
           </div>
         ))}
-        <FormHelperText>{helperText}</FormHelperText>
+        <FormHelperText style={{ color: red[500] }}>
+          {helperText}
+        </FormHelperText>
       </div>
     );
   }

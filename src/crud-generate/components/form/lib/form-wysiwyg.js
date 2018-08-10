@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 
 /* material modules */
+import red from "@material-ui/core/colors/red";
 import InputLabel from "@material-ui/core/InputLabel";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -18,6 +19,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import isArray from "lodash/isArray";
 import isEqual from "lodash/isEqual";
+import { FormHelperText } from "@material-ui/core";
 
 const styles = theme => ({
   container: {
@@ -149,7 +151,7 @@ class FormWysiwyg extends PureComponent {
   };
 
   render() {
-    const { classes, label } = this.props;
+    const { classes, label, helperText } = this.props;
     return (
       <div className={classes.container}>
         <InputLabel>{label}</InputLabel>
@@ -163,6 +165,9 @@ class FormWysiwyg extends PureComponent {
             ...this.imageConf
           }}
         />
+        <FormHelperText style={{ color: red[500] }}>
+          {helperText}
+        </FormHelperText>
       </div>
     );
   }
@@ -170,7 +175,8 @@ class FormWysiwyg extends PureComponent {
 
 FormWysiwyg.propTypes = {
   label: PropTypes.string.isRequired,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  helperText: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(FormWysiwyg);

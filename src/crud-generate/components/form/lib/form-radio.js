@@ -5,6 +5,7 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import red from "@material-ui/core/colors/red";
 
 /* etc modules */
 import has from "lodash/has";
@@ -72,7 +73,9 @@ class FormRadio extends PureComponent {
             />
           ))}
         </RadioGroup>
-        <FormHelperText>{helperText}</FormHelperText>
+        <FormHelperText style={{ color: red[500] }}>
+          {helperText}
+        </FormHelperText>
       </div>
     );
   }

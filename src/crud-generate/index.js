@@ -513,6 +513,12 @@ class CRUDGenerate extends Component {
         },
         () => setTimeout(this.resetSnackbarInfo, 3000)
       );
+
+      this.getDataDependOnConfig(
+        this.state.table.limit,
+        this.state.table.page,
+        this.state.table.offset
+      );
     } catch (e) {
       this.setState(
         {
@@ -618,6 +624,12 @@ class CRUDGenerate extends Component {
         },
         () => setTimeout(this.resetSnackbarInfo, 3000)
       );
+
+      this.getDataDependOnConfig(
+        this.state.table.limit,
+        this.state.table.page,
+        this.state.table.offset
+      );
     } catch (e) {
       this.setState(
         {
@@ -641,7 +653,6 @@ class CRUDGenerate extends Component {
   };
 
   doValidationForm = () => {
-    console.log(this.state);
     return false;
   };
 

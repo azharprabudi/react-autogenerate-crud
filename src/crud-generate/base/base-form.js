@@ -8,6 +8,7 @@ import { withStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import has from "lodash/has";
 import PropTypes from "prop-types";
+import isArray from "lodash/isArray";
 import uniqueId from "lodash/uniqueId";
 
 /* my modules */
@@ -33,6 +34,16 @@ const styles = theme => ({
     flexWrap: "wrap",
     marginBottom: 8,
     backgroundColor: "white"
+  },
+  btnSave: {
+    color: "#fff",
+    marginRight: 8,
+    backgroundColor: theme.palette.primary.main
+  },
+  btnCancel: {
+    color: "#fff",
+    marginRight: 8,
+    backgroundColor: theme.palette.error.main
   }
 });
 
@@ -401,8 +412,65 @@ class BaseForm extends Component {
     });
   };
 
+  /* on submit form */
+  onSubmit = async () => {
+    let isValidate = true;
+    let { form } = this.state;
+    for (let [groupIndex, groupName] of Object.entries(form)) {
+      if (!isArray(groupName)) {
+        for (let [stateIndex, stateName] of Object.entries(groupName)) {
+          const {
+            validationText,
+            validationStatus
+          } = await this.doValidatingInput(
+            groupIndex,
+            stateIndex,
+            stateName.value
+          );
+          form[groupIndex][stateIndex] = {
+            value: stateName.value,
+            validationText,
+            validationStatus
+          };
+          if (validationStatus == false) {
+            isValidate = false;
+          }
+        }
+      } else {
+        for (let i = 0; i < groupName.length; i++) {
+          const stateGroup = groupName[i].state;
+          for (let [stateIndex, stateName] of Object.entries(stateGroup)) {
+            const {
+              validationText,
+              validationStatus
+            } = await this.doValidatingInput(
+              groupIndex,
+              stateIndex,
+              stateName.value
+            );
+            form[groupIndex][i]["state"][stateIndex] = {
+              value: stateName.value,
+              validationText,
+              validationStatus
+            };
+            if (validationStatus == false) {
+              isValidate = false;
+            }
+          }
+        }
+      }
+    }
+    if (isValidate) {
+    } else {
+      this.setState({
+        ...this.state,
+        form
+      });
+    }
+  };
+
   render() {
-    const { classes, fields } = this.props;
+    const { classes, fields, onClickButtonClose } = this.props;
     return (
       <form
         method="post"
@@ -442,14 +510,16 @@ class BaseForm extends Component {
           <Button
             size={"medium"}
             variant={"contained"}
-            onClick={() => alert(1)}
+            onClick={onClickButtonClose}
+            className={classes.btnCancel}
           >
             Cancel
           </Button>
           <Button
             size={"medium"}
             variant={"contained"}
-            onClick={() => alert(1)}
+            onClick={this.onSubmit}
+            className={classes.btnSave}
           >
             Save
           </Button>
@@ -486,6 +556,7 @@ BaseForm.propTypes = {
     callbackBeforeUpdate: PropTypes.func,
     callbackAfterUpdate: PropTypes.func
   }),
+  onClickButtonClose: PropTypes.func.isRequired,
   onClickButtonSubmit: PropTypes.func.isRequired
 };
 

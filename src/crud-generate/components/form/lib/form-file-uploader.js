@@ -2,9 +2,11 @@ import React, { PureComponent, Fragment } from "react";
 
 /* material modules */
 import Button from "@material-ui/core/Button";
+import red from "@material-ui/core/colors/red";
 import Typography from "@material-ui/core/Typography";
 import InputLabel from "@material-ui/core/InputLabel";
 import { withStyles } from "@material-ui/core/styles";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 /* etc modules */
 import has from "lodash/has";
@@ -85,7 +87,15 @@ class FormFileUploader extends PureComponent {
   };
 
   render() {
-    const { label, id, name, disabled, readonly, classes } = this.props;
+    const {
+      label,
+      id,
+      name,
+      disabled,
+      readonly,
+      classes,
+      helperText
+    } = this.props;
     return (
       <div style={{ marginTop: 16, marginBottom: 8 }}>
         <InputLabel>{label}</InputLabel>
@@ -125,6 +135,9 @@ class FormFileUploader extends PureComponent {
             <p className={classes.imageText}>Click / Drop Here For Add image</p>
           </Dropzone>
         )}
+        <FormHelperText style={{ color: red[500] }}>
+          {helperText}
+        </FormHelperText>
       </div>
     );
   }
@@ -145,7 +158,8 @@ FormFileUploader.propTypes = {
       maxSize: PropTypes.number.isRequired,
       allowTypes: PropTypes.string.isRequired
     })
-  })
+  }),
+  helperText: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(FormFileUploader);
