@@ -431,9 +431,7 @@ class CRUDGenerate extends Component {
       }
 
       const dltBulkConfig = has(dlt, "config") ? dlt.config : {};
-      const dltBulkMethod = has(dlt.bulk, "method")
-        ? dlt.bulk.method
-        : "delete";
+      const dltBulkMethod = has(dlt.bulk, "method") ? dlt.bulk.method : "post";
       const dltBulkUrl = has(dlt.bulk, "url") ? dlt.bulk.url : "";
 
       let isContinue = true; // flag for the continue this function or already taken by user
@@ -441,10 +439,10 @@ class CRUDGenerate extends Component {
 
       /* before submit callback the data to user, if user want to modify */
       if (has(dlt.bulk, "callbackBeforeBulkDelete")) {
-        const response = await dlt.bulk.callbackBeforeBulkDelete(
+        const response = await dlt.bulk.callbackBeforeBulkDelete({
           listChecked, // data checked
-          data // all data
-        );
+          listAllData: data // all data
+        });
         /* return from every callback, have to same format like { isContinue, error, data } */
         if (has(response, "isContinue") && !response.isContinue) {
           if (has(response, "error") && response.error !== "") {
@@ -460,19 +458,20 @@ class CRUDGenerate extends Component {
       }
 
       /* if user want to continue submit data using crud generate, just execute it */
+      let result = null;
       if (isContinue) {
-        const result = await axios[dltBulkMethod](
+        result = await axios[dltBulkMethod](
           dltBulkUrl,
           listChecked,
           dltBulkConfig
         );
         if (!has(result, "data")) {
-          throw new Error("Failed to delete item");
+          throw new Error(result);
         }
       }
 
       if (has(dlt.bulk, "callbackAfterDeleteBulk")) {
-        await dlt.bulk.callbackAfterDeleteBulk();
+        await dlt.bulk.callbackAfterDeleteBulk(result);
       }
 
       this.setState(
@@ -545,20 +544,23 @@ class CRUDGenerate extends Component {
       const configDltRow = has(dlt, "config") ? dlt.config : {};
       const methodDltRow = has(dlt, "method") ? dlt.method : "delete";
 
-      if (has(urlDltRow, "replaceUrl")) {
-        url = url.replace(dlt.replaceUrl, params.id);
+      if (has(dlt, "replaceUrl")) {
+        urlDltRow = urlDltRow.replace(dlt.replaceUrl, params.id);
       }
 
       let isContinue = true; // just flag
       if (has(dlt, "callbackBeforeDelete")) {
-        const response = await dlt.callbackBeforeDelete(urlDltRow, params.id);
+        const response = await dlt.callbackBeforeDelete({
+          url: urlDltRow,
+          data: params.id
+        });
         if (has(response, "isContinue") && !response.isContinue) {
           if (has(response.error) && response.error !== "") {
             throw new Error(response.error);
           }
           isContinue = false;
         } else if (has(response, "isContinue") && response.isContinue) {
-          if (has(response, data)) {
+          if (has(response, "data")) {
             urlDltRow = response.data;
           }
           isContinue = true;
@@ -566,16 +568,17 @@ class CRUDGenerate extends Component {
       }
 
       /* perform is callback before update is to continue to this function */
+      let result = null;
       if (isContinue) {
-        const result = await axios[methodDltRow](urlDltRow, configDltRow);
+        result = await axios[methodDltRow](urlDltRow, configDltRow);
         /* perform delete action to one data */
-        if (!has(resultDelete, "data")) {
-          throw new Error("Failed to delete the data");
+        if (!has(result, "data")) {
+          throw new Error(result);
         }
       }
 
       if (has(dlt, "callbackAfterDelete")) {
-        await dlt.callbackAfterDelete();
+        await dlt.callbackAfterDelete(result.data);
       }
 
       this.setState(
