@@ -40,6 +40,25 @@ This props has an array data type in which each value in the array must be an ob
     </tr>
     <tr>
       <td>4</td>
+      <td>attributeNameDetails</td>
+      <td>String</td>
+      <td>''</td>
+      <td>No</td>
+      <td>Specify the attributeName object when you get data from server, example you get data like this :
+      
+```javascript
+ {
+  title: 'test',
+  commentars: [{id: 1, content: 'you are ugly'}, {id: 2, content: 'yeah you too'}]
+ }
+ 
+ so if you want commentars to be details form, set the attributeNameDetails with 'commentars'
+```
+      
+  </td>
+    </tr>
+    <tr>
+      <td>4</td>
       <td>details</td>
       <td>Array</td>
       <td>-</td>
