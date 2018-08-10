@@ -2,7 +2,7 @@ import React, { PureComponent, Fragment } from "react";
 
 /* material modules */
 import Button from "@material-ui/core/Button";
-import CloseIcon from "@material-ui/icons/Close";
+import Typography from "@material-ui/core/Typography";
 import InputLabel from "@material-ui/core/InputLabel";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -107,8 +107,7 @@ class FormFileUploader extends PureComponent {
               className={classes.button}
               onClick={this.removeImage}
             >
-              <CloseIcon />
-              Remove
+              <Typography color={"inherit"}>Remove</Typography>
             </Button>
           </Fragment>
         ) : (

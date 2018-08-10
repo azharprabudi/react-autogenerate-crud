@@ -44,13 +44,18 @@ class FormDialog extends Component {
       params,
       onClickButtonClose,
       createConfigurationServer,
-      updateConfigurationServer
+      updateConfigurationServer,
+      onClickButtonSubmit
     } = this.props;
     return (
       <Dialog fullScreen open={visible} onClose={onClose}>
         <AppBar className={classes.appBar}>
           <Toolbar className={classes.toolbar}>
-            <IconButton color="inherit" onClick={onClose} aria-label="Close">
+            <IconButton
+              color="inherit"
+              onClick={onClickButtonClose}
+              aria-label="Close"
+            >
               <CloseIcon />
             </IconButton>
             <Typography
@@ -60,8 +65,10 @@ class FormDialog extends Component {
             >
               {upperFirst(title)}
             </Typography>
-            <Button color="inherit" onClick={onClickButtonClose}>
-              Submit
+            <Button color="inherit" onClick={onClickButtonSubmit}>
+              <Typography variant="subheading" color="inherit">
+                <b>Submit</b>
+              </Typography>
             </Button>
           </Toolbar>
         </AppBar>

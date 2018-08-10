@@ -97,18 +97,18 @@ class FormInput extends PureComponent {
       <TextField
         id={id}
         name={name}
+        fullWidth
         type={this.state.showPassword ? "text" : type}
         value={this.getRealValue(value)}
         margin={"normal"}
         onChange={this.onChange}
         required={required}
-        fullWidth={true}
         InputProps={{
-          style,
           readOnly: readonly,
           startAdornment: this.getContentStartAdornment(),
           ...extension
         }}
+        style={style}
         label={label}
         error={error}
         disabled={disabled}

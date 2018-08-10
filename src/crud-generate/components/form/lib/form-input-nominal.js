@@ -31,9 +31,9 @@ class FormInputNominal extends PureComponent {
     return (
       <TextField
         id={id}
-        fullWidth
         name={name}
         label={label}
+        fullWidth
         margin={"normal"}
         InputProps={{
           inputComponent: NumberFormatCustom,

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 /* material modules */
+import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -14,13 +15,16 @@ import lib from "./lib";
 const styles = theme => ({
   container: {
     flex: 1,
-    paddingTop: 15,
-    paddingRight: 10,
+    paddingTop: 25,
     paddingBottom: 15,
-    paddingLeft: 10,
+    paddingRight: 8,
+    paddingLeft: 8,
     flexWrap: "wrap",
-    marginBottom: 10,
+    marginBottom: 16,
     backgroundColor: "white"
+  },
+  wrapperTitle: {
+    marginBottom: 10
   }
 });
 
@@ -69,22 +73,25 @@ class BaseFormStandar extends Component {
 
       const style = has(others, "style") ? others.style : {};
       return (
-        <SelectedComponent
-          id={id}
-          key={id}
-          type={type}
-          name={name}
-          label={label}
-          value={value}
-          extension={others}
-          readonly={readonly}
-          disabled={disabled}
-          extension={extension}
-          error={!validationStatus}
-          isEdit={this.props.isEdit}
-          helperText={validationText}
-          onChange={this.onChange(name)}
-        />
+        <Grid item key={id} sm={6} xs={12}>
+          <SelectedComponent
+            id={id}
+            type={type}
+            name={name}
+            label={label}
+            value={value}
+            style={style}
+            extension={others}
+            readonly={readonly}
+            disabled={disabled}
+            extension={extension}
+            error={!validationStatus}
+            isEdit={this.props.isEdit}
+            helperText={validationText}
+            onChange={this.onChange(name)}
+            className={this.props.classes.input}
+          />
+        </Grid>
       );
     }
     return null;
@@ -94,10 +101,14 @@ class BaseFormStandar extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.container}>
-        <Typography variant="title" color="inherit">
-          {this.props.title.toUpperCase()}
-        </Typography>
-        {this.props.details.map(item => this.renderItemInput(item))}
+        <div className={classes.wrapperTitle}>
+          <Typography variant="title" color="inherit">
+            {`# ${this.props.title.toUpperCase()}`}
+          </Typography>
+        </div>
+        <Grid container spacing={16}>
+          {this.props.details.map(item => this.renderItemInput(item))}
+        </Grid>
       </div>
     );
   }

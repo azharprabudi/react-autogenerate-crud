@@ -616,6 +616,17 @@ class CRUDGenerate extends Component {
     }
   };
 
+  /* do submit form */
+  submitForm = () => {
+    if (this.doValidationForm()) {
+    }
+  };
+
+  doValidationForm = () => {
+    console.log(this.state);
+    return false;
+  };
+
   /* form alert dialog open */
   onToggleFormDialog = (title = "", params = {}) => {
     this.setState({
@@ -649,10 +660,23 @@ class CRUDGenerate extends Component {
     }
 
     if (dialogName === "alert" && action === "submit") {
+      const { aclRules, aclId, server } = this.props;
       let isBulk = has(params, "bulkDelete") && params.bulkDelete;
-      this.deleteDataDependOnConfig(isBulk, params);
-    } else if (dialogName === "form" && action == "submit") {
-      this.doSubmitForm(params);
+      /* check acl first */
+      if (
+        has(aclRules, aclId) &&
+        has(aclRules[aclId], "delete") &&
+        aclRules[aclId].delete
+      ) {
+        /* check user already using http to get data or not */
+        if (has(server, "http") && has(server.http, "delete")) {
+          if (has(server.http.delete, "bulk") && isBulk) {
+            this.doDeleteBulkToHTTPServer(params);
+          } else {
+            this.doDeleteRowToHTTPServer(params);
+          }
+        }
+      }
     }
   };
 
@@ -742,7 +766,7 @@ class CRUDGenerate extends Component {
           updateConfigurationServer={this.editConfigurationServer}
           onClose={this.onDialogClose("form", "cancel")}
           onClickButtonClose={this.onDialogClose("form", "cancel")}
-          onClickButtonSubmit={this.onDialogClose("form", "submit")}
+          onClickButtonSubmit={this.submitForm}
         />
         <BaseTable
           data={data}

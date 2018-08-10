@@ -8,8 +8,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
-import AddIcon from "@material-ui/icons/Add";
-import DeleteIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
 
 /* etc modules */
@@ -23,13 +21,32 @@ import Colors from "../../constants/colors";
 const styles = theme => ({
   container: {
     flex: 1,
-    paddingTop: 15,
-    paddingRight: 10,
+    paddingTop: 25,
     paddingBottom: 15,
-    paddingLeft: 10,
+    paddingRight: 8,
+    paddingLeft: 8,
     flexWrap: "wrap",
-    marginBottom: 10,
+    marginBottom: 16,
     backgroundColor: "white"
+  },
+  wrapperTitle: {
+    marginBottom: 10
+  },
+  table: {
+    minWidth: 1020,
+    borderRadius: 5,
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    borderStyle: "solid",
+    borderColor: "rgba(224, 224, 224, 1)"
+  },
+  tableWrapper: {
+    overflowX: "auto"
+  },
+  tableHeader: {
+    backgroundColor: Colors.semiWhite
   },
   btnAdd: {
     backgroundColor: Colors.blue,
@@ -113,63 +130,65 @@ class BaseFormDetail extends Component {
     const { classes, title, details, state, onClickAddRow } = this.props;
     return (
       <div className={classes.container}>
-        <Typography variant="title" color="inherit">
-          {title.toUpperCase()}
-        </Typography>
-        <Table>
-          <TableHead>
-            <TableRow>
-              {details.map(item => (
-                <TableCell key={item.titleColumnTable}>
+        <div className={classes.wrapperTitle}>
+          <Typography variant="title" color="inherit">
+            {title.toUpperCase()}
+          </Typography>
+        </div>
+        <div className={classes.tableWrapper}>
+          <Table component="table" className={classes.table}>
+            <TableHead className={classes.tableHeader}>
+              <TableRow>
+                {details.map(item => (
+                  <TableCell key={item.titleColumnTable}>
+                    <Typography variant={"subheading"}>
+                      <b>{item.titleColumnTable.toUpperCase()}</b>
+                    </Typography>
+                  </TableCell>
+                ))}
+                <TableCell>
                   <Typography variant={"subheading"}>
-                    <b>{item.titleColumnTable.toUpperCase()}</b>
+                    <Button
+                      size={"small"}
+                      variant={"contained"}
+                      className={classes.btnAdd}
+                      onClick={onClickAddRow}
+                    >
+                      <Typography color="inherit">Add Row</Typography>
+                    </Button>
                   </Typography>
                 </TableCell>
-              ))}
-              <TableCell>
-                <Typography variant={"subheading"}>
-                  <Button
-                    size={"medium"}
-                    variant={"contained"}
-                    className={classes.btnAdd}
-                    onClick={onClickAddRow}
-                  >
-                    <AddIcon />
-                    Add Row
-                  </Button>
-                </Typography>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {state.map(itemState => {
-              return (
-                <TableRow key={itemState.uniqueId}>
-                  {details.map(itemDetail => (
-                    <TableCell key={itemDetail.componentAttribute.id}>
-                      {this.renderItemInput(
-                        itemState.uniqueId,
-                        itemState.state,
-                        itemDetail
-                      )}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {state.map(itemState => {
+                return (
+                  <TableRow key={itemState.uniqueId}>
+                    {details.map(itemDetail => (
+                      <TableCell key={itemDetail.componentAttribute.id}>
+                        {this.renderItemInput(
+                          itemState.uniqueId,
+                          itemState.state,
+                          itemDetail
+                        )}
+                      </TableCell>
+                    ))}
+                    <TableCell>
+                      <Button
+                        size={"small"}
+                        variant={"contained"}
+                        className={classes.btnDelete}
+                        onClick={this.onClickRemoveRow(itemState.uniqueId)}
+                      >
+                        <Typography color="inherit">Delete</Typography>
+                      </Button>
                     </TableCell>
-                  ))}
-                  <TableCell>
-                    <Button
-                      size={"medium"}
-                      variant={"contained"}
-                      className={classes.btnDelete}
-                      onClick={this.onClickRemoveRow(itemState.uniqueId)}
-                    >
-                      <DeleteIcon />
-                      Delete
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     );
   }
