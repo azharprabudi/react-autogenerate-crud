@@ -33,6 +33,8 @@ This project is made open source to help other people who use react in developin
 15. "react-select": "^ 2.0.0",
 16. "react-text-mask": "^ 5.4.3",
 17. "validate.js": "^ 0.12.0"
+18. "file-saver": "^1.3.8"
+19. "xlsx": "^0.13.3"
 
 ## And also, this project already has features including: ##
 
