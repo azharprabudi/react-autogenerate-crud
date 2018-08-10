@@ -105,7 +105,7 @@ This configuration is used to retrieve real data that is on the server, unfortun
     <td>Func</td>
     <td>() => {}</td>
     <td>No</td>
-    <td>Callback after form submitted, if you using it you have to return the object like this {isContinue: Boolean (If true, then the generator continue the process and vice cersa), error: Any (if exist, there is error), data: Any (The data will be used for execute) }</td>
+    <td>Callback after form submitted (do anything else)</td>
   </tr>
 </tbody>
 </table>
@@ -260,7 +260,7 @@ you can see a full documentation at <a href="https://github.com/axios/axios">her
     <td>Func</td>
     <td>() => {}</td>
     <td>Yes</td>
-    <td>Callback after form updated, if you using it you have to return the object like this {isContinue: Boolean (If true, then the generator continue the process and vice cersa), error: Any (if exist, there is error), data: Any (The data will be used for execute) }</td>
+    <td>Callback after form updated (do anything else)</td>
   </tr>
 </tbody>
 </table>
@@ -391,7 +391,7 @@ you can see a full documentation at <a href="https://github.com/axios/axios">her
     <td>Func</td>
     <td>() => {}</td>
     <td>Yes</td>
-    <td>Callback after data deleted, if you using it you have to return the object like this {isContinue: Boolean (If true, then the generator continue the process and vice cersa), error: Any (if exist, there is error), data: Any (The data will be used for execute) }</td>
+    <td>Callback after data deleted (do anything else)</td>
   </tr>
 </tbody>
 </table>
@@ -444,11 +444,11 @@ you can see a full documentation at <a href="https://github.com/axios/axios">her
   </tr>
   <tr>
     <td>5</td>
-    <td>callbackBeforeDeleteBulk</td>
+    <td>callbackAfterDeleteBulk</td>
     <td>Func</td>
     <td>() => {}</td>
     <td>No</td>
-    <td>Callback after bulk data deleted, if you using it you have to return the object like this {isContinue: Boolean (If true, then the generator continue the process and vice cersa), error: Any (if exist, there is error), data: Any (The data will be used for execute) }</td>
+    <td>Callback after bulk data deleted (do anything else)</td>
   </tr>
 </tbody>
 </table>
