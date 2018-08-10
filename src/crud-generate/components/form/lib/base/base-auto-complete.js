@@ -173,7 +173,6 @@ class BaseAutoComplete extends PureComponent {
     const {
       id,
       name,
-      value,
       label,
       multi,
       error,
