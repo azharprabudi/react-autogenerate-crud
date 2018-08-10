@@ -1,11 +1,18 @@
 import React, { Component, Fragment } from "react";
 
+/* material ui */
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import blue from "@material-ui/core/colors/blue";
+import orange from "@material-ui/core/colors/orange";
+import red from "@material-ui/core/colors/red";
+import green from "@material-ui/core/colors/green";
+import brown from "@material-ui/core/colors/brown";
+
 /* etc modules */
 import axios from "axios";
 import has from "lodash/has";
 import PropTypes from "prop-types";
 import isArray from "lodash/isArray";
-import moment from "moment";
 
 /* custom components */
 import BaseTable from "./base/base-table";
@@ -14,9 +21,46 @@ import AlertDialog from "./components/etc/alert-dialog";
 import CustomSnackbar from "./components/etc/custom-snackbar";
 
 /* custom configuration */
-import Colors from "./constants/colors";
 import OptionsConf from "./constants/options-conf";
 import GenerateExportFile from "./helpers/generate-export-file";
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      light: blue[300],
+      main: blue[500],
+      dark: blue[700],
+      contrastText: "#fff"
+    },
+    secondary: {
+      light: blue[300],
+      main: blue[500],
+      dark: blue[700],
+      contrastText: "#fff"
+    },
+    error: {
+      light: red[300],
+      main: red[500],
+      dark: red[700],
+      contrastText: "#fff"
+    },
+    alternative1: {
+      light: orange[300],
+      main: orange[500],
+      dark: orange[700],
+      contrastText: "#fff"
+    },
+    alternative2: {
+      light: green[300],
+      main: green[500],
+      dark: green[700],
+      contrastText: "#fff"
+    },
+    table: {
+      main: brown[500]
+    }
+  }
+});
 
 class CRUDGenerate extends Component {
   constructor(props) {
@@ -738,7 +782,7 @@ class CRUDGenerate extends Component {
       snackbarInfo: { visible, type, message }
     } = this.state;
     return (
-      <Fragment>
+      <MuiThemeProvider theme={theme}>
         <FormDialog
           fields={this.fields}
           title={formTitle}
@@ -797,7 +841,7 @@ class CRUDGenerate extends Component {
           onAggree={this.onDialogClose("alert", "submit")}
           onDisaggree={this.onDialogClose("alert", "cancel")}
         />
-      </Fragment>
+      </MuiThemeProvider>
     );
   }
 }
@@ -953,7 +997,7 @@ CRUDGenerate.defaultProps = {
   initialLimit: 10,
   loading: {
     size: 40,
-    color: Colors.blue
+    color: "#2196F3"
   },
   table: {
     buttonTopTable: {},

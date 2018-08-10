@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 /* material modules */
+import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
 
 /* etc modules */
@@ -8,7 +9,6 @@ import axios from "axios";
 import has from "lodash/has";
 import PropTypes from "prop-types";
 import uniqueId from "lodash/uniqueId";
-import isObject from "lodash/isObject";
 
 /* my modules */
 import validators from "../helpers/validators";
@@ -23,6 +23,16 @@ const styles = theme => ({
     flex: 1,
     backgroundColor: "#f3f3f3",
     paddingTop: 65
+  },
+  wrapperFooter: {
+    flex: 1,
+    paddingTop: 25,
+    paddingBottom: 15,
+    paddingRight: 8,
+    paddingLeft: 8,
+    flexWrap: "wrap",
+    marginBottom: 8,
+    backgroundColor: "white"
   }
 });
 
@@ -428,6 +438,22 @@ class BaseForm extends Component {
             );
           }
         })}
+        <div className={classes.wrapperFooter}>
+          <Button
+            size={"medium"}
+            variant={"contained"}
+            onClick={() => alert(1)}
+          >
+            Cancel
+          </Button>
+          <Button
+            size={"medium"}
+            variant={"contained"}
+            onClick={() => alert(1)}
+          >
+            Save
+          </Button>
+        </div>
       </form>
     );
   }
@@ -459,7 +485,8 @@ BaseForm.propTypes = {
     dataFromProps: PropTypes.bool,
     callbackBeforeUpdate: PropTypes.func,
     callbackAfterUpdate: PropTypes.func
-  })
+  }),
+  onClickButtonSubmit: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(BaseForm);

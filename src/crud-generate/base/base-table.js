@@ -7,7 +7,6 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Paper from "@material-ui/core/Paper";
 import TablePagination from "@material-ui/core/TablePagination";
 import Button from "@material-ui/core/Button";
-import green from "@material-ui/core/colors/green";
 
 /* etc modules */
 import has from "lodash/has";
@@ -21,7 +20,6 @@ import BaseTableBody from "../components/table/base-table-body";
 
 /* custom config */
 import OptionsConf from "../constants/options-conf";
-import Colors from "../constants/colors";
 
 const styles = theme => ({
   loading: {
@@ -44,15 +42,15 @@ const styles = theme => ({
     marginRight: 5
   },
   buttonAddNew: {
-    backgroundColor: Colors.blue,
+    backgroundColor: theme.palette.primary.main,
     color: "white"
   },
   buttonDelete: {
-    backgroundColor: Colors.red,
+    backgroundColor: theme.palette.error.main,
     color: "white"
   },
   buttonExport: {
-    backgroundColor: green[500],
+    backgroundColor: theme.palette.alternative2.main,
     color: "white"
   },
   wrapper: {
@@ -246,7 +244,6 @@ class BaseTable extends PureComponent {
       orderBy,
       loading,
       isLoading,
-      table,
       page,
       limit,
       columns,

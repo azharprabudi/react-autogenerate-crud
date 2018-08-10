@@ -16,7 +16,6 @@ import PropTypes from "prop-types";
 
 /* my modules */
 import lib from "./lib";
-import Colors from "../../constants/colors";
 
 const styles = theme => ({
   container: {
@@ -30,7 +29,7 @@ const styles = theme => ({
     backgroundColor: "white"
   },
   wrapperTitle: {
-    marginBottom: 10
+    marginBottom: 15
   },
   table: {
     minWidth: 1020,
@@ -46,15 +45,15 @@ const styles = theme => ({
     overflowX: "auto"
   },
   tableHeader: {
-    backgroundColor: Colors.semiWhite
+    backgroundColor: "#f3f3f3"
   },
   btnAdd: {
-    backgroundColor: Colors.blue,
-    color: Colors.white
+    backgroundColor: theme.palette.alternative2.main,
+    color: "#fff"
   },
   btnDelete: {
-    backgroundColor: Colors.red,
-    color: Colors.white
+    backgroundColor: theme.palette.error.main,
+    color: "#fff"
   }
 });
 

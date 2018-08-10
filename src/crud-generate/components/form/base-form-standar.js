@@ -24,7 +24,7 @@ const styles = theme => ({
     backgroundColor: "white"
   },
   wrapperTitle: {
-    marginBottom: 10
+    marginBottom: 15
   }
 });
 

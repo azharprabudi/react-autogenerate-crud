@@ -17,7 +17,6 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 
 /* my modules */
-import Colors from "../../constants/colors";
 import BaseForm from "../../base/base-form";
 import { thousandSeparator } from "../../helpers/custom-function";
 
@@ -26,20 +25,22 @@ const styles = theme => ({
     maxWidth: 150,
     maxHeight: 150
   },
-
   button: {
     margin: theme.spacing.unit
   },
   buttonEdit: {
-    backgroundColor: Colors.orange,
-    color: Colors.white
+    backgroundColor: theme.palette.alternative1.main,
+    color: "#fff"
   },
   buttonDelete: {
-    backgroundColor: Colors.red,
-    color: Colors.white
+    backgroundColor: theme.palette.error.main,
+    color: "#fff"
   },
   icon: {
     marginHorizontal: theme.spacing.unit
+  },
+  checkbox: {
+    color: theme.palette.primary.main
   }
 });
 
@@ -237,11 +238,12 @@ class BaseTableBody extends Component {
   render() {
     const {
       data,
+      classes,
       columns,
       checkbox,
       listChecked,
-      useAdditionalButtons,
-      deleteAttributeName
+      deleteAttributeName,
+      useAdditionalButtons
     } = this.props;
     return (
       <TableBody component="tbody">
@@ -251,8 +253,8 @@ class BaseTableBody extends Component {
               <TableCell padding={"checkbox"}>
                 <Checkbox
                   checked={listChecked.indexOf(item[deleteAttributeName]) > -1}
-                  style={{ color: Colors.red }}
                   onClick={this.onClickCheckbox(item[deleteAttributeName])}
+                  className={classes.checkbox}
                 />
               </TableCell>
             )}

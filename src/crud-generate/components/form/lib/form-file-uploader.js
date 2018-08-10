@@ -11,9 +11,6 @@ import has from "lodash/has";
 import PropTypes from "prop-types";
 import Dropzone from "react-dropzone";
 
-/* my modules */
-import Colors from "../../../constants/colors";
-
 const styles = theme => ({
   wrapperImages: {
     width: 180,
@@ -31,8 +28,8 @@ const styles = theme => ({
   },
   button: {
     marginTop: 8,
-    color: Colors.white,
-    backgroundColor: Colors.red
+    color: "#fff",
+    backgroundColor: theme.palette.error.main
   },
   img: {
     width: "100%"

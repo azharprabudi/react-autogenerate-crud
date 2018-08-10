@@ -14,11 +14,13 @@ import has from "lodash/has";
 import PropTypes from "prop-types";
 
 /* my modules */
-import Colors from "../../constants/colors";
 
 const styles = theme => ({
   header: {
-    backgroundColor: Colors.semiWhite
+    backgroundColor: "#f3f3f3"
+  },
+  checkbox: {
+    color: theme.palette.primary.main
   }
 });
 
@@ -47,7 +49,7 @@ class BaseTableHeader extends Component {
                 <Checkbox
                   checked={isCheckAllItem}
                   onClick={onCheckAllItem}
-                  style={{ color: Colors.red }}
+                  className={classes.checkbox}
                 />
               </TableCell>
             )}

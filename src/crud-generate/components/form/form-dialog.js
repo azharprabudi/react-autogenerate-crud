@@ -7,7 +7,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
 
 /* etc modules */
@@ -16,24 +15,26 @@ import upperFirst from "lodash/upperFirst";
 
 /* my modules */
 import BaseForm from "../../base/base-form";
-import Colors from "../../constants/colors";
 import OptionsConf from "../../constants/options-conf";
 
 const styles = theme => ({
   appBar: {
     position: "fixed",
-    backgroundColor: Colors.blue
+    backgroundColor: theme.palette.primary.main
   },
   flex: {
     flex: 1
   },
   toolbar: {
-    paddingLeft: 0,
+    paddingLeft: 15,
     paddingRight: 15
   }
 });
 
 class FormDialog extends Component {
+  test = () => {
+    console.log(this.reftest);
+  };
   render() {
     const {
       fields,
@@ -51,13 +52,6 @@ class FormDialog extends Component {
       <Dialog fullScreen open={visible} onClose={onClose}>
         <AppBar className={classes.appBar}>
           <Toolbar className={classes.toolbar}>
-            <IconButton
-              color="inherit"
-              onClick={onClickButtonClose}
-              aria-label="Close"
-            >
-              <CloseIcon />
-            </IconButton>
             <Typography
               variant="title"
               color="inherit"
@@ -65,11 +59,13 @@ class FormDialog extends Component {
             >
               {upperFirst(title)}
             </Typography>
-            <Button color="inherit" onClick={onClickButtonSubmit}>
-              <Typography variant="subheading" color="inherit">
-                <b>Submit</b>
-              </Typography>
-            </Button>
+            <IconButton
+              color="inherit"
+              onClick={onClickButtonClose}
+              aria-label="Close"
+            >
+              <CloseIcon />
+            </IconButton>
           </Toolbar>
         </AppBar>
         <BaseForm
@@ -77,6 +73,7 @@ class FormDialog extends Component {
           fields={fields}
           createConfigurationServer={createConfigurationServer}
           updateConfigurationServer={updateConfigurationServer}
+          onClickButtonSubmit={onClickButtonSubmit}
         />
       </Dialog>
     );
