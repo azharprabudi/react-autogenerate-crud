@@ -1,7 +1,10 @@
 /* etc modules */
 
 import axios from "axios";
+import xlsx from "xlsx";
 import has from "lodash/has";
+import moment from "moment";
+import { saveAs } from "file-saver";
 
 class GenerateCsv {
   constructor(urlFetch, config, column) {
@@ -10,56 +13,56 @@ class GenerateCsv {
     this.urlFetch = urlFetch;
   }
 
-  async getDataFromServer() {
+  async generateFile(type) {
     try {
       const data = await axios.get(this.urlFetch, this.config);
       if (!has(data, "data")) {
         throw new Error(data);
       }
-      return data;
+
+      const header = [];
+      const extension = type === "csv" ? "csv" : "xlsx";
+      const fileDataExcel = data.data.map((item, index) => {
+        let i = 0;
+        let arr = [];
+        while (i < this.column.length) {
+          let {
+            typeColumnTable,
+            titleColumnTable,
+            attributeColumnTable
+          } = this.column[i];
+          if (typeColumnTable !== "custom") {
+            arr.push(item[attributeColumnTable]);
+          }
+
+          if (index < 1) {
+            header.push(titleColumnTable);
+          }
+          i++;
+        }
+        return arr;
+      });
+
+      /* add header table at fileDataExcel array */
+      fileDataExcel.splice(0, 0, header);
+
+      const workbook = new xlsx.utils.book_new();
+      const arrToSheet = xlsx.utils.aoa_to_sheet(fileDataExcel);
+      xlsx.utils.book_append_sheet(workbook, arrToSheet, "Sheet 1");
+
+      const workbookOutput = xlsx.write(workbook, {
+        type: "array",
+        bookType: extension,
+        bookSST: false
+      });
+
+      saveAs(
+        new Blob([workbookOutput], { type: "application/octet-stream" }),
+        `export-${moment().format("DD/MM/YYYY")}.${extension}`
+      );
     } catch (e) {
       return e;
     }
-  }
-
-  async getFile(type) {
-    try {
-      let data = await this.getDataFromServer();
-      if (!has(data, "data")) {
-        throw new Error("Failed get data from server");
-      }
-      if (type === "csv") {
-        return this.getContentCsv(data.data);
-      }
-    } catch (e) {
-      return { error: true, data: e };
-    }
-  }
-
-  getContentCsv(data) {
-    let contentCsv = "data:text/csv;charset=utf-8,";
-    for (let iData = 0; iData < data.length; iData++) {
-      let header = [];
-      let row = [];
-      for (let iColumn = 0; iColumn < this.column.length; iColumn++) {
-        let itemColumn = this.column[iColumn];
-        if (itemColumn.typeColumnTable !== "custom") {
-          // for first looping add header at the top of table
-          if (iData < 1) {
-            header.push(itemColumn.titleColumnTable);
-          }
-          // add row item
-          row.push(data[iData][itemColumn.attributeColumnTable]);
-        }
-      }
-
-      // add header to csv file
-      if (header.length > 0) {
-        contentCsv += `${header.join(",")}\r\n`;
-      }
-      contentCsv += `${row.join(",")}\r\n`;
-    }
-    return contentCsv;
   }
 }
 

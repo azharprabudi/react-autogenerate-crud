@@ -132,7 +132,7 @@ class BaseFormDetail extends Component {
       <div className={classes.container}>
         <div className={classes.wrapperTitle}>
           <Typography variant="title" color="inherit">
-            {title.toUpperCase()}
+            {`# ${title.toUpperCase()}`}
           </Typography>
         </div>
         <div className={classes.tableWrapper}>

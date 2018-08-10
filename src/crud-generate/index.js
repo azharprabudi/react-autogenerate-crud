@@ -59,6 +59,9 @@ class CRUDGenerate extends Component {
       isCheckAllItem: false
     };
 
+    // destruct object
+    const { server } = props;
+
     // list column table
     this.columnTable = this.getListColumnTable();
 
@@ -77,35 +80,6 @@ class CRUDGenerate extends Component {
         this.editAttributeName = props.server.update.attributeName;
       }
     }
-
-    /* initial first so can using at other method */
-    let config = {};
-    let urlExport = "";
-    const { aclRules, aclId, server, export: exportConf } = props;
-    if (has(aclRules[aclId], "export") && aclRules[aclId].export) {
-      /* get url from export config, but if not exist take it from http request read */
-      if (has(exportConf, "url") && exportConf.url !== "") {
-        urlExport = exportConf.url;
-        config =
-          has(exportConf, "config") && Object.keys(exportConf.config).length > 0
-            ? exportConf.config
-            : {};
-      } else {
-        if (has(server, "http") && has(server.http, "read")) {
-          urlExport = server.http.read.url;
-          config =
-            has(server.http, "config") &&
-            Object.keys(server.http.config).length > 0
-              ? server.http.config
-              : {};
-        }
-      }
-    }
-    this.mGenerateExportFile = new GenerateExportFile(
-      urlExport,
-      config,
-      this.columnTable
-    );
 
     /* get setting configuration server */
     this.addConfigurationServer = {};
@@ -702,28 +676,43 @@ class CRUDGenerate extends Component {
   /* listener for export whenever the button is clicked */
   onClickExport = type => async () => {
     try {
-      const data = await this.mGenerateExportFile.getFile(type);
-      if (has(data, "error")) {
-        throw new Error(data.error);
+      /* initial first so can using at other method */
+      let config = {};
+      let urlExport = "";
+      const { aclRules, aclId, server, export: exportConf } = this.props;
+      if (has(aclRules[aclId], "export") && aclRules[aclId].export) {
+        /* get url from export config, but if not exist take it from http request read */
+        if (has(exportConf, "url") && exportConf.url !== "") {
+          urlExport = exportConf.url;
+          config =
+            has(exportConf, "config") &&
+            Object.keys(exportConf.config).length > 0
+              ? exportConf.config
+              : {};
+        } else {
+          if (has(server, "http") && has(server.http, "read")) {
+            urlExport = server.http.read.url;
+            config =
+              has(server.http, "config") &&
+              Object.keys(server.http.config).length > 0
+                ? server.http.config
+                : {};
+          }
+        }
       }
-      if (type === "csv") {
-        const encodeData = encodeURI(data);
-        this.refExportBtn.setAttribute("href", encodeData);
-        this.refExportBtn.setAttribute(
-          "download",
-          `${this.props.title}-${moment().format("DDMMYYYY")}.csv`
-        );
-        this.refExportBtn.click();
-      } else {
-        alert("Excel not available currently");
-      }
+      this.mGenerateExportFile = new GenerateExportFile(
+        urlExport,
+        config,
+        this.columnTable
+      );
+      await this.mGenerateExportFile.generateFile(type);
     } catch (e) {
       this.setState({
         ...this.state,
         snackbarInfo: {
           visible: true,
           type: "error",
-          message: isArray(e.data) ? JSON.stringify(e.data) : e.data.toString()
+          message: isArray(e) ? JSON.stringify(e) : e.toString()
         }
       });
     }
