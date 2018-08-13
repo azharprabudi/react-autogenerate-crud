@@ -11,7 +11,6 @@ import { withStyles } from "@material-ui/core/styles";
 
 /* etc modules */
 import PropTypes from "prop-types";
-import upperFirst from "lodash/upperFirst";
 
 /* my modules */
 import BaseForm from "../../base/base-form";
@@ -32,9 +31,6 @@ const styles = theme => ({
 });
 
 class FormDialog extends Component {
-  test = () => {
-    console.log(this.reftest);
-  };
   render() {
     const {
       fields,
@@ -57,7 +53,7 @@ class FormDialog extends Component {
               color="inherit"
               className={classes.flex}
             >
-              {upperFirst(title)}
+              {title}
             </Typography>
             <IconButton
               color="inherit"

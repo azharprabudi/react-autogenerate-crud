@@ -5,12 +5,7 @@ import config from "./config-form-user";
 
 class Index extends Component {
   render() {
-    return (
-      <div style={{ display: "inline" }}>
-        <h1>hello azhar</h1>
-        <CRUDGenerate {...config} />
-      </div>
-    );
+    return <CRUDGenerate {...config} />;
   }
 }
 

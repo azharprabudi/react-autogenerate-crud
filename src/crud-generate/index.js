@@ -13,6 +13,7 @@ import axios from "axios";
 import has from "lodash/has";
 import PropTypes from "prop-types";
 import isArray from "lodash/isArray";
+import upperFirst from "lodash/upperFirst";
 
 /* custom components */
 import BaseTable from "./base/base-table";
@@ -647,14 +648,7 @@ class CRUDGenerate extends Component {
   };
 
   /* do submit form */
-  submitForm = () => {
-    if (this.doValidationForm()) {
-    }
-  };
-
-  doValidationForm = () => {
-    return false;
-  };
+  doSubmitForm = data => {};
 
   /* form alert dialog open */
   onToggleFormDialog = (title = "", params = {}) => {
@@ -774,7 +768,14 @@ class CRUDGenerate extends Component {
   };
 
   render() {
-    const { aclId, aclRules, table, loading, export: exportConf } = this.props;
+    const {
+      aclId,
+      aclRules,
+      table,
+      loading,
+      export: exportConf,
+      title
+    } = this.props;
     const {
       data,
       loading: isLoading,
@@ -796,14 +797,14 @@ class CRUDGenerate extends Component {
       <MuiThemeProvider theme={theme}>
         <FormDialog
           fields={this.fields}
-          title={formTitle}
+          title={`${upperFirst(formTitle)} ${upperFirst(title)}`}
           params={formParams}
           visible={formVisible}
           createConfigurationServer={this.addConfigurationServer}
           updateConfigurationServer={this.editConfigurationServer}
           onClose={this.onDialogClose("form", "cancel")}
           onClickButtonClose={this.onDialogClose("form", "cancel")}
-          onClickButtonSubmit={this.submitForm}
+          onClickButtonSubmit={this.doSubmitForm}
         />
         <BaseTable
           data={data}

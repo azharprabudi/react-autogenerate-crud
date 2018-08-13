@@ -2,6 +2,9 @@ import React, { Component } from "react";
 
 /* material modules */
 import Button from "@material-ui/core/Button";
+import SaveIcon from "@material-ui/icons/Save";
+import CloseIcon from "@material-ui/icons/Close";
+import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 
 /* etc modules */
@@ -9,15 +12,16 @@ import axios from "axios";
 import has from "lodash/has";
 import PropTypes from "prop-types";
 import isArray from "lodash/isArray";
+import isString from "lodash/isString";
 import uniqueId from "lodash/uniqueId";
 
 /* my modules */
 import validators from "../helpers/validators";
 import OptionsConf from "../constants/options-conf";
+import AlertDialog from "../components/etc/alert-dialog";
 import { libDefaultvalue } from "../components/form/lib/index";
 import BaseFormStandar from "../components/form/base-form-standar";
 import BaseFormDetails from "../components/form/base-form-details";
-import { isString } from "util";
 
 const styles = theme => ({
   container: {
@@ -55,6 +59,11 @@ class BaseForm extends Component {
     super(props);
     this.state = {
       loading: false,
+      dialog: {
+        alert: {
+          visible: false
+        }
+      },
       snackbarInfo: {
         type: "error",
         message: "",
@@ -461,6 +470,7 @@ class BaseForm extends Component {
       }
     }
     if (isValidate) {
+      this.toggleDialog("alert", true)();
     } else {
       this.setState({
         ...this.state,
@@ -468,6 +478,23 @@ class BaseForm extends Component {
       });
     }
   };
+
+  toggleDialog = (name, visible) => () => {
+    if (this.state.dialog[name].visilbe !== visible) {
+      console.log(1);
+      this.setState({
+        ...this.state,
+        dialog: {
+          ...this.state.dialog,
+          [name]: {
+            visible
+          }
+        }
+      });
+    }
+  };
+
+  onAggreeSubmitForm = () => {};
 
   render() {
     const { classes, fields, onClickButtonClose } = this.props;
@@ -478,6 +505,19 @@ class BaseForm extends Component {
         className={classes.container}
         onSubmit={() => alert(1)}
       >
+        <AlertDialog
+          type={"Confirmation"}
+          title={"confirmation"}
+          message={
+            this.isEdit
+              ? "Are you sure want to update this data ?"
+              : "Are you sure want to created this data ?"
+          }
+          visible={this.state.dialog.alert.visible}
+          onAggree={this.onAggreeSubmitForm}
+          onDisaggree={this.toggleDialog("alert", false)}
+          onDialogclose={this.toggleDialog("alert", false)}
+        />
         {fields.map(({ type, title, groupName, details, ...others }) => {
           if (type === "standard") {
             return (
@@ -513,7 +553,8 @@ class BaseForm extends Component {
             onClick={onClickButtonClose}
             className={classes.btnCancel}
           >
-            Cancel
+            <CloseIcon />
+            <Typography color={"inherit"}>Cancel</Typography>
           </Button>
           <Button
             size={"medium"}
@@ -521,7 +562,10 @@ class BaseForm extends Component {
             onClick={this.onSubmit}
             className={classes.btnSave}
           >
-            Save
+            <SaveIcon />
+            <Typography color={"inherit"}>
+              {this.isEdit ? "Update" : "Save"}
+            </Typography>
           </Button>
         </div>
       </form>
