@@ -82,6 +82,7 @@ class FormDialog extends Component {
 }
 
 FormDialog.propTypes = {
+  fields: PropTypes.array.isRequired,
   visible: PropTypes.bool.isRequired,
   params: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,

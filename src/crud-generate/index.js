@@ -17,6 +17,7 @@ import upperFirst from "lodash/upperFirst";
 
 /* custom components */
 import BaseTable from "./base/base-table";
+import BaseSearch from "./base/base-search";
 import FormDialog from "./components/form/form-dialog";
 import AlertDialog from "./components/etc/alert-dialog";
 import CustomSnackbar from "./components/etc/custom-snackbar";
@@ -148,6 +149,9 @@ class CRUDGenerate extends Component {
         item => !has(item, "mergingColumn") || item.mergingColumn === false
       )
     }));
+
+    /* get list search field */
+    this.searchField = this.getListSearch();
   }
 
   componentDidMount() {
@@ -159,14 +163,37 @@ class CRUDGenerate extends Component {
     const columns = [];
     const { fields } = this.props;
     for (let i = 0; i <= fields.length - 1; i++) {
-      for (let j = 0; j <= fields[i].details.length - 1; j++) {
-        let field = fields[i].details[j];
-        if (has(field, "showOnTable") && field.showOnTable) {
-          columns.push(field);
+      if (fields[i].type === "standard") {
+        for (let j = 0; j <= fields[i].details.length - 1; j++) {
+          let field = fields[i].details[j];
+          if (has(field, "showOnTable") && field.showOnTable) {
+            columns.push(field);
+          }
         }
       }
     }
     return columns;
+  };
+
+  getListSearch = () => {
+    const search = [];
+    const { fields } = this.props;
+    for (let i = 0; i < fields.length; i++) {
+      if (fields[i].type === "standard") {
+        for (let j = 0; j < fields[i].details; j++) {
+          if (
+            has(fields[i][j], "allowSearch") &&
+            fields[i][j].allowSearch &&
+            !has(
+              fields[i][j].mergingColumn || fields[i][j].mergingColumn === false
+            )
+          ) {
+            search.push(fields[i][j]);
+          }
+        }
+      }
+    }
+    return search;
   };
 
   /* fetching data depend on configuration using http / firebase / graphql */
@@ -1000,6 +1027,7 @@ class CRUDGenerate extends Component {
           loading={this.state.loadingForm}
           setErrorMessage={this.setSnackbarInfo}
         />
+        <BaseSearch fields={this.fields} />
         <BaseTable
           data={data}
           sort={sort}
