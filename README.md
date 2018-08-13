@@ -35,6 +35,7 @@ This project is made open source to help other people who use react in developin
 17. "validate.js": "^ 0.12.0"
 18. "file-saver": "^1.3.8"
 19. "xlsx": "^0.13.3"
+20. "react-scroll": "^1.7.10"
 
 ## And also, this project already has features including: ##
 
