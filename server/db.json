@@ -37,7 +37,6 @@
           "id": 1,
           "user": 1,
           "like": 200,
-          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
           "content": "<h1>Wow amazing sekali</h1>",
           "createdAt": "2018-08-19 15:30"
         },
@@ -45,7 +44,6 @@
           "id": 2,
           "user": 2,
           "like": 5,
-          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
           "content": "<h1>Wow sangat keren sekali</h1>",
           "createdAt": "2018-08-19 15:30"
         },
@@ -53,7 +51,6 @@
           "id": 3,
           "user": 2,
           "like": 10,
-          "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
           "content": "<h1>Wajah ini apakah ganteng ?</h1>",
           "createdAt": "2018-08-19 15:30"
         }
@@ -466,6 +463,63 @@
           "avatar": "http://www.cantiknsehat.com/wp-content/uploads/2015/04/cara-mengatasi-dan-merawat-kulit-wajah-kusam-untuk-pria.jpg",
           "content": "<h1>Wajah ini apakah ganteng ?</h1>",
           "createdAt": "2018-08-19 15:30"
+        }
+      ]
+    },
+    {
+      "id": 381,
+      "categoryArticleId": 1,
+      "creator": 1,
+      "createdAt": "2018-08-13T01:00",
+      "viewers": "123",
+      "title": "Politik",
+      "content": "<p>Politik🤔</p>\n",
+      "tag": [
+        1
+      ],
+      "comments": [
+        {
+          "user": 2,
+          "like": "2",
+          "content": "<p><span style=\"color: rgb(0,0,0);background-color: rgb(255,255,255);font-size: medium;font-family: Times New Roman;\">Politik�</span>�</p>\n",
+          "createdAt": "2018-08-13T01:00",
+          "id": 861
+        }
+      ]
+    },
+    {
+      "id": 257,
+      "categoryArticleId": 2,
+      "creator": 2,
+      "createdAt": "2018-07-16 14:20",
+      "viewers": 3000,
+      "title": "Sedihnya Melihat Beasiswa Dikti dan Presiden 123",
+      "content": "<p>Kisruh beasiswa Dikti, yakni terlambatnya Dikti mencairkan beasiswa untuk para mahasiswa penerimanya, sempat membuat kehebohan pada 2014. Beranjak dari pembenahan beasiswa Dikti, Budi Waluyo menilai persyaratan memiliki LOA (Letter of Application) untuk mengajukan aplikasi beasiswa Dikti dan Beasiswa Presiden Republik Indonesia sangat memberatkan dan karena itu, kecil kemungkinan anak-anak dari provinsi kecil atau dari keluarga marginal akan banyak terjaring. Menurut Budi Waluyo, LOA tidak perlu dijadikan syarat karena beasiswa dari sponsor luar negeri tidak meminta LOA dan mendapatkan LOA tidaklah mudah dan membutuhkan banyak biaya. Opini Budi Waluyo ini dibaca sebanyak lebih dari 12.380 kali.</p>",
+      "tag": [
+        1,
+        4
+      ],
+      "comments": [
+        {
+          "user": 1,
+          "like": 200,
+          "content": "<h1>Wow amazing sekali</h1>",
+          "createdAt": "2018-08-19 15:30",
+          "id": 654
+        },
+        {
+          "user": 2,
+          "like": 5,
+          "content": "<h1>Wow sangat keren sekali</h1>",
+          "createdAt": "2018-08-19 15:30",
+          "id": 880
+        },
+        {
+          "user": 2,
+          "like": 10,
+          "content": "<h1>Wajah ini apakah ganteng ?</h1>",
+          "createdAt": "2018-08-19 15:30",
+          "id": 748
         }
       ]
     }

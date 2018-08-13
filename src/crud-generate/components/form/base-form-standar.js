@@ -37,7 +37,7 @@ class BaseFormStandar extends Component {
     component,
     componentAttribute: { name, id, label, type, ...others }
   }) => {
-    if (typeof lib[component] !== "undefined") {
+    if (typeof lib[component] !== "undefined" && type !== "hidden") {
       const SelectedComponent = lib[component];
       const { value, validationStatus, validationText } = this.props.state[
         name
@@ -73,7 +73,7 @@ class BaseFormStandar extends Component {
 
       const style = has(others, "style") ? others.style : {};
       return (
-        <Grid item key={id} sm={6} xs={12}>
+        <Grid item key={id} sm={6} xs={12} id={"test"}>
           <SelectedComponent
             id={id}
             type={type}

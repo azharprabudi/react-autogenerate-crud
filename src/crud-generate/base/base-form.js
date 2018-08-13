@@ -64,11 +64,6 @@ class BaseForm extends Component {
           visible: false
         }
       },
-      snackbarInfo: {
-        type: "error",
-        message: "",
-        visible: false
-      },
       form: this.initialStateForm(props.fields),
       dataExist: {}
     };
@@ -443,6 +438,25 @@ class BaseForm extends Component {
           };
           if (validationStatus == false) {
             isValidate = false;
+            /*
+            cannot using scrolling
+            if (errorElementName == null) {
+              let selectedField = this.props.fields.find(
+                ({ groupName }) => groupName == groupIndex
+              );
+              if (has(selectedField, "details")) {
+                selectedField = selectedField.details.find(
+                  ({ componentAttribute }) =>
+                    componentAttribute.name == stateIndex
+                );
+                if (has(selectedField, "componentAttribute")) {
+                  errorElementName = `${selectedField.componentAttribute.id}-${
+                    selectedField.componentAttribute.name
+                  }`;
+                }
+              }
+            }
+            */
           }
         }
       } else {
@@ -472,16 +486,15 @@ class BaseForm extends Component {
     if (isValidate) {
       this.toggleDialog("alert", true)();
     } else {
-      this.setState({
-        ...this.state,
-        form
+      this.props.setErrorMessage({
+        type: "error",
+        message: "Some input field have a validation error"
       });
     }
   };
 
   toggleDialog = (name, visible) => () => {
     if (this.state.dialog[name].visilbe !== visible) {
-      console.log(1);
       this.setState({
         ...this.state,
         dialog: {
@@ -494,7 +507,50 @@ class BaseForm extends Component {
     }
   };
 
-  onAggreeSubmitForm = () => {};
+  giveNormalData = data => {
+    let newData = {};
+    for (let i = 0; i < this.props.fields.length; i++) {
+      let { groupName, type, details, ...field } = this.props.fields[i];
+      if (type === "standard") {
+        for (let j = 0; j < details.length; j++) {
+          if (has(details[j], "mergingColumn") && !details[j].mergingColumn) {
+            newData[details[j].componentAttribute.name] =
+              data[groupName][details[j].componentAttribute.name].value;
+          }
+        }
+      } else if (type === "details") {
+        let { attributeNameDetails } = field;
+        if (!newData[attributeNameDetails]) {
+          newData[attributeNameDetails] = [];
+        }
+        for (let j = 0; j < data[groupName].length; j++) {
+          if (!newData[attributeNameDetails][j]) {
+            newData[attributeNameDetails][j] = {};
+          }
+          for (let k = 0; k < details.length; k++) {
+            newData[attributeNameDetails][j][
+              details[k].componentAttribute.name
+            ] =
+              data[groupName][j]["state"][details[k].componentAttribute.name][
+                "value"
+              ];
+          }
+        }
+      }
+    }
+    return newData;
+  };
+
+  onAggreeSubmitForm = () => {
+    this.props.onClickButtonSubmit(
+      {
+        data: this.giveNormalData(this.state.form),
+        dataExist: this.state.dataExist,
+        id: this.props.params[BaseForm.ID_FORM]
+      },
+      this.isEdit
+    );
+  };
 
   render() {
     const { classes, fields, onClickButtonClose } = this.props;
@@ -506,7 +562,7 @@ class BaseForm extends Component {
         onSubmit={() => alert(1)}
       >
         <AlertDialog
-          type={"Confirmation"}
+          type={"confirmation"}
           title={"confirmation"}
           message={
             this.isEdit
@@ -600,6 +656,7 @@ BaseForm.propTypes = {
     callbackBeforeUpdate: PropTypes.func,
     callbackAfterUpdate: PropTypes.func
   }),
+  setErrorMessage: PropTypes.func.isRequired,
   onClickButtonClose: PropTypes.func.isRequired,
   onClickButtonSubmit: PropTypes.func.isRequired
 };

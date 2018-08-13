@@ -63,7 +63,7 @@ class BaseFormDetail extends Component {
     itemState,
     { component, componentAttribute: { name, id, label, type, ...others } }
   ) => {
-    if (typeof lib[component] !== "undefined") {
+    if (typeof lib[component] !== "undefined" && type !== "hidden") {
       const SelectedComponent = lib[component];
       const { value, validationStatus, validationText } = itemState[name];
 
@@ -97,21 +97,23 @@ class BaseFormDetail extends Component {
 
       const style = has(others, "style") ? others.style : {};
       return (
-        <SelectedComponent
-          id={id}
-          type={type}
-          name={name}
-          label={label}
-          value={value}
-          extension={others}
-          readonly={readonly}
-          disabled={disabled}
-          extension={extension}
-          error={!validationStatus}
-          isEdit={this.props.isEdit}
-          helperText={validationText}
-          onChange={this.onChange(uniqueId, name)}
-        />
+        <TableCell key={id}>
+          <SelectedComponent
+            id={id}
+            type={type}
+            name={name}
+            label={label}
+            value={value}
+            extension={others}
+            readonly={readonly}
+            disabled={disabled}
+            extension={extension}
+            error={!validationStatus}
+            isEdit={this.props.isEdit}
+            helperText={validationText}
+            onChange={this.onChange(uniqueId, name)}
+          />
+        </TableCell>
       );
     }
     return null;
@@ -163,15 +165,13 @@ class BaseFormDetail extends Component {
               {state.map(itemState => {
                 return (
                   <TableRow key={itemState.uniqueId}>
-                    {details.map(itemDetail => (
-                      <TableCell key={itemDetail.componentAttribute.id}>
-                        {this.renderItemInput(
-                          itemState.uniqueId,
-                          itemState.state,
-                          itemDetail
-                        )}
-                      </TableCell>
-                    ))}
+                    {details.map(itemDetail =>
+                      this.renderItemInput(
+                        itemState.uniqueId,
+                        itemState.state,
+                        itemDetail
+                      )
+                    )}
                     <TableCell>
                       <Button
                         size={"small"}

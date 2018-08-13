@@ -24,6 +24,7 @@ import CustomSnackbar from "./components/etc/custom-snackbar";
 /* custom configuration */
 import OptionsConf from "./constants/options-conf";
 import GenerateExportFile from "./helpers/generate-export-file";
+import { stringify } from "querystring";
 
 const theme = createMuiTheme({
   palette: {
@@ -71,6 +72,7 @@ class CRUDGenerate extends Component {
     this.state = {
       data: [],
       loading: false,
+      loadingForm: false,
       snackbarInfo: {
         type: "error",
         message: "",
@@ -255,7 +257,7 @@ class CRUDGenerate extends Component {
       let urlRead = this.getHTTPUrl(read, limit, offset, page);
 
       /* start fetching data */
-      await this.setLoadingProms(true);
+      await this.setLoadingProms("loading", true);
       let { data } = await axios.get(urlRead, configRead);
 
       /* finish fetch data and set data into state */
@@ -292,8 +294,25 @@ class CRUDGenerate extends Component {
     }
   };
 
-  setLoadingProms = (loading = false) =>
-    new Promise(resolve => this.setState({ ...this.state, loading }, resolve));
+  setLoadingProms = (stateName, loading = false) =>
+    new Promise(resolve =>
+      this.setState({ ...this.state, [stateName]: loading }, resolve)
+    );
+
+  setSnackbarInfo = data => {
+    if (this.state.snackbarInfo.visible !== true) {
+      this.setState(
+        {
+          ...this.state,
+          snackbarInfo: {
+            ...data,
+            visible: true
+          }
+        },
+        () => setTimeout(this.resetSnackbarInfo, 3000)
+      );
+    }
+  };
 
   resetSnackbarInfo = () => {
     if (this.state.snackbarInfo.visible === true) {
@@ -440,7 +459,7 @@ class CRUDGenerate extends Component {
   doDeleteBulkToHTTPServer = async (params = {}) => {
     try {
       // set loading to true
-      await this.setLoadingProms(true);
+      await this.setLoadingProms("loading", true);
 
       let dlt = {};
       const { server } = this.props;
@@ -458,19 +477,19 @@ class CRUDGenerate extends Component {
 
       /* before submit callback the data to user, if user want to modify */
       if (has(dlt.bulk, "callbackBeforeBulkDelete")) {
-        const response = await dlt.bulk.callbackBeforeBulkDelete({
-          listChecked, // data checked
-          listAllData: data // all data
+        const resultCb = await dlt.bulk.callbackBeforeBulkDelete({
+          data: listChecked, // data checked
+          dataExist: data // all data
         });
         /* return from every callback, have to same format like { isContinue, error, data } */
-        if (has(response, "isContinue") && !response.isContinue) {
-          if (has(response, "error") && response.error !== "") {
-            throw new Error(response.error);
-          }
+        if (has(resultCb, "error") && resultCb.error !== "") {
+          throw new Error(resultCb.error);
+        }
+        if (!has(resultCb, "isContinue") || !resultCb.isContinue) {
           isContinue = false;
-        } else if (has(response, "isContinue") && response.isContinue) {
-          if (has(response, "data")) {
-            listChecked = data;
+        } else if (has(resultCb, "isContinue") && resultCb.isContinue) {
+          if (has(resultCb, "data")) {
+            listChecked = resultCb.data;
           }
           isContinue = true;
         }
@@ -487,6 +506,7 @@ class CRUDGenerate extends Component {
         if (!has(result, "data")) {
           throw new Error(result);
         }
+        result = result.data;
       }
 
       if (has(dlt.bulk, "callbackAfterDeleteBulk")) {
@@ -557,7 +577,7 @@ class CRUDGenerate extends Component {
   doDeleteRowToHTTPServer = async params => {
     try {
       // set loading to true
-      await this.setLoadingProms(true);
+      await this.setLoadingProms("loading", true);
 
       let dlt = {};
       const { server } = this.props;
@@ -575,18 +595,18 @@ class CRUDGenerate extends Component {
 
       let isContinue = true; // just flag
       if (has(dlt, "callbackBeforeDelete")) {
-        const response = await dlt.callbackBeforeDelete({
+        const resultCb = await dlt.callbackBeforeDelete({
           url: urlDltRow,
           data: params.id
         });
-        if (has(response, "isContinue") && !response.isContinue) {
-          if (has(response.error) && response.error !== "") {
-            throw new Error(response.error);
-          }
+        if (has(resultCb.error) && resultCb.error !== "") {
+          throw new Error(resultCb.error);
+        }
+        if (!has(resultCb, "isContinue") || !resultCb.isContinue) {
           isContinue = false;
-        } else if (has(response, "isContinue") && response.isContinue) {
-          if (has(response, "data")) {
-            urlDltRow = response.data;
+        } else if (has(resultCb, "isContinue") && resultCb.isContinue) {
+          if (has(resultCb, "data")) {
+            urlDltRow = resultCb.data;
           }
           isContinue = true;
         }
@@ -600,6 +620,7 @@ class CRUDGenerate extends Component {
         if (!has(result, "data")) {
           throw new Error(result);
         }
+        result = result.data;
       }
 
       if (has(dlt, "callbackAfterDelete")) {
@@ -648,7 +669,178 @@ class CRUDGenerate extends Component {
   };
 
   /* do submit form */
-  doSubmitForm = data => {};
+  doSubmitForm = async (dataObj, isEdit) => {
+    try {
+      let resultStatus = false;
+      const { aclRules, aclId } = this.props;
+      if (
+        !this.isEdit &&
+        has(aclRules, aclId) &&
+        has(aclRules[aclId], "create") &&
+        aclRules[aclId].create
+      ) {
+        const result = await this.doAddForm(dataObj);
+        if (result.error === true) {
+          throw new Error(result.errorMessage);
+        }
+        resultStatus = true;
+      } else if (
+        this.isEdit &&
+        has(aclRules, aclId) &&
+        has(aclRules[aclId], "update") &&
+        aclRules[aclId].update
+      ) {
+        return this.doUpdateForm(dataObj);
+      } else {
+        throw new Error("Doesn't have a permission for do that");
+      }
+
+      if (resultStatus) {
+        this.setState(
+          {
+            ...this.state,
+            loadingForm: false,
+            snackbarInfo: {
+              type: "success",
+              message: "Success Add Your Data",
+              visible: true
+            },
+            dialog: {
+              ...this.state.dialog,
+              form: {
+                ...this.state.dialog.form,
+                visible: false,
+                params: {}
+              }
+            }
+          },
+          () => setTimeout(this.resetSnackbarInfo, 3000)
+        );
+      }
+    } catch (e) {
+      this.setSnackbarInfo({
+        message: isArray(e) ? JSON.stringify(e) : e.toString(),
+        type: "error"
+      });
+    }
+  };
+
+  /* add new data */
+  doAddForm = async dataObj => {
+    try {
+      this.setLoadingProms("loadingForm", true);
+
+      const { server } = this.props;
+      let configuration = {};
+      if (has(server, "http")) {
+        if (has(server.http, "create")) {
+          configuration = server.http.create;
+        }
+      }
+
+      let resultCb = dataObj.data;
+      let isContinue = true;
+      if (has(configuration, "callbackBeforeCreate")) {
+        resultCb = await configuration.callbackBeforeCreate(dataObj);
+        if (has(resultCb, "error") && resultCb.error !== "") {
+          throw new Error(resultCb.data);
+        }
+        if (has(resultCb, "isContinue") && resultCb.isContinue) {
+          if (has(resultCb, "data")) {
+            resultCb = resultCb.data;
+          }
+          isContinue = true;
+        } else if (!has(resultCb.isContinue) || !resultCb.isContinue) {
+          isContinue = false;
+        }
+      }
+
+      let result = null;
+      if (isContinue) {
+        let url = has(configuration, "url") ? configuration.url : "";
+        let method = has(configuration, "method")
+          ? configuration.method
+          : "post";
+        let config = has(configuration, "config") ? configuration.config : {};
+
+        result = await axios[method](url, resultCb, config);
+        if (!has(result, "data")) {
+          throw new Error(result);
+        }
+        result = result.data;
+      }
+
+      if (has(configuration, "callbackAfterCreate")) {
+        await configuration.callbackAfterCreate(result);
+      }
+
+      return { error: false };
+    } catch (e) {
+      return { error: true, message: e };
+    }
+  };
+
+  /* do edit */
+  doUpdateForm = async data => {
+    try {
+      let configuration = {};
+      const { server } = this.props;
+      if (has(server, "http")) {
+        if ((has(server.http), "update")) {
+          configuration = server.http.update;
+        }
+      }
+
+      let isContinue = true;
+      let resultCb = data.data;
+      if (has(configuration, "callbackBeforeUpdate")) {
+        let resultCb = await configuration.callbackBeforeUpdate({
+          data: data.data,
+          dataExist: data.dataExist
+        });
+
+        if (has(resultCb, "error") && resultCb.error !== "") {
+          throw new Error(resultCb.error);
+        }
+
+        if (!has(resultCb, "isContinue") || !resultCb.isContinue) {
+          isContinue = false;
+        } else if (has(resultCb, "isContinue") && resultCb.isContinue) {
+          if ((resultCb, "data")) {
+            resultCb = resultCb.data;
+          }
+          isContinue = true;
+        }
+      }
+
+      let result = null;
+      if (isContinue) {
+        let url = has(configuration, "url") ? configuration.url : "";
+        let method = has(configuration, "method")
+          ? configuration.method
+          : "patch";
+        let config = has(configuration, "config") ? configuration.config : {};
+
+        if (has(configuration, "replaceUrl")) {
+          url = url.replace(configuration.replaceUrl, data.id);
+        }
+
+        result = axios[method](url, resultCb, config);
+        if (!has(result, "data")) {
+          throw new Error(result);
+        }
+        result = result.data;
+      }
+
+      if (has(configuration, "callbackAfterUpdate")) {
+        await configuration.callbackAfterUpdate(result);
+      }
+
+      return { error: false };
+    } catch (e) {
+      return { error: true, message: e };
+    }
+  };
 
   /* form alert dialog open */
   onToggleFormDialog = (title = "", params = {}) => {
@@ -805,6 +997,8 @@ class CRUDGenerate extends Component {
           onClose={this.onDialogClose("form", "cancel")}
           onClickButtonClose={this.onDialogClose("form", "cancel")}
           onClickButtonSubmit={this.doSubmitForm}
+          loading={this.state.loadingForm}
+          setErrorMessage={this.setSnackbarInfo}
         />
         <BaseTable
           data={data}

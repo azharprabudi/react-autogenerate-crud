@@ -8,6 +8,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 /* etc modules */
 import PropTypes from "prop-types";
@@ -42,7 +43,8 @@ class FormDialog extends Component {
       onClickButtonClose,
       createConfigurationServer,
       updateConfigurationServer,
-      onClickButtonSubmit
+      onClickButtonSubmit,
+      setErrorMessage
     } = this.props;
     return (
       <Dialog fullScreen open={visible} onClose={onClose}>
@@ -63,10 +65,12 @@ class FormDialog extends Component {
               <CloseIcon />
             </IconButton>
           </Toolbar>
+          {this.props.loading && <LinearProgress color="secondary" />}
         </AppBar>
         <BaseForm
           params={params}
           fields={fields}
+          setErrorMessage={setErrorMessage}
           onClickButtonSubmit={onClickButtonSubmit}
           onClickButtonClose={onClickButtonClose}
           createConfigurationServer={createConfigurationServer}
@@ -103,8 +107,10 @@ FormDialog.propTypes = {
     callbackBeforeUpdate: PropTypes.func,
     callbackAfterUpdate: PropTypes.func
   }),
+  loading: PropTypes.bool.isRequired,
   onClickButtonClose: PropTypes.func.isRequired,
-  onClickButtonSubmit: PropTypes.func.isRequired
+  onClickButtonSubmit: PropTypes.func.isRequired,
+  setErrorMessage: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(FormDialog);
