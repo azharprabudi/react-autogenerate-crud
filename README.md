@@ -125,7 +125,7 @@ This project is made open source to help other people who use react in developin
         <tr>
             <td>16</td>
             <td>Submit for edit data, and add new</td>
-            <td>Not Yet</td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
             <td>17</td>
