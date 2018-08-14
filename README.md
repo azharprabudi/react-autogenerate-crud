@@ -248,6 +248,22 @@ This project is made open source to help other people who use react in developin
             <td>No</td>
             <td>See full documentation <a href="./documentation/loading/README.md">here</a></td>
         </tr>
+        <tr>
+            <td>10</td>
+            <td>additionalComponentInForm</td>
+            <td>Object</td>
+            <td>
+                
+```javascript
+{
+    top: () => <h1>examples</h1> (functional component)
+    bottom: () => <h2>examples</h2> (functional component)
+}
+```           
+</td>
+            <td>No</td>
+            <td>This configuration is used to add several components to the form that has been created automatically</td>
+        </tr>
     </tbody>
 </table>
 
