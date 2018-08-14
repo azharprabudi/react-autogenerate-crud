@@ -522,6 +522,27 @@
           "id": 748
         }
       ]
+    },
+    {
+      "id": 329,
+      "categoryArticleId": 1,
+      "creator": 2,
+      "createdAt": "2018-08-15T01:00",
+      "viewers": "2",
+      "title": "Rumah",
+      "content": "<p>test</p>\n",
+      "tag": [
+        3
+      ],
+      "comments": [
+        {
+          "user": 2,
+          "like": "212",
+          "content": "<p><span style=\"color: rgb(0,0,0);background-color: rgb(255,255,255);font-size: medium;font-family: Times New Roman;\">test</span></p>\n",
+          "createdAt": "2018-08-14T01:00",
+          "id": 964
+        }
+      ]
     }
   ],
   "tag": [

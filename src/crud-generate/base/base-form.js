@@ -569,7 +569,7 @@ class BaseForm extends Component {
         {TopAdditional}
         <AlertDialog
           type={"confirmation"}
-          title={"confirmation"}
+          title={"Confirmation"}
           message={
             this.isEdit
               ? "Are you sure want to update this data ?"
