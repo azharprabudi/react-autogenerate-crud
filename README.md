@@ -137,6 +137,11 @@ This project is made open source to help other people who use react in developin
             <td>Sorting using api</td>
             <td>Not Yet</td>
         </tr>
+        <tr>
+            <td>19</td>
+            <td>Add some component from outside, to render in form crud</td>
+            <td>Not Yet</td>
+        </tr>
     </tbody>
 </table>
 
