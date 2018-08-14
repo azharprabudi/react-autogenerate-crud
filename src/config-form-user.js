@@ -41,7 +41,7 @@ const config = {
         query: {
           limit: "_limit",
           page: "_page",
-          search: {}
+          callbackBeforeSearch: url => url
         },
         config: {}
       },
@@ -451,6 +451,10 @@ const config = {
   export: {
     url: "",
     type: "csv"
+  },
+  additionalForm: {
+    position: "top",
+    component: () => <h1>Helo gaes</h1>
   }
 };
 

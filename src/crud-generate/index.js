@@ -251,7 +251,7 @@ class CRUDGenerate extends Component {
     }
   };
 
-  getHTTPUrl = (obj, limit, offset, page) => {
+  getHTTPUrl = (obj, limit, offset, page, search) => {
     /*
     Create url link from configuration in parent component also configuration of limitation per row and current page or offset.
     AVAILABLE :
@@ -263,19 +263,36 @@ class CRUDGenerate extends Component {
     2. SEARCH
     */
     let url = obj.url;
+    let isSearch = false;
+
     if (has(obj, "query")) {
       url = `${obj.url}?`;
       if (has(obj.query, "limit")) {
-        url += `&${obj.query.limit}=${limit}`;
+        url += `${obj.query.limit}=${limit}&`;
       }
 
       if (has(obj.query, "offset")) {
-        url += `&${obj.query.offset}=${offset};`;
+        url += `${obj.query.offset}=${offset}&`;
       } else if (has(obj.query, "page")) {
-        url += `&${obj.query.page}=${page};`;
+        url += `${obj.query.page}=${page}&`;
       }
     }
-    return url;
+
+    if (Object.keys(search).length > 0) {
+      if (url.indexOf("?") < 0) {
+        url += `${url}?`;
+      }
+      for (let [index, item] of Object.entries(search)) {
+        if (
+          (Array.isArray(item) && item.length > 0) ||
+          (!Array.isArray(item) && item !== "")
+        ) {
+          url += `${index}=${item}&`;
+          isSearch = true;
+        }
+      }
+    }
+    return { url, isSearch };
   };
 
   getDataFromHTTPServer = async (limit, offset, page) => {
@@ -301,7 +318,19 @@ class CRUDGenerate extends Component {
 
       /* required data when get data from server */
       let configRead = has(read, "config") ? read.config : {};
-      let urlRead = this.getHTTPUrl(read, limit, offset, page);
+      let { url: urlRead, isSearch } = this.getHTTPUrl(
+        read,
+        limit,
+        offset,
+        page,
+        search
+      );
+
+      if (isSearch) {
+        if (has(read, "query") && has(read.query, "callbackBeforeSearch")) {
+          urlRead = await read.query.callbackBeforeSearch(urlRead);
+        }
+      }
 
       /* start fetching data */
       await this.setLoadingProms("loading", true);
@@ -1019,7 +1048,10 @@ class CRUDGenerate extends Component {
 
   /* clear value from form */
   doClearFormValue = () => {
-    let { search } = this.state;
+    let {
+      search,
+      table: { limit, offset, page }
+    } = this.state;
     for (let [index, item] of Object.entries(search)) {
       if (Array.isArray(item)) {
         search[index] = [];
@@ -1027,14 +1059,23 @@ class CRUDGenerate extends Component {
         search[index] = "";
       }
     }
-    this.setState({
-      ...this.state,
-      search
-    });
+    this.setState(
+      {
+        ...this.state,
+        search
+      },
+      () => this.getDataDependOnConfig(limit, offset, page)
+    );
   };
 
   /* do search value */
-  doSearchValue = () => {};
+  doSearchValue = () => {
+    this.getDataDependOnConfig(
+      this.state.table.limit,
+      this.state.table.offset,
+      this.state.table.page
+    );
+  };
 
   render() {
     const {
