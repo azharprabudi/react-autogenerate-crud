@@ -141,12 +141,13 @@ This configuration is used to retrieve real data that is on the server, unfortun
     <td>{}</td>
     <td>Yes</td>
     <td>
-      Attributes that must be filled in this object are limit (String), page (String), search (Object). Limit and page are filled in, so that tables can perform pagination, so that the url when processing data requests for tables, will be added according to the data provided in the query. Example:
+      Attributes that must be filled in this object are limit (String), page (String). Limit and page are filled in, so that tables can perform pagination, so that the url when processing data requests for tables, will be added according to the data provided in the query. Example:
 
 ```javascript
 {
   limit: '_xLimit',
   page: '_xPage',
+  callbackBeforeSearch: url => url // you must return the new url or existing url (optional)
 }
 http://localhost:3000/user?_xLimit=10&_xPage=1
 ```
