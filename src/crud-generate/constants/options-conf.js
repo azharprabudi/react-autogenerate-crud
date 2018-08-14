@@ -16,6 +16,13 @@ export default {
     "CustomEditor",
     "FileUploader"
   ],
+  componentNotAllowedSearch: [
+    "Radio",
+    "Checkbox",
+    "CustomEditor",
+    "FileUploader",
+    "TextArea"
+  ],
   methodValue: ["get", "post", "patch", "put", "delete"],
   typeColumnValue: [
     "text",

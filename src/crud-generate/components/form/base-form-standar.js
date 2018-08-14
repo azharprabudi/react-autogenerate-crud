@@ -73,7 +73,7 @@ class BaseFormStandar extends Component {
 
       const style = has(others, "style") ? others.style : {};
       return (
-        <Grid item key={id} sm={6} xs={12} id={"test"}>
+        <Grid item key={id} sm={6} xs={12}>
           <SelectedComponent
             id={id}
             type={type}
@@ -89,7 +89,6 @@ class BaseFormStandar extends Component {
             isEdit={this.props.isEdit}
             helperText={validationText}
             onChange={this.onChange(name)}
-            className={this.props.classes.input}
           />
         </Grid>
       );
@@ -106,7 +105,13 @@ class BaseFormStandar extends Component {
             {`# ${this.props.title.toUpperCase()}`}
           </Typography>
         </div>
-        <Grid container spacing={16}>
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+          spacing={16}
+        >
           {this.props.details.map(item => this.renderItemInput(item))}
         </Grid>
       </div>

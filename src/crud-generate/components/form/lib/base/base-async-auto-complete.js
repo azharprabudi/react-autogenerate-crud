@@ -70,6 +70,15 @@ class BaseAsyncAutoComplete extends PureComponent {
     ) {
       this.initialize = false;
       this.getValueFromProps(this.props.value);
+    } else if (
+      !this.props.isEdit &&
+      !isEqual(this.props.value, previousProps.value) &&
+      !isEqual(this.props.value, this.state.selected)
+    ) {
+      this.setState({
+        ...this.state,
+        selected: this.props.value
+      });
     }
   }
 

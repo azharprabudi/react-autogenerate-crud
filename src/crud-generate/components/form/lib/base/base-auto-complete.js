@@ -53,6 +53,9 @@ const styles = theme => ({
     position: "absolute",
     left: 2,
     fontSize: 16
+  },
+  test: {
+    backgroundColor: "red"
   }
 });
 
@@ -100,6 +103,35 @@ class BaseAutoComplete extends PureComponent {
       }
 
       this.initialize = false;
+    } else if (
+      !this.props.isEdit &&
+      !isEqual(this.props.value, previousProps.value)
+    ) {
+      if (this.props.multi) {
+        this.setState({
+          ...this.state,
+          selected: this.props.value.map(item => {
+            const selected = this.state.data.find(
+              findItem => findItem.value === item
+            );
+            return {
+              value: has(selected, "value") ? selected.value : "",
+              label: has(selected, "label") ? selected.label : ""
+            };
+          })
+        });
+      } else {
+        const selected = this.state.data.find(
+          findItem => findItem.value === this.props.value
+        );
+        this.setState({
+          ...this.state,
+          selected: {
+            value: has(selected, "value") ? selected.value : "",
+            label: has(selected, "label") ? selected.label : ""
+          }
+        });
+      }
     }
   }
 
@@ -196,6 +228,7 @@ class BaseAutoComplete extends PureComponent {
         onChange={this.onChange}
         options={this.state.data}
         value={this.state.selected}
+        selectMenu={classes.test}
       />
     );
   }

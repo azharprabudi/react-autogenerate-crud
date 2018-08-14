@@ -1,12 +1,14 @@
 import React, { Component, Fragment } from "react";
 
 /* material ui */
+import Typography from "@material-ui/core/Typography";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import blue from "@material-ui/core/colors/blue";
 import orange from "@material-ui/core/colors/orange";
 import red from "@material-ui/core/colors/red";
 import green from "@material-ui/core/colors/green";
 import brown from "@material-ui/core/colors/brown";
+import { withStyles } from "@material-ui/core/styles";
 
 /* etc modules */
 import axios from "axios";
@@ -23,9 +25,9 @@ import AlertDialog from "./components/etc/alert-dialog";
 import CustomSnackbar from "./components/etc/custom-snackbar";
 
 /* custom configuration */
+import { libDefaultvalue } from "./components/form/lib";
 import OptionsConf from "./constants/options-conf";
 import GenerateExportFile from "./helpers/generate-export-file";
-import { stringify } from "querystring";
 
 const theme = createMuiTheme({
   palette: {
@@ -65,9 +67,21 @@ const theme = createMuiTheme({
   }
 });
 
+const styles = theme => ({
+  title: {
+    fontWeight: "bold",
+    color: "black",
+    borderBottomWidth: 0,
+    marginBottom: 8
+  }
+});
+
 class CRUDGenerate extends Component {
   constructor(props) {
     super(props);
+
+    /* get search field and search state */
+    const { searchField, stateSearch } = this.getStateAndFieldSearch();
 
     /* this state spread to the children */
     this.state = {
@@ -79,7 +93,7 @@ class CRUDGenerate extends Component {
         message: "",
         visible: false
       },
-      search: {},
+      search: stateSearch,
       table: {
         sort: "asc",
         orderBy: "",
@@ -151,7 +165,7 @@ class CRUDGenerate extends Component {
     }));
 
     /* get list search field */
-    this.searchField = this.getListSearch();
+    this.searchField = searchField;
   }
 
   componentDidMount() {
@@ -175,25 +189,31 @@ class CRUDGenerate extends Component {
     return columns;
   };
 
-  getListSearch = () => {
-    const search = [];
+  getStateAndFieldSearch = () => {
+    const searchField = [];
+    const stateSearch = {};
     const { fields } = this.props;
     for (let i = 0; i < fields.length; i++) {
       if (fields[i].type === "standard") {
-        for (let j = 0; j < fields[i].details; j++) {
+        for (let j = 0; j < fields[i].details.length; j++) {
           if (
-            has(fields[i][j], "allowSearch") &&
-            fields[i][j].allowSearch &&
-            !has(
-              fields[i][j].mergingColumn || fields[i][j].mergingColumn === false
-            )
+            has(fields[i].details[j], "allowSearch") &&
+            fields[i].details[j].allowSearch &&
+            (!has(fields[i].details[j].mergingColumn) ||
+              fields[i].details[j].mergingColumn === false) &&
+            OptionsConf.componentNotAllowedSearch.indexOf(
+              fields[i].details[j].component
+            ) < 0 &&
+            fields[i].details[j].componentAttribute.type !== "hidden"
           ) {
-            search.push(fields[i][j]);
+            searchField.push(fields[i].details[j]);
+            stateSearch[fields[i].details[j].componentAttribute.name] =
+              libDefaultvalue[fields[i].details[j].component];
           }
         }
       }
     }
-    return search;
+    return { stateSearch, searchField };
   };
 
   /* fetching data depend on configuration using http / firebase / graphql */
@@ -986,6 +1006,36 @@ class CRUDGenerate extends Component {
     }
   };
 
+  /* on change search */
+  onChangeSearch = (stateName, value) => {
+    this.setState({
+      ...this.state,
+      search: {
+        ...this.state.search,
+        [stateName]: value
+      }
+    });
+  };
+
+  /* clear value from form */
+  doClearFormValue = () => {
+    let { search } = this.state;
+    for (let [index, item] of Object.entries(search)) {
+      if (Array.isArray(item)) {
+        search[index] = [];
+      } else {
+        search[index] = "";
+      }
+    }
+    this.setState({
+      ...this.state,
+      search
+    });
+  };
+
+  /* do search value */
+  doSearchValue = () => {};
+
   render() {
     const {
       aclId,
@@ -993,7 +1043,8 @@ class CRUDGenerate extends Component {
       table,
       loading,
       export: exportConf,
-      title
+      title,
+      classes
     } = this.props;
     const {
       data,
@@ -1014,6 +1065,9 @@ class CRUDGenerate extends Component {
     } = this.state;
     return (
       <MuiThemeProvider theme={theme}>
+        <Typography className={classes.title} variant={"display1"}>
+          {title}
+        </Typography>
         <FormDialog
           fields={this.fields}
           title={`${upperFirst(formTitle)} ${upperFirst(title)}`}
@@ -1027,7 +1081,13 @@ class CRUDGenerate extends Component {
           loading={this.state.loadingForm}
           setErrorMessage={this.setSnackbarInfo}
         />
-        <BaseSearch fields={this.fields} />
+        <BaseSearch
+          fields={this.searchField}
+          values={this.state.search}
+          onChangeSearch={this.onChangeSearch}
+          doSearchValue={this.doSearchValue}
+          doClearFormValue={this.doClearFormValue}
+        />
         <BaseTable
           data={data}
           sort={sort}
@@ -1212,7 +1272,8 @@ CRUDGenerate.propTypes = {
     url: PropTypes.string,
     config: PropTypes.object,
     type: PropTypes.oneOf(OptionsConf.typeExportValue).isRequired
-  })
+  }),
+  classes: PropTypes.object.isRequired
 };
 
 CRUDGenerate.defaultProps = {
@@ -1245,4 +1306,4 @@ CRUDGenerate.defaultProps = {
   }
 };
 
-export default CRUDGenerate;
+export default withStyles(styles)(CRUDGenerate);

@@ -34,8 +34,8 @@ const styles = theme => ({
     overflowX: "auto"
   },
   buttonWrapper: {
-    marginTop: 10,
-    marginBottom: 10,
+    marginTop: 15,
+    marginBottom: 15,
     flexDirection: "column"
   },
   button: {
