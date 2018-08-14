@@ -1083,9 +1083,10 @@ class CRUDGenerate extends Component {
       aclRules,
       table,
       loading,
-      export: exportConf,
       title,
-      classes
+      classes,
+      export: exportConf,
+      additionalFieldsAtForm
     } = this.props;
     const {
       data,
@@ -1121,6 +1122,7 @@ class CRUDGenerate extends Component {
           onClickButtonSubmit={this.doSubmitForm}
           loading={this.state.loadingForm}
           setErrorMessage={this.setSnackbarInfo}
+          additionalFieldsAtForm={additionalFieldsAtForm}
         />
         <BaseSearch
           fields={this.searchField}
@@ -1314,7 +1316,11 @@ CRUDGenerate.propTypes = {
     config: PropTypes.object,
     type: PropTypes.oneOf(OptionsConf.typeExportValue).isRequired
   }),
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  additionalFieldsAtForm: PropTypes.shape({
+    top: PropTypes.element,
+    bottom: PropTypes.element
+  })
 };
 
 CRUDGenerate.defaultProps = {
@@ -1344,6 +1350,10 @@ CRUDGenerate.defaultProps = {
   export: {
     url: "",
     type: "csv"
+  },
+  additionalFieldsAtForm: {
+    top: <div />,
+    bottom: <div />
   }
 };
 

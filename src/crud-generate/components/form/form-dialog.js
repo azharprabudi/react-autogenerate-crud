@@ -44,7 +44,8 @@ class FormDialog extends Component {
       createConfigurationServer,
       updateConfigurationServer,
       onClickButtonSubmit,
-      setErrorMessage
+      setErrorMessage,
+      additionalFieldsAtForm
     } = this.props;
     return (
       <Dialog fullScreen open={visible} onClose={onClose}>
@@ -75,6 +76,7 @@ class FormDialog extends Component {
           onClickButtonClose={onClickButtonClose}
           createConfigurationServer={createConfigurationServer}
           updateConfigurationServer={updateConfigurationServer}
+          additionalFieldsAtForm={additionalFieldsAtForm}
         />
       </Dialog>
     );
@@ -111,7 +113,11 @@ FormDialog.propTypes = {
   loading: PropTypes.bool.isRequired,
   onClickButtonClose: PropTypes.func.isRequired,
   onClickButtonSubmit: PropTypes.func.isRequired,
-  setErrorMessage: PropTypes.func.isRequired
+  setErrorMessage: PropTypes.func.isRequired,
+  additionalFieldsAtForm: PropTypes.shape({
+    top: PropTypes.element,
+    bottom: PropTypes.element
+  })
 };
 
 export default withStyles(styles)(FormDialog);

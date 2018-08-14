@@ -553,14 +553,20 @@ class BaseForm extends Component {
   };
 
   render() {
-    const { classes, fields, onClickButtonClose } = this.props;
+    const {
+      classes,
+      fields,
+      onClickButtonClose,
+      additionalFieldsAtForm: { top: TopAdditional, bottom: BottomAdditional }
+    } = this.props;
+    console.log(TopAdditional);
     return (
       <form
         method="post"
         encType="multipart/form-data"
         className={classes.container}
-        onSubmit={() => alert(1)}
       >
+        {TopAdditional}
         <AlertDialog
           type={"confirmation"}
           title={"confirmation"}
@@ -602,6 +608,7 @@ class BaseForm extends Component {
             );
           }
         })}
+        {BottomAdditional}
         <div className={classes.wrapperFooter}>
           <Button
             size={"medium"}
@@ -658,7 +665,11 @@ BaseForm.propTypes = {
   }),
   setErrorMessage: PropTypes.func.isRequired,
   onClickButtonClose: PropTypes.func.isRequired,
-  onClickButtonSubmit: PropTypes.func.isRequired
+  onClickButtonSubmit: PropTypes.func.isRequired,
+  additionalFieldsAtForm: PropTypes.shape({
+    top: PropTypes.element,
+    bottom: PropTypes.element
+  })
 };
 
 export default withStyles(styles)(BaseForm);

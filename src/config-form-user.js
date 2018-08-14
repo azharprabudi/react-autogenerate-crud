@@ -1,3 +1,4 @@
+import React from "react";
 import random from "lodash/random";
 
 const config = {
@@ -452,9 +453,9 @@ const config = {
     url: "",
     type: "csv"
   },
-  additionalForm: {
-    position: "top",
-    component: () => <h1>Helo gaes</h1>
+  additionalFieldsAtForm: {
+    top: <h1>This is just example</h1>,
+    bottom: <h1>This is just example</h1>
   }
 };
 
