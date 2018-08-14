@@ -14,7 +14,7 @@ const config = {
     }
   },
   initialLimit: 10,
-  title: "Users",
+  title: "Articles",
   server: {
     http: {
       create: {
