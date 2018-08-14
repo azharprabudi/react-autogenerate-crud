@@ -147,12 +147,27 @@ class CRUDGenerate extends Component {
     this.addConfigurationServer = {};
     this.editConfigurationServer = {};
 
+    /* configuration sorting */
+    this.confSortApi = { enable: false };
+
     if (has(server, "http") && Object.keys(server.http).length > 0) {
       if (has(server.http, "create")) {
         this.addConfigurationServer = { ...server.http.create };
       }
       if (has(server.http, "update")) {
         this.editConfigurationServer = { ...server.http.update };
+      }
+      if (has(server.http, "read")) {
+        if (
+          has(server.http.read, "query") &&
+          has(server.http.read, "query") &&
+          has(server.http.read.query, "sort")
+        ) {
+          this.confSortApi = {
+            enable: true,
+            url: server.http.read.query.sort
+          };
+        }
       }
     }
 
@@ -251,7 +266,7 @@ class CRUDGenerate extends Component {
     }
   };
 
-  getHTTPUrl = (obj, limit, offset, page, search) => {
+  getHTTPUrl = (obj, limit, offset, page, search, sort) => {
     /*
     Create url link from configuration in parent component also configuration of limitation per row and current page or offset.
     AVAILABLE :
@@ -280,7 +295,7 @@ class CRUDGenerate extends Component {
 
     if (Object.keys(search).length > 0) {
       if (url.indexOf("?") < 0) {
-        url += `${url}?`;
+        url += `?`;
       }
       for (let [index, item] of Object.entries(search)) {
         if (
@@ -290,6 +305,13 @@ class CRUDGenerate extends Component {
           url += `${index}=${item}&`;
           isSearch = true;
         }
+      }
+
+      if (sort !== null) {
+        if (url.indexOf("?") < 0) {
+          url += "?";
+        }
+        url += `&${sort}`;
       }
     }
     return { url, isSearch };
@@ -316,6 +338,13 @@ class CRUDGenerate extends Component {
         page = table.page;
       }
 
+      let sort = null;
+      if (this.confSortApi.enable && table.orderBy !== "") {
+        sort = this.confSortApi.url;
+        sort = sort.replace("{orderName}", table.orderBy);
+        sort = sort.replace("{orderBy}", table.sort);
+      }
+
       /* required data when get data from server */
       let configRead = has(read, "config") ? read.config : {};
       let { url: urlRead, isSearch } = this.getHTTPUrl(
@@ -323,7 +352,8 @@ class CRUDGenerate extends Component {
         limit,
         offset,
         page,
-        search
+        search,
+        sort
       );
 
       if (isSearch) {
@@ -339,7 +369,9 @@ class CRUDGenerate extends Component {
       /* finish fetch data and set data into state */
       this.setState({
         ...this.state,
-        data: this.orderingData(data, table.orderBy, table.sort),
+        data: this.confSortApi.enable
+          ? data
+          : this.orderingData(data, table.orderBy, table.sort),
         table: {
           ...this.state.table,
           limit,
@@ -406,22 +438,35 @@ class CRUDGenerate extends Component {
   onOrderingColumnTable = (orderByNameColumn, sort) => {
     /*
     This function will be called, if the user want to sort column depend on data in state, maybe for next time i want to make it sort data by query API link.
-
-    AVAILABLE :
-    1. SORT by current state
-
-    NO AVAILABLE :
-    2. SORT to query link api
     */
-    this.setState({
-      ...this.state,
-      data: this.orderingData(this.state.data, orderByNameColumn, sort),
-      table: {
-        ...this.state.table,
-        orderBy: orderByNameColumn,
-        sort
-      }
-    });
+    if (!this.confSortApi.enable) {
+      this.setState({
+        ...this.state,
+        data: this.orderingData(this.state.data, orderByNameColumn, sort),
+        table: {
+          ...this.state.table,
+          orderBy: orderByNameColumn,
+          sort
+        }
+      });
+    } else {
+      this.setState(
+        {
+          ...this.state,
+          table: {
+            ...this.state.table,
+            orderBy: orderByNameColumn,
+            sort
+          }
+        },
+        () =>
+          this.getDataDependOnConfig(
+            this.state.table.limit,
+            this.state.table.offset,
+            this.state.table.page
+          )
+      );
+    }
   };
 
   /* this sort will be categorize by two type data, there are number and text. So if text, using function localeCompare, meanwhile number using step curr - next */
@@ -1212,7 +1257,12 @@ CRUDGenerate.propTypes = {
       }),
       read: PropTypes.shape({
         url: PropTypes.string.isRequired,
-        query: PropTypes.object,
+        query: PropTypes.shape({
+          limit: PropTypes.string,
+          offset: PropTypes.string,
+          sort: PropTypes.string,
+          callbackBeforeSearch: PropTypes.func
+        }),
         config: PropTypes.object
       }),
       update: PropTypes.shape({

@@ -42,6 +42,7 @@ const config = {
         query: {
           limit: "_limit",
           page: "_page",
+          sort: "_sort={orderName}&_order={orderBy}",
           callbackBeforeSearch: url => url
         },
         config: {}
