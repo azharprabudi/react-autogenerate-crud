@@ -7,6 +7,9 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Paper from "@material-ui/core/Paper";
 import TablePagination from "@material-ui/core/TablePagination";
 import Button from "@material-ui/core/Button";
+import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton";
+import CloudDownloadIcon from "@material-ui/icons/CloudDownload";
 
 /* etc modules */
 import has from "lodash/has";
@@ -53,6 +56,10 @@ const styles = theme => ({
     backgroundColor: theme.palette.alternative2.main,
     color: "white"
   },
+  buttonImport: {
+    backgroundColor: theme.palette.alternative1.main,
+    color: "white"
+  },
   wrapper: {
     borderRadius: 5,
     borderWidth: 1,
@@ -61,6 +68,9 @@ const styles = theme => ({
   },
   icon: {
     marginRight: 5
+  },
+  inputHidden: {
+    display: "none"
   }
 });
 
@@ -132,6 +142,22 @@ class BaseTable extends PureComponent {
       }
     }
 
+    if (has(aclSelected, "import") && aclSelected.import) {
+      // check point
+      buttonImport = {
+        label: "Import",
+        class: props.classes.buttonImport,
+        size: "medium",
+        variant: "contained",
+        style: {},
+        type: "button",
+        iconName: "CloudUpload",
+        ...buttonTopTable.import
+      };
+
+      buttonTopTable = omit(buttonTopTable, "import");
+    }
+
     /* check acl for button delete */
     if (has(aclSelected, "delete") && aclSelected.delete) {
       buttonDelete = {
@@ -153,6 +179,7 @@ class BaseTable extends PureComponent {
       create: buttonCreate,
       exportCsv: buttonExport.csv,
       exportExcel: buttonExport.excel,
+      import: buttonImport,
       delete: buttonDelete,
       ...buttonTopTable
     };
@@ -200,23 +227,60 @@ class BaseTable extends PureComponent {
           }
         }
 
-        buttons = [
-          ...buttons,
-          <Button
-            key={index}
-            size={item.size}
-            style={item.style}
-            variant={item.variant}
-            onClick={item.type === "button" ? item.onClick : () => {}}
-            href={item.type === "link" ? item.href : ""}
-            className={classNames(this.props.classes.button, item.class)}
-          >
-            {IconSelected !== "" && (
-              <IconSelected className={this.props.classes.icon} />
-            )}
-            {item.label}
-          </Button>
-        ];
+        // do something different with import button
+        if (index !== "import") {
+          buttons.push(
+            <Button
+              key={index}
+              size={item.size}
+              style={item.style}
+              variant={item.variant}
+              onClick={item.type === "button" ? item.onClick : () => {}}
+              href={item.type === "link" ? item.href : ""}
+              className={classNames(this.props.classes.button, item.class)}
+            >
+              {IconSelected !== "" && (
+                <IconSelected className={this.props.classes.icon} />
+              )}
+              {item.label}
+            </Button>
+          );
+        } else {
+          buttons.push(
+            <Fragment key={index}>
+              <input
+                type="file"
+                id="button-upload-file"
+                accept=".xls,.xlsx,.csv"
+                className={this.props.classes.inputHidden}
+                onChange={this.props.doImportData}
+              />
+              <label htmlFor="button-upload-file">
+                <Button
+                  size={item.size}
+                  style={item.style}
+                  component={"span"}
+                  variant={item.variant}
+                  className={classNames(this.props.classes.button, item.class)}
+                >
+                  {IconSelected !== "" && (
+                    <IconSelected className={this.props.classes.icon} />
+                  )}
+                  {item.label}
+                </Button>
+                <Tooltip title="Download Example Data For Import">
+                  <IconButton
+                    className={this.props.classes.button}
+                    aria-label="Download Example Data For Import"
+                    onClick={this.props.doDownloadImportdata}
+                  >
+                    <CloudDownloadIcon />
+                  </IconButton>
+                </Tooltip>
+              </label>
+            </Fragment>
+          );
+        }
       }
     }
 
@@ -369,7 +433,9 @@ BaseTable.propTypes = {
     config: PropTypes.object,
     type: PropTypes.oneOf(OptionsConf.typeExportValue).isRequired
   }).isRequired,
-  dataFromProps: PropTypes.bool.isRequired
+  dataFromProps: PropTypes.bool.isRequired,
+  doDownloadImportdata: PropTypes.func.isRequired,
+  doImportData: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(BaseTable);

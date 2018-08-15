@@ -559,7 +559,6 @@ class BaseForm extends Component {
       onClickButtonClose,
       additionalFieldsAtForm: { top: TopAdditional, bottom: BottomAdditional }
     } = this.props;
-    console.log(TopAdditional);
     return (
       <form
         method="post"

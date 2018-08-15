@@ -83,7 +83,9 @@ class BaseTableHeader extends Component {
             )}
             {useAdditionalButtons && (
               <TableCell>
-                <Typography>#</Typography>
+                <Typography>
+                  <b>#</b>
+                </Typography>
               </TableCell>
             )}
           </TableRow>

@@ -27,7 +27,7 @@ import CustomSnackbar from "./components/etc/custom-snackbar";
 /* custom configuration */
 import { libDefaultvalue } from "./components/form/lib";
 import OptionsConf from "./constants/options-conf";
-import GenerateExportFile from "./helpers/generate-export-file";
+import ImportExportFile from "./helpers/import-export-file.js";
 
 const theme = createMuiTheme({
   palette: {
@@ -269,13 +269,6 @@ class CRUDGenerate extends Component {
   getHTTPUrl = (obj, limit, offset, page, search, sort) => {
     /*
     Create url link from configuration in parent component also configuration of limitation per row and current page or offset.
-    AVAILABLE :
-    1. Limit
-    2. Offset / Page
-
-    NOT AVAILABLE :
-    1. SORT
-    2. SEARCH
     */
     let url = obj.url;
     let isSearch = false;
@@ -1062,12 +1055,13 @@ class CRUDGenerate extends Component {
           }
         }
       }
-      this.mGenerateExportFile = new GenerateExportFile(
+      this.mImportExportFile = new ImportExportFile();
+      await this.mImportExportFile.generateFile(
         urlExport,
         config,
-        this.columnTable
+        this.columnTable,
+        type
       );
-      await this.mGenerateExportFile.generateFile(type);
     } catch (e) {
       this.setState({
         ...this.state,
@@ -1120,6 +1114,22 @@ class CRUDGenerate extends Component {
       this.state.table.offset,
       this.state.table.page
     );
+  };
+
+  /* download example data */
+  doDownloadImportdata = async () => {
+    const { aclRules, aclId, fields } = this.props;
+    if (has(aclRules[aclId], "import") && aclRules[aclId].import) {
+      const mImportExportFile = new ImportExportFile();
+      await mImportExportFile.downloadExampleData(
+        this.props.import.formatValueColumn
+      );
+    }
+  };
+
+  /* import data listener */
+  doImportData = e => {
+    console.log(e.target.value);
   };
 
   render() {
@@ -1207,6 +1217,8 @@ class CRUDGenerate extends Component {
           export={exportConf}
           onClickExportCsv={this.onClickExport("csv")}
           onClickExportExcel={this.onClickExport("excel")}
+          doImportData={this.doImportData}
+          doDownloadImportdata={this.doDownloadImportdata}
         />
         <CustomSnackbar
           type={type}
@@ -1370,6 +1382,14 @@ CRUDGenerate.propTypes = {
   additionalFieldsAtForm: PropTypes.shape({
     top: PropTypes.element,
     bottom: PropTypes.element
+  }),
+  import: PropTypes.shape({
+    url: PropTypes.string,
+    method: PropTypes.oneOf(OptionsConf.methodValue).isRequired,
+    config: PropTypes.object,
+    callbackBeforeImport: PropTypes.func,
+    callbackAfterImport: PropTypes.func,
+    formatValueColumn: PropTypes.object.isRequired
   })
 };
 

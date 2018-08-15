@@ -452,7 +452,23 @@ const config = {
   ],
   export: {
     url: "",
-    type: "csv"
+    type: "excel"
+  },
+  import: {
+    url: "",
+    method: "post",
+    config: {},
+    callbackBeforeImport: () => {},
+    callbackAfterImport: () => {},
+    formatValueColumn: {
+      "Main.id": "number",
+      "Main.categoryArticleId": "number",
+      "Main.creator": "number",
+      "Main.createdAt": "number",
+      "Main.id": "number",
+      "Main.id": "number",
+      "Main.id": "number"
+    }
   },
   additionalFieldsAtForm: {
     top: <h1>This is just example</h1>,

@@ -1,21 +1,19 @@
 /* etc modules */
-
 import axios from "axios";
 import xlsx from "xlsx";
 import has from "lodash/has";
 import moment from "moment";
+import random from "lodash/random";
 import { saveAs } from "file-saver";
+import faker from "faker";
 
-class GenerateCsv {
-  constructor(urlFetch, config, column) {
-    this.column = column;
-    this.config = config;
-    this.urlFetch = urlFetch;
-  }
+/* my module */
+import { libDefaultvalue } from "../components/form/lib";
 
-  async generateFile(type) {
+class ImportExportFile {
+  async generateFile(urlFetch, config, column, type) {
     try {
-      const data = await axios.get(this.urlFetch, this.config);
+      const data = await axios.get(urlFetch, config);
       if (!has(data, "data")) {
         throw new Error(data);
       }
@@ -25,12 +23,12 @@ class GenerateCsv {
       const fileDataExcel = data.data.map((item, index) => {
         let i = 0;
         let arr = [];
-        while (i < this.column.length) {
+        while (i < column.length) {
           let {
             typeColumnTable,
             titleColumnTable,
             attributeColumnTable
-          } = this.column[i];
+          } = column[i];
           if (typeColumnTable !== "custom") {
             arr.push(item[attributeColumnTable]);
           }
@@ -64,6 +62,41 @@ class GenerateCsv {
       return e;
     }
   }
+
+  creatingArrayExampleData(fields, aliasData) {
+    let body = [];
+    let header = [];
+    for (let i = 0; i < fields.length; i++) {
+      let field = fields[i];
+      for (let j = 0; j < field.details.length; j++) {
+        if (
+          !has(field.details[j], "mergingColumn") ||
+          !field.details[j].mergingColumn
+        ) {
+          let columnName = field.details[j].titleColumnTable;
+          if (!header[i]) {
+            header[i] = [];
+          }
+          header[i].push(columnName);
+
+          if (!body[i]) {
+            body[i] = [];
+          }
+          let value = libDefaultvalue[field.details[j].component];
+          body[i].push();
+        }
+      }
+    }
+  }
+
+  async downloadExampleData(fields) {
+    try {
+      // creating array data from fields and alias data
+      const arr = this.creatingArrayExampleData(fields);
+    } catch (e) {
+      return e;
+    }
+  }
 }
 
-export default GenerateCsv;
+export default ImportExportFile;
