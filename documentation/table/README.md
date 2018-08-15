@@ -20,7 +20,7 @@ This configuration must be done, if you want to add additional buttons that are 
     <td>Object</td>
     <td>{}</td>
     <td>No</td>
-    <td>This will replace or add a button above the table. This existing object has attributes ['create', 'delete', 'exportCsv', 'exportExcel'] you can replace it just use the specify the attribute name, to know the list props and how to use it click <a href="#buttonTopTable">here</a></td>
+    <td>This will replace or add a button above the table. This existing object has attributes ['create', 'delete', 'exportCsv', 'exportExcel', 'import'] you can replace it just use the specify the attribute name, to know the list props and how to use it click <a href="#buttonTopTable">here</a></td>
   </tr>
   <tr>
     <td>2</td>
