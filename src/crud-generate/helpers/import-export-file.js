@@ -3,12 +3,7 @@ import axios from "axios";
 import xlsx from "xlsx";
 import has from "lodash/has";
 import moment from "moment";
-import random from "lodash/random";
 import { saveAs } from "file-saver";
-import faker from "faker";
-
-/* my module */
-import { libDefaultvalue } from "../components/form/lib";
 
 class ImportExportFile {
   async generateFile(urlFetch, config, column, type) {
@@ -63,36 +58,81 @@ class ImportExportFile {
     }
   }
 
-  creatingArrayExampleData(fields, aliasData) {
-    let body = [];
-    let header = [];
-    for (let i = 0; i < fields.length; i++) {
-      let field = fields[i];
-      for (let j = 0; j < field.details.length; j++) {
-        if (
-          !has(field.details[j], "mergingColumn") ||
-          !field.details[j].mergingColumn
-        ) {
-          let columnName = field.details[j].titleColumnTable;
-          if (!header[i]) {
-            header[i] = [];
-          }
-          header[i].push(columnName);
+  createDataForWB(formatDataImport) {
+    let row = 0;
+    let headers = [];
+    let contents = [];
+    let totalRows = formatDataImport[Object.keys(formatDataImport)[0]].length;
 
-          if (!body[i]) {
-            body[i] = [];
-          }
-          let value = libDefaultvalue[field.details[j].component];
-          body[i].push();
+    while (row < totalRows) {
+      let i = 0;
+      let maxColumnLength = 1;
+      // get maxColumn first
+      while (i < Object.keys(formatDataImport).length) {
+        let index = Object.keys(formatDataImport)[i];
+        let rowColumnValue = formatDataImport[index][row];
+        if (maxColumnLength < rowColumnValue.length) {
+          maxColumnLength = rowColumnValue.length;
         }
+        if (row == 0) {
+          let headerName = index.split("as")[1];
+          headers.push(headerName);
+        }
+        i++;
       }
+
+      // then get value from obj data
+      i = 0;
+      let baseDataColumn = []; // this is meaning which column doest have details
+      while (i < maxColumnLength) {
+        let j = 0;
+        let content = [...baseDataColumn];
+        while (j < Object.keys(formatDataImport).length) {
+          let column = formatDataImport[Object.keys(formatDataImport)[j]][row];
+          let value = column[i] || null;
+
+          if (i == 0) {
+            if (column.length === 1) {
+              baseDataColumn.push(value);
+            } else {
+              baseDataColumn.push(null);
+            }
+            content.push(value);
+          } else {
+            if (value !== null) {
+              content[j] = value;
+            }
+          }
+          j++;
+        }
+        contents.push(content);
+        i++;
+      }
+      row++;
     }
+    return [headers, ...contents];
   }
 
-  async downloadExampleData(fields) {
+  async downloadExampleData(formatDataImport) {
     try {
       // creating array data from fields and alias data
-      const arr = this.creatingArrayExampleData(fields);
+      const exampleData = this.createDataForWB(formatDataImport);
+      const workbook = new xlsx.utils.book_new();
+      const arrToSheet = xlsx.utils.aoa_to_sheet(exampleData);
+      xlsx.utils.book_append_sheet(workbook, arrToSheet, "Sheet 1");
+
+      const workbookOutput = xlsx.write(workbook, {
+        type: "array",
+        bookType: "xlsx",
+        bookSST: false
+      });
+
+      saveAs(
+        new Blob([workbookOutput], { type: "application/octet-stream" }),
+        `example-data-import.xlsx`
+      );
+
+      return true;
     } catch (e) {
       return e;
     }

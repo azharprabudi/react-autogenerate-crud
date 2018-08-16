@@ -1,5 +1,7 @@
 import React from "react";
 import random from "lodash/random";
+import moment from "moment";
+import faker from "faker/locale/en";
 
 const config = {
   aclId: "*",
@@ -119,7 +121,7 @@ const config = {
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: false,
-          titleColumnTable: "",
+          titleColumnTable: "Article Id",
           typeColumnTable: "text",
           attributeColumnTable: "id",
           prefixColumnTable: "",
@@ -152,7 +154,7 @@ const config = {
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: false,
-          titleColumnTable: "",
+          titleColumnTable: "Category Article Id",
           typeColumnTable: "text",
           attributeColumnTable: "categoryArticleId",
           prefixColumnTable: "",
@@ -185,7 +187,7 @@ const config = {
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: false,
-          titleColumnTable: "",
+          titleColumnTable: "Creator",
           typeColumnTable: "text",
           attributeColumnTable: "creator",
           prefixColumnTable: "",
@@ -322,7 +324,7 @@ const config = {
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: false,
-          titleColumnTable: "",
+          titleColumnTable: "Tag",
           typeColumnTable: "text",
           attributeColumnTable: "tag",
           prefixColumnTable: "",
@@ -460,14 +462,42 @@ const config = {
     config: {},
     callbackBeforeImport: () => {},
     callbackAfterImport: () => {},
-    formatValueColumn: {
-      "Main.id": "number",
-      "Main.categoryArticleId": "number",
-      "Main.creator": "number",
-      "Main.createdAt": "number",
-      "Main.id": "number",
-      "Main.id": "number",
-      "Main.id": "number"
+    formatDataImport: {
+      "id as Article Id": [[300], [400]],
+      "categoryArticleId as Category Article Id": [[1], [2]],
+      "categoryArticleName as Category Article Name": [
+        ["Politik"],
+        ["Ekonomi"]
+      ],
+      "creator as Creator": [[1], [2]],
+      "creator as Creator Name": [["Azhar Prabudi"], ["Boby Harmoko"]],
+      "createdAt as Created Date": [["2017-06-10 12:10"], ["2017-06-10 12:10"]],
+      "viewers as Viewers": [[100], [200]],
+      "title as Title": [["Title First Data"], ["Title Second Data"]],
+      "content as Content": [
+        ["This is content at <b>first row</b>"],
+        ["This is content at <b>second row</b>"]
+      ],
+      "tag.id as Tag Id": [[2, 1], [1, 2, 3]],
+      "tag.name as Tag Name": [
+        ["2018Informasi", "Baru"],
+        ["Baru", "2018Informasi", "Trending Topic"]
+      ],
+      "comments.id as Commentar Id": [[1], [1, 2]],
+      "comments.user as User Commentar Id": [[1], [1, 1]],
+      "comments.user as User Commentar Name": [
+        ["Azhar Prabudi"],
+        ["Azhar Prabudi", "Azhar Prabudi"]
+      ],
+      "comments.like as Count Like": [[100], [0, 200]],
+      "comments.createdAt as Created Date": [
+        ["2017-06-10 12:10"],
+        ["2017-05-10 12:10", "2017-06-10 12:10"]
+      ],
+      "comments.content as Commentar Content": [
+        ["First Commentar At First Row"],
+        ["First Commentar At Second Row", "Second Commentar At second Row"]
+      ]
     }
   },
   additionalFieldsAtForm: {

@@ -544,6 +544,7 @@ class BaseForm extends Component {
   onAggreeSubmitForm = () => {
     this.props.onClickButtonSubmit(
       {
+        abnormalData: this.state.form,
         data: this.giveNormalData(this.state.form),
         dataExist: this.state.dataExist,
         id: this.props.params[BaseForm.ID_FORM]

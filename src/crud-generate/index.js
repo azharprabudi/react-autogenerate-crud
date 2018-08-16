@@ -783,7 +783,7 @@ class CRUDGenerate extends Component {
   };
 
   /* do submit form */
-  doSubmitForm = async (dataObj, isEdit) => {
+  doSubmitForm = async dataObj => {
     try {
       let resultStatus = false;
       const { aclRules, aclId } = this.props;
@@ -908,10 +908,7 @@ class CRUDGenerate extends Component {
       let isContinue = true;
       let resultCb = data.data;
       if (has(configuration, "callbackBeforeUpdate")) {
-        let resultCb = await configuration.callbackBeforeUpdate({
-          data: data.data,
-          dataExist: data.dataExist
-        });
+        let resultCb = await configuration.callbackBeforeUpdate(data);
 
         if (has(resultCb, "error") && resultCb.error !== "") {
           throw new Error(resultCb.error);
@@ -1118,12 +1115,26 @@ class CRUDGenerate extends Component {
 
   /* download example data */
   doDownloadImportdata = async () => {
-    const { aclRules, aclId, fields } = this.props;
-    if (has(aclRules[aclId], "import") && aclRules[aclId].import) {
+    const { aclRules, aclId } = this.props;
+    try {
+      if (
+        !has(aclRules[aclId], "import") ||
+        !aclRules[aclId].import ||
+        !has(this.props, "import")
+      ) {
+        throw new Error("Doesnt have configuration import");
+      }
+      if (!has(this.props.import, "formatDataImport")) {
+        throw new Error(
+          "Doesnt have configuration formatDataImport inside import attribute"
+        );
+      }
       const mImportExportFile = new ImportExportFile();
       await mImportExportFile.downloadExampleData(
-        this.props.import.formatValueColumn
+        this.props.import.formatDataImport
       );
+    } catch (e) {
+      alert(isArray(e) ? JSON.stringify(e) : e.toString());
     }
   };
 
@@ -1389,7 +1400,7 @@ CRUDGenerate.propTypes = {
     config: PropTypes.object,
     callbackBeforeImport: PropTypes.func,
     callbackAfterImport: PropTypes.func,
-    formatValueColumn: PropTypes.object.isRequired
+    formatDataImport: PropTypes.object.isRequired
   })
 };
 
