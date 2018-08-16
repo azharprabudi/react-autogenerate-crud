@@ -3,6 +3,7 @@ import axios from "axios";
 import xlsx from "xlsx";
 import has from "lodash/has";
 import moment from "moment";
+import faker from "faker";
 import { saveAs } from "file-saver";
 
 class ImportExportFile {
@@ -113,29 +114,71 @@ class ImportExportFile {
     return [headers, ...contents];
   }
 
-  async downloadExampleData(formatDataImport) {
-    try {
-      // creating array data from fields and alias data
-      const exampleData = this.createDataForWB(formatDataImport);
-      const workbook = new xlsx.utils.book_new();
-      const arrToSheet = xlsx.utils.aoa_to_sheet(exampleData);
-      xlsx.utils.book_append_sheet(workbook, arrToSheet, "Sheet 1");
+  downloadExampleData(formatDataImport) {
+    // creating array data from fields and alias data
+    const exampleData = this.createDataForWB(formatDataImport);
+    const workbook = new xlsx.utils.book_new();
+    const arrToSheet = xlsx.utils.aoa_to_sheet(exampleData);
+    xlsx.utils.book_append_sheet(workbook, arrToSheet, "Sheet 1");
 
-      const workbookOutput = xlsx.write(workbook, {
-        type: "array",
-        bookType: "xlsx",
-        bookSST: false
+    const workbookOutput = xlsx.write(workbook, {
+      type: "array",
+      bookType: "xlsx",
+      bookSST: false
+    });
+
+    saveAs(
+      new Blob([workbookOutput], { type: "application/octet-stream" }),
+      `example-data-import.xlsx`
+    );
+  }
+
+  convertToNormalObjectData(data, formatDataImport) {
+    // let result = [];
+    // for (let sheet = 0; sheet < data.length; sheet++) {
+    //   let obj = {};
+    //   let dataObj = {};
+    //   for (let i = 0; i < data[sheet].length; i++) {
+    //     let value = data[sheet][i];
+    //     if (i === 0) {
+    //       let j = 0;
+    //       let findIndex = "";
+    //       while (j < Object.keys(formatDataImport).length) {
+    //         let index = Object.keys(formatDataImport)[j];
+    //         if (
+    //           index.split("as").length > 1 &&
+    //           index.split("as")[1] === value
+    //         ) {
+    //           findIndex = index.split("as")[0];
+    //           obj[`${j}`] = findIndex;
+    //           dataObj[findIndex] = '';
+    //           break;
+    //         } else if (index === value) {
+    //           findIndex = index;
+    //           obj[`${j}`] = findIndex;
+    //           dataObj[findIndex] = '';
+    //           break;
+    //         }
+    //         j++;
+    //       }
+    //     } else {
+    //       if (dataObj[])
+    //     }
+    //   }
+    //   result.push(obj);
+    // }
+  }
+
+  getDataFromFileUpload(file, formatDataImport) {
+    let data = [];
+    const wb = xlsx.read(file, { type: "array" });
+    const wsname = wb.SheetNames;
+    for (let i = 0; i < wsname.length; i++) {
+      data[i] = xlsx.utils.sheet_to_json(wb.Sheets[wsname[i]], {
+        header: 1
       });
-
-      saveAs(
-        new Blob([workbookOutput], { type: "application/octet-stream" }),
-        `example-data-import.xlsx`
-      );
-
-      return true;
-    } catch (e) {
-      return e;
     }
+    this.convertToNormalObjectData(data, formatDataImport);
   }
 }
 

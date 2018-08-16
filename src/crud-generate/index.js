@@ -1114,7 +1114,7 @@ class CRUDGenerate extends Component {
   };
 
   /* download example data */
-  doDownloadImportdata = async () => {
+  doDownloadImportdata = () => {
     const { aclRules, aclId } = this.props;
     try {
       if (
@@ -1130,9 +1130,7 @@ class CRUDGenerate extends Component {
         );
       }
       const mImportExportFile = new ImportExportFile();
-      await mImportExportFile.downloadExampleData(
-        this.props.import.formatDataImport
-      );
+      mImportExportFile.downloadExampleData(this.props.import.formatDataImport);
     } catch (e) {
       alert(isArray(e) ? JSON.stringify(e) : e.toString());
     }
@@ -1140,7 +1138,41 @@ class CRUDGenerate extends Component {
 
   /* import data listener */
   doImportData = e => {
-    console.log(e.target.value);
+    try {
+      const { aclRules, aclId } = this.props;
+      if (
+        !has(aclRules, aclId) ||
+        aclRules[aclId] ||
+        has(this.props, "import")
+      ) {
+        throw new Error("Doesnt have configuration import");
+      }
+      if (!has(this.props.import, "formatDataImport")) {
+        throw new Error(
+          "Doesnt have configuration formatDataImport inside import attribute"
+        );
+      }
+      if (/.+\.(xlsx|.xls)$/.test(e.target.files[0].name) === false) {
+        throw new Error("The extension files is not allowed");
+      }
+      const reader = new FileReader();
+      reader.onload = this.onProgressImportData;
+      reader.onabort = () => alert("Abort upload file");
+      reader.onerror = () => alert("Error upload file");
+      reader.readAsArrayBuffer(
+        e.target.files[0],
+        this.props.import.formatDataImport
+      );
+    } catch (e) {
+      alert(isArray(e) ? JSON.stringify(e) : e.toString());
+    }
+  };
+
+  onProgressImportData = (e, formatDataImport) => {
+    let { result } = e.target;
+    result = new Uint8Array(result);
+    const mImportExportFile = new ImportExportFile();
+    mImportExportFile.getDataFromFileUpload(result, formatDataImport);
   };
 
   render() {
