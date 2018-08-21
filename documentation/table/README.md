@@ -226,8 +226,7 @@ table={{
 />
 ```
 
-
-## YOU CAN SEE FULL EXAMPLE CONFIGURATION AT <a href="https://github.com/azharprabudi/react-autogenerate-crud/blob/master/src/config-form-user.js">HERE</a> ##
+## YOU CAN SEE FULL EXAMPLE CONFIGURATION AT <a href="https://github.com/azharprabudi/react-autogenerate-crud/blob/master/src/config-full-form-user.js">HERE</a> ##
 
 
 <b>Back to main <a href="https://github.com/azharprabudi/react-autogenerate-crud">link</a></b>
