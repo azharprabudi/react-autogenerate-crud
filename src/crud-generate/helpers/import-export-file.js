@@ -3,7 +3,6 @@ import axios from "axios";
 import xlsx from "xlsx";
 import has from "lodash/has";
 import moment from "moment";
-import faker from "faker";
 import { saveAs } from "file-saver";
 
 class ImportExportFile {
@@ -60,17 +59,14 @@ class ImportExportFile {
   }
 
   createDataForWB(formatDataImport) {
-    let row = 0;
     let headers = [];
     let contents = [];
     let totalRows = formatDataImport[Object.keys(formatDataImport)[0]].length;
 
-    while (row < totalRows) {
-      let i = 0;
+    for (let row = 0; row < totalRows; row++) {
       let maxColumnLength = 1;
       // get maxColumn first
-      while (i < Object.keys(formatDataImport).length) {
-        let index = Object.keys(formatDataImport)[i];
+      for (let index of Object.keys(formatDataImport)) {
         let rowColumnValue = formatDataImport[index][row];
         if (maxColumnLength < rowColumnValue.length) {
           maxColumnLength = rowColumnValue.length;
@@ -79,37 +75,31 @@ class ImportExportFile {
           let headerName = index.split("as")[1];
           headers.push(headerName);
         }
-        i++;
       }
 
-      // then get value from obj data
-      i = 0;
-      let baseDataColumn = []; // this is meaning which column doest have details
-      while (i < maxColumnLength) {
-        let j = 0;
-        let content = [...baseDataColumn];
-        while (j < Object.keys(formatDataImport).length) {
-          let column = formatDataImport[Object.keys(formatDataImport)[j]][row];
-          let value = column[i] || null;
+      let master = [];
+      for (let i = 0; i < maxColumnLength; i++) {
+        let column = 0;
+        let content = [...master];
+        for (let index of Object.keys(formatDataImport)) {
+          let value =
+            typeof formatDataImport[index][row][i] === "undefined"
+              ? null
+              : formatDataImport[index][row][i];
+          // this is master index
+          if (index.split("as")[0].split(".").length <= 1 && i == 0) {
+            master.push(value);
+          }
 
           if (i == 0) {
-            if (column.length === 1) {
-              baseDataColumn.push(value);
-            } else {
-              baseDataColumn.push(null);
-            }
             content.push(value);
-          } else {
-            if (value !== null) {
-              content[j] = value;
-            }
+          } else if (i > 0 && index.split("as")[0].split(".").length > 1) {
+            content.splice(column, 1, value);
           }
-          j++;
+          column++;
         }
         contents.push(content);
-        i++;
       }
-      row++;
     }
     return [headers, ...contents];
   }
@@ -133,40 +123,123 @@ class ImportExportFile {
     );
   }
 
-  convertToNormalObjectData(data, formatDataImport) {
-    // let result = [];
-    // for (let sheet = 0; sheet < data.length; sheet++) {
-    //   let obj = {};
-    //   let dataObj = {};
-    //   for (let i = 0; i < data[sheet].length; i++) {
-    //     let value = data[sheet][i];
-    //     if (i === 0) {
-    //       let j = 0;
-    //       let findIndex = "";
-    //       while (j < Object.keys(formatDataImport).length) {
-    //         let index = Object.keys(formatDataImport)[j];
-    //         if (
-    //           index.split("as").length > 1 &&
-    //           index.split("as")[1] === value
-    //         ) {
-    //           findIndex = index.split("as")[0];
-    //           obj[`${j}`] = findIndex;
-    //           dataObj[findIndex] = '';
-    //           break;
-    //         } else if (index === value) {
-    //           findIndex = index;
-    //           obj[`${j}`] = findIndex;
-    //           dataObj[findIndex] = '';
-    //           break;
-    //         }
-    //         j++;
-    //       }
-    //     } else {
-    //       if (dataObj[])
-    //     }
-    //   }
-    //   result.push(obj);
-    // }
+  creatingKeyObject(headerSheet, formatDataImport) {
+    let masterKey = { master: {}, detail: {}, mockup: {}, index: {} };
+    // loop data header in every sheet maybe there are different header sheet with each other
+    for (let headerIndex = 0; headerIndex < headerSheet.length; headerIndex++) {
+      let valueHeader = headerSheet[headerIndex];
+      // check if the valueHeader is not exist at formatDataImport (maybe the developer using [as] as a title of column table remember as title column table must be unique)
+      if (!has(formatDataImport, valueHeader)) {
+        let i = 0;
+        while (i < Object.keys(formatDataImport).length) {
+          let item = Object.keys(formatDataImport)[i].split("as");
+          if (
+            item.length > 1 &&
+            item[1].replace(/\s/g, "") == valueHeader.replace(/\s/g, "")
+          ) {
+            valueHeader = item[0].replace(/\s/g, "");
+            break;
+          }
+          i++;
+        }
+      }
+
+      if (valueHeader.split(".").length > 1) {
+        let splitIndex = valueHeader.split(".");
+        masterKey["detail"][splitIndex[0].replace(/\s/g, "")] = [];
+        masterKey["mockup"][splitIndex[0].replace(/\s/g, "")] = [];
+      } else {
+        masterKey["master"][valueHeader.replace(/\s/g, "")] = "";
+        masterKey["mockup"][valueHeader.replace(/\s/g, "")] = "";
+      }
+      masterKey["index"][headerIndex] = valueHeader;
+    }
+    return masterKey;
+  }
+
+  removeValObj(obj) {
+    for (let i = 0; i < Object.keys(obj).length; i++) {
+      let val = obj[Object.keys(obj)[i]];
+      if (Array.isArray(val)) {
+        obj[Object.keys(obj)[i]] = [];
+      } else {
+        obj[Object.keys(obj)[i]] = "";
+      }
+    }
+  }
+
+  convertToNormalObjectData(dataSheet, formatDataImport) {
+    let results = [];
+    for (let sheetPage = 0; sheetPage < dataSheet.length; sheetPage++) {
+      let result = [];
+      let { mockup, index, master, detail } = this.creatingKeyObject(
+        dataSheet[sheetPage][0],
+        formatDataImport
+      );
+
+      // row start from 1 because the zero index row is the header value
+      for (let row = 1; row < dataSheet[sheetPage].length; row++) {
+        // loop column
+        // details still take a value problem
+        let mainMockup = { ...mockup };
+        let detailMockup = { ...detail };
+        let tempDetailColumnName = "";
+        for (
+          let column = 0;
+          column < dataSheet[sheetPage][row].length;
+          column++
+        ) {
+          let indexObj = { ...index };
+          indexObj = indexObj[column];
+          let value = dataSheet[sheetPage][row][column];
+
+          if (has(mainMockup, indexObj)) {
+            mainMockup[indexObj] = value;
+          } else {
+            let indexSplit = indexObj.split(".");
+            if (tempDetailColumnName !== indexSplit[0]) {
+              detailMockup[indexSplit[0]] = [{}];
+            }
+            detailMockup[indexSplit[0]][0][indexSplit[1]] = value;
+            tempDetailColumnName = indexSplit[0];
+          }
+        }
+
+        result = [...result, { ...mainMockup, ...detailMockup }];
+
+        if (row > 1) {
+          /* check if data master same or not */
+          let isMasterSame = true;
+          for (let attr of Object.keys(master)) {
+            if (result[1][attr] != result[0][attr]) {
+              isMasterSame = false;
+              break;
+            }
+          }
+          /* then if master same merge it, and just take data details */
+          if (isMasterSame) {
+            for (let attr of Object.keys(detail)) {
+              result[0][attr] = [...result[0][attr], ...result[1][attr]];
+            }
+
+            if (row + 1 == dataSheet[sheetPage].length) {
+              results.push(result[0]);
+            }
+
+            result.splice(1, 1);
+          } else {
+            results.push(result[0]);
+            result.splice(0, 1);
+
+            if (row + 1 == dataSheet[sheetPage].length) {
+              results.push(result[0]);
+              result.splice(0, 1);
+            }
+          }
+        }
+      }
+    }
+    return results;
   }
 
   getDataFromFileUpload(file, formatDataImport) {
@@ -178,7 +251,7 @@ class ImportExportFile {
         header: 1
       });
     }
-    this.convertToNormalObjectData(data, formatDataImport);
+    return this.convertToNormalObjectData(data, formatDataImport);
   }
 }
 

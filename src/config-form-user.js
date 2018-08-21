@@ -460,8 +460,6 @@ const config = {
     url: "",
     method: "post",
     config: {},
-    callbackBeforeImport: () => {},
-    callbackAfterImport: () => {},
     formatDataImport: {
       "id as Article Id": [[300], [400]],
       "categoryArticleId as Category Article Id": [[1], [2]],
@@ -470,8 +468,11 @@ const config = {
         ["Ekonomi"]
       ],
       "creator as Creator": [[1], [2]],
-      "creator as Creator Name": [["Azhar Prabudi"], ["Boby Harmoko"]],
-      "createdAt as Created Date": [["2017-06-10 12:10"], ["2017-06-10 12:10"]],
+      "creatorName as Creator Name": [["Azhar Prabudi"], ["Boby Harmoko"]],
+      "createdAt as Article Created Date": [
+        ["2017-06-10 12:10"],
+        ["2017-06-10 12:10"]
+      ],
       "viewers as Viewers": [[100], [200]],
       "title as Title": [["Title First Data"], ["Title Second Data"]],
       "content as Content": [
@@ -491,8 +492,8 @@ const config = {
       ],
       "comments.like as Count Like": [[100], [0, 200]],
       "comments.createdAt as Created Date": [
-        ["2017-06-10 12:10"],
-        ["2017-05-10 12:10", "2017-06-10 12:10"]
+        ["2017-02-10 12:12"],
+        ["2017-03-10 12:13", "2017-04-10 12:14"]
       ],
       "comments.content as Commentar Content": [
         ["First Commentar At First Row"],

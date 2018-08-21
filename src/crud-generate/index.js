@@ -1142,8 +1142,8 @@ class CRUDGenerate extends Component {
       const { aclRules, aclId } = this.props;
       if (
         !has(aclRules, aclId) ||
-        aclRules[aclId] ||
-        has(this.props, "import")
+        !aclRules[aclId] ||
+        !has(this.props, "import")
       ) {
         throw new Error("Doesnt have configuration import");
       }
@@ -1156,23 +1156,66 @@ class CRUDGenerate extends Component {
         throw new Error("The extension files is not allowed");
       }
       const reader = new FileReader();
-      reader.onload = this.onProgressImportData;
-      reader.onabort = () => alert("Abort upload file");
-      reader.onerror = () => alert("Error upload file");
-      reader.readAsArrayBuffer(
-        e.target.files[0],
+      reader.onload = this.onProgressImportData(
         this.props.import.formatDataImport
       );
+      reader.onabort = () => alert("Abort upload file");
+      reader.onerror = () => alert("Error upload file");
+      reader.readAsArrayBuffer(e.target.files[0]);
     } catch (e) {
       alert(isArray(e) ? JSON.stringify(e) : e.toString());
     }
   };
 
-  onProgressImportData = (e, formatDataImport) => {
-    let { result } = e.target;
-    result = new Uint8Array(result);
-    const mImportExportFile = new ImportExportFile();
-    mImportExportFile.getDataFromFileUpload(result, formatDataImport);
+  onProgressImportData = formatDataImport => async e => {
+    try {
+      let { result } = e.target;
+      result = new Uint8Array(result);
+      const { import: importConf } = this.props;
+      const mImportExportFile = new ImportExportFile();
+      let resultDataImport = mImportExportFile.getDataFromFileUpload(
+        result,
+        formatDataImport
+      );
+
+      let isContinue = true;
+      if (has(importConf, "callbackBeforeImport")) {
+        let resultCb = await importConf.callbackBeforeImport(resultDataImport);
+        if (has(resultCb, "isContinue")) {
+          if (has(resultCb, "data")) {
+            resultDataImport = resultCb.data;
+          }
+        } else {
+          isContinue = false;
+          if (has(resultCb, "error") && resultCb.error != "") {
+            throw new Error(resultCb.error);
+          }
+        }
+      }
+
+      let resultRequest = null;
+      if (isContinue) {
+        let url = has(importConf, "url") ? importConf.url : "";
+        let method = has(importConf, "method") ? importConf.method : "post";
+        let config = has(importConf, "config") ? importConf.config : {};
+
+        let resultRequest = await axios[method](url, resultDataImport, config);
+        if (!has(resultRequest, "data")) {
+          throw new Error(resultRequest);
+        } else {
+          resultRequest = resultRequest.data;
+        }
+      }
+
+      if (has(importConf, "callbackAfterImport")) {
+        await importConf.callbackAfterImport(resultRequest);
+      }
+    } catch (e) {
+      this.setSnackbarInfo({
+        type: "error",
+        message: isArray(e) ? JSON.stringify(e) : e.toString()
+      });
+    }
   };
 
   render() {
