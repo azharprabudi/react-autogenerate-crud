@@ -115,7 +115,7 @@ This project is made open source to help other people who use react in developin
         <tr>
             <td>14</td>
             <td>Import data from excel</td>
-            <td>Not Yet</td>
+            <td><img width="20" height="20" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" alt="done"/></td>
         </tr>
         <tr>
             <td>15</td>
