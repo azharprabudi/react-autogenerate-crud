@@ -150,6 +150,9 @@ class CRUDGenerate extends Component {
     /* configuration sorting */
     this.confSortApi = { enable: false };
 
+    /* checkbox value */
+    this.useCheckbox = false;
+
     if (has(server, "http") && Object.keys(server.http).length > 0) {
       if (has(server.http, "create")) {
         this.addConfigurationServer = { ...server.http.create };
@@ -167,6 +170,16 @@ class CRUDGenerate extends Component {
             enable: true,
             url: server.http.read.query.sort
           };
+        }
+      }
+      if (has(server.http, "delete")) {
+        if (
+          has(server.http.delete, "bulk") &&
+          server.http.delete.bulk.enable &&
+          has(props.aclRules[props.aclId], "delete") &&
+          props.aclRules[props.aclId].delete
+        ) {
+          this.useCheckbox = true;
         }
       }
     }
@@ -1305,6 +1318,7 @@ class CRUDGenerate extends Component {
           onClickExportExcel={this.onClickExport("excel")}
           doImportData={this.doImportData}
           doDownloadImportdata={this.doDownloadImportdata}
+          useCheckbox={this.useCheckbox}
         />
         <CustomSnackbar
           type={type}
@@ -1451,14 +1465,14 @@ CRUDGenerate.propTypes = {
           titleColumnTable: PropTypes.string.isRequired,
           typeColumnTable: PropTypes.oneOf(OptionsConf.typeColumnValue)
             .isRequired,
-          attributeColumnTable: PropTypes.string.isRequired,
+          uniqueId: PropTypes.string.isRequired,
           allowSearch: PropTypes.bool,
           prefixColumnTable: PropTypes.string
         })
       )
     })
   ).isRequired,
-  initialLimit: PropTypes.oneOf(OptionsConf.limitValue).isRequired,
+  initialLimit: PropTypes.oneOf(OptionsConf.limitValue),
   export: PropTypes.shape({
     url: PropTypes.string,
     config: PropTypes.object,

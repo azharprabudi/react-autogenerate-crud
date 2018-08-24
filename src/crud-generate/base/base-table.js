@@ -322,7 +322,8 @@ class BaseTable extends PureComponent {
       onChangeRowsPerPage,
       onClickDeleteRowItem,
       deleteAttributeName,
-      editAttributeName
+      editAttributeName,
+      useCheckbox
     } = this.props;
     return (
       <Fragment>
@@ -338,7 +339,7 @@ class BaseTable extends PureComponent {
                 onCheckAllItem={onCheckAllItem}
                 onChangeOrderBy={this.onChangeOrderBy}
                 useAdditionalButtons={this.useAdditionalButtons}
-                checkbox={has(aclSelected, "delete") && aclSelected.delete}
+                checkbox={useCheckbox}
               />
               <BaseTableBody
                 data={data}
@@ -353,7 +354,7 @@ class BaseTable extends PureComponent {
                 deleteAttributeName={deleteAttributeName}
                 additionalRowColumn={this.additionalRowColumn}
                 useAdditionalButtons={this.useAdditionalButtons}
-                checkbox={has(aclSelected, "delete") && aclSelected.delete}
+                checkbox={useCheckbox}
               />
             </Table>
           </div>
@@ -435,7 +436,8 @@ BaseTable.propTypes = {
   }).isRequired,
   dataFromProps: PropTypes.bool.isRequired,
   doDownloadImportdata: PropTypes.func.isRequired,
-  doImportData: PropTypes.func.isRequired
+  doImportData: PropTypes.func.isRequired,
+  useCheckbox: PropTypes.bool.isRequired
 };
 
 export default withStyles(styles)(BaseTable);

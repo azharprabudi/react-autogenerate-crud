@@ -143,8 +143,8 @@ class BaseForm extends Component {
           if (!has(field, "mergingColumn") || field.mergingColumn === false) {
             /* get value from data */
             form[groupName][field.componentAttribute.name] = {
-              value: has(data, field.attributeColumnTable)
-                ? data[field.attributeColumnTable]
+              value: has(data, field.uniqueId)
+                ? data[field.uniqueId]
                 : libDefaultvalue[field.component],
               validationStatus: true,
               validationText: ""
@@ -189,8 +189,8 @@ class BaseForm extends Component {
                 form[groupName][i]["state"][field.componentAttribute.name] = {
                   value:
                     detailsData.length > 0 &&
-                    has(detailsData[i], field.attributeColumnTable)
-                      ? detailsData[i][field.attributeColumnTable]
+                    has(detailsData[i], field.uniqueId)
+                      ? detailsData[i][field.uniqueId]
                       : libDefaultvalue[field.component],
                   validationStatus: true,
                   validationText: ""

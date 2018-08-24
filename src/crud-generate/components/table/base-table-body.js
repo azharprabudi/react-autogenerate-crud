@@ -50,11 +50,9 @@ class BaseTableBody extends Component {
 
     const { additionalRowColumn, aclSelected } = props;
 
-    let additionalButtons =
-      has(additionalRowColumn, "row") &&
-      has(additionalRowColumn, "additionalButtons")
-        ? additionalRowColumn.row.additionalButtons
-        : {};
+    let additionalButtons = has(additionalRowColumn, "additionalButtons")
+      ? additionalRowColumn.additionalButtons
+      : {};
 
     /* if there any configuration for button edit can replace here */
     let buttonEdit = {};
@@ -122,7 +120,7 @@ class BaseTableBody extends Component {
       : "";
     const valueEachColumn = `${prefix} ${this.getValueEachColumn(
       data,
-      itemColumn.attributeColumnTable
+      itemColumn.uniqueId
     )}`;
     switch (itemColumn.typeColumnTable) {
       case "image":
@@ -259,7 +257,7 @@ class BaseTableBody extends Component {
               </TableCell>
             )}
             {columns.map(itemColumn => (
-              <TableCell key={item[itemColumn.attributeColumnTable]}>
+              <TableCell key={item[itemColumn.uniqueId]}>
                 {this.renderItemEachColumn(item, itemColumn)}
               </TableCell>
             ))}

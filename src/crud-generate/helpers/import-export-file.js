@@ -19,13 +19,9 @@ class ImportExportFile {
         let i = 0;
         let arr = [];
         while (i < column.length) {
-          let {
-            typeColumnTable,
-            titleColumnTable,
-            attributeColumnTable
-          } = column[i];
+          let { typeColumnTable, titleColumnTable, uniqueId } = column[i];
           if (typeColumnTable !== "custom") {
-            arr.push(item[attributeColumnTable]);
+            arr.push(item[uniqueId]);
           }
 
           if (index < 1) {

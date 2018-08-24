@@ -1,7 +1,5 @@
 import React from "react";
 import random from "lodash/random";
-import moment from "moment";
-import faker from "faker/locale/en";
 
 const config = {
   aclId: "*",
@@ -88,10 +86,15 @@ const config = {
     row: {
       replaceUrl: "{id}",
       attributeName: "id",
-      additionalButtons: {}
+      additionalButtons: {
+        test: {
+          label: "test"
+        }
+      }
     }
   },
   loading: {
+    // not required
     color: "primary",
     size: 40
   },
@@ -102,32 +105,17 @@ const config = {
       groupName: "Main",
       details: [
         {
-          component: "Input",
-          componentAttribute: {
-            id: "id",
-            name: "id",
-            label: "",
-            type: "hidden",
-            onAdd: {
-              disabled: false,
-              readonly: false
-            },
-            onEdit: {
-              disabled: false,
-              readonly: false
-            }
+          uniqueId: "id",
+          edit: {
+            disabled: false,
+            readonly: false
           },
-          validation: "",
-          showOnTable: false,
-          mergingColumn: false,
-          sortColumnTable: false,
-          titleColumnTable: "Article Id",
-          typeColumnTable: "text",
-          attributeColumnTable: "id",
-          prefixColumnTable: "",
+          defaultValue: 0,
+          label: "Article Id",
           allowSearch: true
         },
         {
+          uniqueId: "categoryArticleId",
           component: "SelectAutoComplete",
           componentAttribute: {
             id: "categoryArticleId",
@@ -154,13 +142,14 @@ const config = {
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: false,
-          titleColumnTable: "Category Article Id",
+          label: "Category Article Id",
           typeColumnTable: "text",
-          attributeColumnTable: "categoryArticleId",
+          uniqueId: "categoryArticleId",
           prefixColumnTable: "",
           allowSearch: true
         },
         {
+          uniqueId: "creator",
           component: "SelectAutoComplete",
           componentAttribute: {
             id: "creator",
@@ -187,13 +176,14 @@ const config = {
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: false,
-          titleColumnTable: "Creator",
+          label: "Creator",
           typeColumnTable: "text",
-          attributeColumnTable: "creator",
+          uniqueId: "creator",
           prefixColumnTable: "",
           allowSearch: true
         },
         {
+          uniqueId: "createdAt",
           component: "Input",
           componentAttribute: {
             id: "createdAt",
@@ -213,9 +203,8 @@ const config = {
           showOnTable: true,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "Created At",
+          label: "Created At",
           typeColumnTable: "datetime",
-          attributeColumnTable: "createdAt",
           prefixColumnTable: "",
           allowSearch: true
         },
@@ -239,9 +228,9 @@ const config = {
           showOnTable: true,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "Viewers",
+          label: "Viewers",
           typeColumnTable: "text",
-          attributeColumnTable: "viewers",
+          uniqueId: "viewers",
           prefixColumnTable: "",
           allowSearch: true
         },
@@ -265,9 +254,9 @@ const config = {
           showOnTable: true,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "Title",
+          label: "Title",
           typeColumnTable: "text",
-          attributeColumnTable: "title",
+          uniqueId: "title",
           prefixColumnTable: "",
           allowSearch: true
         },
@@ -291,9 +280,9 @@ const config = {
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "Content",
+          label: "Content",
           typeColumnTable: "longtext",
-          attributeColumnTable: "content",
+          uniqueId: "content",
           prefixColumnTable: "",
           allowSearch: true
         },
@@ -324,9 +313,9 @@ const config = {
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: false,
-          titleColumnTable: "Tag",
+          label: "Tag",
           typeColumnTable: "text",
-          attributeColumnTable: "tag",
+          uniqueId: "tag",
           prefixColumnTable: "",
           allowSearch: true
         }
@@ -365,9 +354,9 @@ const config = {
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "User",
+          label: "User",
           typeColumnTable: "text",
-          attributeColumnTable: "user",
+          uniqueId: "user",
           prefixColumnTable: "",
           allowSearch: true
         },
@@ -391,9 +380,9 @@ const config = {
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "Like",
+          label: "Like",
           typeColumnTable: "text",
-          attributeColumnTable: "like",
+          uniqueId: "like",
           prefixColumnTable: "",
           allowSearch: true
         },
@@ -417,9 +406,9 @@ const config = {
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "Content",
+          label: "Content",
           typeColumnTable: "text",
-          attributeColumnTable: "content",
+          uniqueId: "content",
           prefixColumnTable: "",
           allowSearch: true
         },
@@ -443,9 +432,9 @@ const config = {
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: true,
-          titleColumnTable: "Created At",
+          label: "Created At",
           typeColumnTable: "text",
-          attributeColumnTable: "createdAt",
+          uniqueId: "createdAt",
           prefixColumnTable: "",
           allowSearch: true
         }
