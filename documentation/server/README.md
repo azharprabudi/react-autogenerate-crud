@@ -46,7 +46,7 @@ This configuration is used to retrieve real data that is on the server, unfortun
     <td>Object</td>
     <td>{}</td>
     <td>No</td>
-    <td>the description of update, you can click <a href="#update">here</a></td>
+    <td>the description of update, you can click <a href="#delete">here</a></td>
    </tr>
 </tbody>
 </table>
@@ -316,7 +316,7 @@ you can see a full documentation at <a href="https://github.com/axios/axios">her
 </table>
 
 ## delete ##
-<b id="update">some attributes needed in update</b>
+<b id="delete">some attributes needed in update</b>
 
 
 <table>
@@ -345,7 +345,7 @@ you can see a full documentation at <a href="https://github.com/axios/axios">her
     <td>Object</td>
     <td>{}</td>
     <td>No</td>
-    <td>See full documentation <a href="#bulk">here</a></td>
+    <td>If you not set this, the delete checkbox will unavailable, See full documentation <a href="#bulk">here</a></td>
   </tr>
   <tr>
     <td>3</td>
