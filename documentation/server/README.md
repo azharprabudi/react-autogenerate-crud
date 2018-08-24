@@ -147,7 +147,10 @@ This configuration is used to retrieve real data that is on the server, unfortun
 {
   limit: '_xLimit',
   page: '_xPage',
-  sort: "_sort={orderName}&_order={orderBy}", // fill this if you want to using sort by api, and type the query. Remember orderName and orderBy will be replace with orderName column you select and the value
+  sort: "_sort={orderName}&_order={orderBy}", // fill this if you want to using sort by api, and type the query. 
+  Remember orderName and orderBy will be replace with orderName column you select and the value, if you want to use one of
+  them just just like this: sort: "_sort={orderName}"
+  
   callbackBeforeSearch: url => url // you must return the new url or existing url (optional)
 }
 http://localhost:3000/user?_xLimit=10&_xPage=1
