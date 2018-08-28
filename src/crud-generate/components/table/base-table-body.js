@@ -97,8 +97,8 @@ class BaseTableBody extends Component {
     };
   }
 
-  onClickCheckbox = id => () => {
-    this.props.onClickCheckbox(id);
+  onClickCheckbox = item => () => {
+    this.props.onClickCheckbox(item);
   };
 
   getValueEachColumn = (rawData, attrName) => {
@@ -250,8 +250,11 @@ class BaseTableBody extends Component {
             {checkbox && (
               <TableCell padding={"checkbox"}>
                 <Checkbox
-                  checked={listChecked.indexOf(item[deleteAttributeName]) > -1}
-                  onClick={this.onClickCheckbox(item[deleteAttributeName])}
+                  checked={listChecked.some(
+                    item =>
+                      item[deleteAttributeName] === item[deleteAttributeName]
+                  )}
+                  onClick={this.onClickCheckbox(item)}
                   className={classes.checkbox}
                 />
               </TableCell>

@@ -16,70 +16,82 @@ const config = {
   initialLimit: 10,
   title: "Articles",
   server: {
+    default: "http", // default value
     http: {
-      create: {
-        url: "http://localhost:3000/article",
-        method: "post",
-        config: {},
-        callbackBeforeCreate: ({ data }) => {
-          return {
-            isContinue: true,
-            data: {
-              ...data,
-              id: random(100, 400),
-              comments: data.comments.map(item => ({
-                ...item,
-                id: random(500, 1000)
-              }))
-            },
-            error: ""
-          };
-        },
-        callbackAfterCreate: () => {}
+      url: "http://localhost:3000/article", // required
+      uniqueId: "id",
+      query: {
+        limit: "_limit",
+        page: "_page",
+        sort: "_sort={orderName}&_order={orderBy}"
       },
-      read: {
-        url: "http://localhost:3000/article",
-        query: {
-          limit: "_limit",
-          page: "_page",
-          sort: "_sort={orderName}&_order={orderBy}",
-          callbackBeforeSearch: url => url
-        },
-        config: {}
-      },
-      update: {
-        url: "http://localhost:3000/article/{id}",
-        get: {
-          url: "http://localhost:3000/article/{id}",
-          config: {},
-          replaceUrl: "{id}",
-          attributeName: "id"
-        },
-        config: {},
-        method: "patch",
-        replaceUrl: "{id}",
-        attributeName: "id",
-        dataFromProps: false,
-        callbackBeforeUpdate: () => {},
-        callbackAfterUpdate: () => {}
-      },
-      delete: {
-        url: "http://localhost:3000/article/{id}",
-        bulk: {
-          enable: true,
-          method: "get",
-          url: "http://localhost:3000/article/{id}",
-          callbackBeforeDeleteBulk: () => {},
-          callbackAfterDeleteBulk: () => {}
-        },
-        config: {},
-        method: "delete",
-        replaceUrl: "{id}",
-        attributeName: "id",
-        callbackBeforeDelete: () => {},
-        callbackAfterDelete: () => {}
-      }
+      method: {}, // default value read => 'get', create => post, edit => 'patch', delete => 'delete', bulkDelete => 'post'
+      config: {}, // default value {}
+      callbackBefore: () => {},
+      callbackAfter: () => {}
     }
+    // create: {
+    //   url: "http://localhost:3000/article",
+    //   method: "post",
+    //   config: {},
+    //   callbackBeforeCreate: ({ data }) => {
+    //     return {
+    //       isContinue: true,
+    //       data: {
+    //         ...data,
+    //         id: random(100, 400),
+    //         comments: data.comments.map(item => ({
+    //           ...item,
+    //           id: random(500, 1000)
+    //         }))
+    //       },
+    //       error: ""
+    //     };
+    //   },
+    //   callbackAfterCreate: () => {}
+    // },
+    // read: {
+    //   url: "http://localhost:3000/article",
+    //   query: {
+    //     limit: "_limit",
+    //     page: "_page",
+    //     sort: "_sort={orderName}&_order={orderBy}",
+    //     callbackBeforeSearch: url => url
+    //   },
+    //   config: {}
+    // },
+    // update: {
+    //   url: "http://localhost:3000/article/{id}",
+    //   get: {
+    //     url: "http://localhost:3000/article/{id}",
+    //     config: {},
+    //     replaceUrl: "{id}",
+    //     attributeName: "id"
+    //   },
+    //   config: {},
+    //   method: "patch",
+    //   replaceUrl: "{id}",
+    //   attributeName: "id",
+    //   dataFromProps: false,
+    //   callbackBeforeUpdate: () => {},
+    //   callbackAfterUpdate: () => {}
+    // },
+    // delete: {
+    //   url: "http://localhost:3000/article/{id}",
+    //   bulk: {
+    //     enable: true,
+    //     method: "get",
+    //     url: "http://localhost:3000/article/{id}",
+    //     callbackBeforeDeleteBulk: () => {},
+    //     callbackAfterDeleteBulk: () => {}
+    //   },
+    //   config: {},
+    //   method: "delete",
+    //   replaceUrl: "{id}",
+    //   attributeName: "id",
+    //   callbackBeforeDelete: () => {},
+    //   callbackAfterDelete: () => {}
+    // }
   },
   table: {
     buttonTopTable: {},
@@ -104,16 +116,14 @@ const config = {
       type: "standard",
       groupName: "Main",
       details: [
-        {
-          uniqueId: "id",
-          edit: {
-            disabled: false,
-            readonly: false
-          },
-          defaultValue: 0,
-          label: "Article Id",
-          allowSearch: true
-        },
+        // {
+        //   uniqueId: "id",
+        //   addEditable: true,
+        //   editEditable: true,
+        //   defaultValue: 0,
+        //   label: "Article Id",
+        //   allowSearch: true
+        // },
         {
           uniqueId: "categoryArticleId",
           component: "SelectAutoComplete",
@@ -142,6 +152,7 @@ const config = {
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: false,
+          titleColumnTable: "Category Article Id",
           label: "Category Article Id",
           typeColumnTable: "text",
           uniqueId: "categoryArticleId",
@@ -176,268 +187,269 @@ const config = {
           showOnTable: false,
           mergingColumn: false,
           sortColumnTable: false,
+          titleColumnTable: "Category Article Id",
           label: "Creator",
           typeColumnTable: "text",
           uniqueId: "creator",
           prefixColumnTable: "",
           allowSearch: true
-        },
-        {
-          uniqueId: "createdAt",
-          component: "Input",
-          componentAttribute: {
-            id: "createdAt",
-            name: "createdAt",
-            label: "Created At",
-            type: "datetime-local",
-            onAdd: {
-              disabled: false,
-              readonly: false
-            },
-            onEdit: {
-              disabled: false,
-              readonly: false
-            }
-          },
-          validation: "required",
-          showOnTable: true,
-          mergingColumn: false,
-          sortColumnTable: true,
-          label: "Created At",
-          typeColumnTable: "datetime",
-          prefixColumnTable: "",
-          allowSearch: true
-        },
-        {
-          component: "Input",
-          componentAttribute: {
-            id: "viewers",
-            name: "viewers",
-            label: "Viewers",
-            type: "number",
-            onAdd: {
-              disabled: false,
-              readonly: false
-            },
-            onEdit: {
-              disabled: false,
-              readonly: false
-            }
-          },
-          validation: "required",
-          showOnTable: true,
-          mergingColumn: false,
-          sortColumnTable: true,
-          label: "Viewers",
-          typeColumnTable: "text",
-          uniqueId: "viewers",
-          prefixColumnTable: "",
-          allowSearch: true
-        },
-        {
-          component: "Input",
-          componentAttribute: {
-            id: "title",
-            name: "title",
-            label: "Title",
-            type: "text",
-            onAdd: {
-              disabled: false,
-              readonly: false
-            },
-            onEdit: {
-              disabled: false,
-              readonly: false
-            }
-          },
-          validation: "required",
-          showOnTable: true,
-          mergingColumn: false,
-          sortColumnTable: true,
-          label: "Title",
-          typeColumnTable: "text",
-          uniqueId: "title",
-          prefixColumnTable: "",
-          allowSearch: true
-        },
-        {
-          component: "CustomEditor",
-          componentAttribute: {
-            id: "content",
-            name: "content",
-            label: "Content",
-            type: "text",
-            onAdd: {
-              disabled: false,
-              readonly: false
-            },
-            onEdit: {
-              disabled: false,
-              readonly: false
-            }
-          },
-          validation: "required",
-          showOnTable: false,
-          mergingColumn: false,
-          sortColumnTable: true,
-          label: "Content",
-          typeColumnTable: "longtext",
-          uniqueId: "content",
-          prefixColumnTable: "",
-          allowSearch: true
-        },
-        {
-          component: "SelectMultipleAutoComplete",
-          componentAttribute: {
-            id: "tag",
-            name: "tag",
-            label: "Tag",
-            type: "text",
-            onAdd: {
-              disabled: false,
-              readonly: false
-            },
-            onEdit: {
-              disabled: false,
-              readonly: false
-            },
-            extension: {
-              customSource: {
-                url: "http://localhost:3000/tag"
-              },
-              idAttributeName: "id",
-              labelAttributeName: "name"
-            }
-          },
-          validation: "required",
-          showOnTable: false,
-          mergingColumn: false,
-          sortColumnTable: false,
-          label: "Tag",
-          typeColumnTable: "text",
-          uniqueId: "tag",
-          prefixColumnTable: "",
-          allowSearch: true
         }
-      ]
-    },
-    {
-      title: "Details",
-      type: "details",
-      groupName: "details_1",
-      attributeNameDetails: "comments",
-      details: [
-        {
-          component: "Select",
-          componentAttribute: {
-            id: "user",
-            name: "user",
-            label: "Select Details Standar",
-            type: "text",
-            onAdd: {
-              disabled: false,
-              readonly: false
-            },
-            onEdit: {
-              disabled: false,
-              readonly: false
-            },
-            extension: {
-              customSource: {
-                url: "http://localhost:3000/user"
-              },
-              idAttributeName: "id",
-              labelAttributeName: "name"
-            }
-          },
-          validation: "required",
-          showOnTable: false,
-          mergingColumn: false,
-          sortColumnTable: true,
-          label: "User",
-          typeColumnTable: "text",
-          uniqueId: "user",
-          prefixColumnTable: "",
-          allowSearch: true
-        },
-        {
-          component: "Input",
-          componentAttribute: {
-            id: "like",
-            name: "like",
-            label: "Like",
-            type: "number",
-            onAdd: {
-              disabled: false,
-              readonly: false
-            },
-            onEdit: {
-              disabled: false,
-              readonly: false
-            }
-          },
-          validation: "required",
-          showOnTable: false,
-          mergingColumn: false,
-          sortColumnTable: true,
-          label: "Like",
-          typeColumnTable: "text",
-          uniqueId: "like",
-          prefixColumnTable: "",
-          allowSearch: true
-        },
-        {
-          component: "CustomEditor",
-          componentAttribute: {
-            id: "content",
-            name: "content",
-            label: "Content",
-            type: "text",
-            onAdd: {
-              disabled: false,
-              readonly: false
-            },
-            onEdit: {
-              disabled: false,
-              readonly: false
-            }
-          },
-          validation: "required",
-          showOnTable: false,
-          mergingColumn: false,
-          sortColumnTable: true,
-          label: "Content",
-          typeColumnTable: "text",
-          uniqueId: "content",
-          prefixColumnTable: "",
-          allowSearch: true
-        },
-        {
-          component: "Input",
-          componentAttribute: {
-            id: "createdAt",
-            name: "createdAt",
-            label: "Created At",
-            type: "datetime-local",
-            onAdd: {
-              disabled: false,
-              readonly: false
-            },
-            onEdit: {
-              disabled: false,
-              readonly: false
-            }
-          },
-          validation: "required",
-          showOnTable: false,
-          mergingColumn: false,
-          sortColumnTable: true,
-          label: "Created At",
-          typeColumnTable: "text",
-          uniqueId: "createdAt",
-          prefixColumnTable: "",
-          allowSearch: true
-        }
+        //     {
+        //       uniqueId: "createdAt",
+        //       component: "Input",
+        //       componentAttribute: {
+        //         id: "createdAt",
+        //         name: "createdAt",
+        //         label: "Created At",
+        //         type: "datetime-local",
+        //         onAdd: {
+        //           disabled: false,
+        //           readonly: false
+        //         },
+        //         onEdit: {
+        //           disabled: false,
+        //           readonly: false
+        //         }
+        //       },
+        //       validation: "required",
+        //       showOnTable: true,
+        //       mergingColumn: false,
+        //       sortColumnTable: true,
+        //       label: "Created At",
+        //       typeColumnTable: "datetime",
+        //       prefixColumnTable: "",
+        //       allowSearch: true
+        //     },
+        //     {
+        //       component: "Input",
+        //       componentAttribute: {
+        //         id: "viewers",
+        //         name: "viewers",
+        //         label: "Viewers",
+        //         type: "number",
+        //         onAdd: {
+        //           disabled: false,
+        //           readonly: false
+        //         },
+        //         onEdit: {
+        //           disabled: false,
+        //           readonly: false
+        //         }
+        //       },
+        //       validation: "required",
+        //       showOnTable: true,
+        //       mergingColumn: false,
+        //       sortColumnTable: true,
+        //       label: "Viewers",
+        //       typeColumnTable: "text",
+        //       uniqueId: "viewers",
+        //       prefixColumnTable: "",
+        //       allowSearch: true
+        //     },
+        //     {
+        //       component: "Input",
+        //       componentAttribute: {
+        //         id: "title",
+        //         name: "title",
+        //         label: "Title",
+        //         type: "text",
+        //         onAdd: {
+        //           disabled: false,
+        //           readonly: false
+        //         },
+        //         onEdit: {
+        //           disabled: false,
+        //           readonly: false
+        //         }
+        //       },
+        //       validation: "required",
+        //       showOnTable: true,
+        //       mergingColumn: false,
+        //       sortColumnTable: true,
+        //       label: "Title",
+        //       typeColumnTable: "text",
+        //       uniqueId: "title",
+        //       prefixColumnTable: "",
+        //       allowSearch: true
+        //     },
+        //     {
+        //       component: "CustomEditor",
+        //       componentAttribute: {
+        //         id: "content",
+        //         name: "content",
+        //         label: "Content",
+        //         type: "text",
+        //         onAdd: {
+        //           disabled: false,
+        //           readonly: false
+        //         },
+        //         onEdit: {
+        //           disabled: false,
+        //           readonly: false
+        //         }
+        //       },
+        //       validation: "required",
+        //       showOnTable: false,
+        //       mergingColumn: false,
+        //       sortColumnTable: true,
+        //       label: "Content",
+        //       typeColumnTable: "longtext",
+        //       uniqueId: "content",
+        //       prefixColumnTable: "",
+        //       allowSearch: true
+        //     },
+        //     {
+        //       component: "SelectMultipleAutoComplete",
+        //       componentAttribute: {
+        //         id: "tag",
+        //         name: "tag",
+        //         label: "Tag",
+        //         type: "text",
+        //         onAdd: {
+        //           disabled: false,
+        //           readonly: false
+        //         },
+        //         onEdit: {
+        //           disabled: false,
+        //           readonly: false
+        //         },
+        //         extension: {
+        //           customSource: {
+        //             url: "http://localhost:3000/tag"
+        //           },
+        //           idAttributeName: "id",
+        //           labelAttributeName: "name"
+        //         }
+        //       },
+        //       validation: "required",
+        //       showOnTable: false,
+        //       mergingColumn: false,
+        //       sortColumnTable: false,
+        //       label: "Tag",
+        //       typeColumnTable: "text",
+        //       uniqueId: "tag",
+        //       prefixColumnTable: "",
+        //       allowSearch: true
+        //     }
+        //   ]
+        // },
+        // {
+        //   title: "Details",
+        //   type: "details",
+        //   groupName: "details_1",
+        //   attributeNameDetails: "comments",
+        //   details: [
+        //     {
+        //       component: "Select",
+        //       componentAttribute: {
+        //         id: "user",
+        //         name: "user",
+        //         label: "Select Details Standar",
+        //         type: "text",
+        //         onAdd: {
+        //           disabled: false,
+        //           readonly: false
+        //         },
+        //         onEdit: {
+        //           disabled: false,
+        //           readonly: false
+        //         },
+        //         extension: {
+        //           customSource: {
+        //             url: "http://localhost:3000/user"
+        //           },
+        //           idAttributeName: "id",
+        //           labelAttributeName: "name"
+        //         }
+        //       },
+        //       validation: "required",
+        //       showOnTable: false,
+        //       mergingColumn: false,
+        //       sortColumnTable: true,
+        //       label: "User",
+        //       typeColumnTable: "text",
+        //       uniqueId: "user",
+        //       prefixColumnTable: "",
+        //       allowSearch: true
+        //     },
+        //     {
+        //       component: "Input",
+        //       componentAttribute: {
+        //         id: "like",
+        //         name: "like",
+        //         label: "Like",
+        //         type: "number",
+        //         onAdd: {
+        //           disabled: false,
+        //           readonly: false
+        //         },
+        //         onEdit: {
+        //           disabled: false,
+        //           readonly: false
+        //         }
+        //       },
+        //       validation: "required",
+        //       showOnTable: false,
+        //       mergingColumn: false,
+        //       sortColumnTable: true,
+        //       label: "Like",
+        //       typeColumnTable: "text",
+        //       uniqueId: "like",
+        //       prefixColumnTable: "",
+        //       allowSearch: true
+        //     },
+        //     {
+        //       component: "CustomEditor",
+        //       componentAttribute: {
+        //         id: "content",
+        //         name: "content",
+        //         label: "Content",
+        //         type: "text",
+        //         onAdd: {
+        //           disabled: false,
+        //           readonly: false
+        //         },
+        //         onEdit: {
+        //           disabled: false,
+        //           readonly: false
+        //         }
+        //       },
+        //       validation: "required",
+        //       showOnTable: false,
+        //       mergingColumn: false,
+        //       sortColumnTable: true,
+        //       label: "Content",
+        //       typeColumnTable: "text",
+        //       uniqueId: "content",
+        //       prefixColumnTable: "",
+        //       allowSearch: true
+        //     },
+        //     {
+        //       component: "Input",
+        //       componentAttribute: {
+        //         id: "createdAt",
+        //         name: "createdAt",
+        //         label: "Created At",
+        //         type: "datetime-local",
+        //         onAdd: {
+        //           disabled: false,
+        //           readonly: false
+        //         },
+        //         onEdit: {
+        //           disabled: false,
+        //           readonly: false
+        //         }
+        //       },
+        //       validation: "required",
+        //       showOnTable: false,
+        //       mergingColumn: false,
+        //       sortColumnTable: true,
+        //       label: "Created At",
+        //       typeColumnTable: "text",
+        //       uniqueId: "createdAt",
+        //       prefixColumnTable: "",
+        //       allowSearch: true
+        //     }
       ]
     }
   ],

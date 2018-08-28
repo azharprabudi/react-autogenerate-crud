@@ -63,7 +63,7 @@ class BaseFormDetail extends Component {
     itemState,
     { component, componentAttribute: { name, id, label, type, ...others } }
   ) => {
-    if (typeof lib[component] !== "undefined" && type !== "hidden") {
+    if (lib[component]) {
       const SelectedComponent = lib[component];
       const { value, validationStatus, validationText } = itemState[name];
 

@@ -30,6 +30,12 @@ const lib = {
 
 export const libDefaultvalue = {
   Input: "",
+  InputHidden: "",
+  InputPassword: "",
+  InputDate: "",
+  InputTime: "",
+  InputDateTime: "",
+  InputNumber: "",
   TextArea: "",
   InputNominal: "",
   Radio: "",

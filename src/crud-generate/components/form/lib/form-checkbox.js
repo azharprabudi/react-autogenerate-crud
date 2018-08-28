@@ -76,7 +76,7 @@ class FormCheckbox extends PureComponent {
               control={
                 <Checkbox
                   name={name}
-                  id={`id-${item[extension.idAttributeName]}`}
+                  id={item[extension.idAttributeName]}
                   disabled={disabled}
                   onChange={this.onChange}
                   value={item[extension.idAttributeName].toString()}

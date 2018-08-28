@@ -80,8 +80,13 @@ class CRUDGenerate extends Component {
   constructor(props) {
     super(props);
 
-    /* get search field and search state */
-    const { searchField, stateSearch } = this.getStateAndFieldSearch();
+    /* get initial data includes, search | state | columns */
+    const {
+      columns,
+      formField,
+      searchField,
+      stateSearch
+    } = this.getInitialData();
 
     /* this state spread to the children */
     this.state = {
@@ -120,157 +125,184 @@ class CRUDGenerate extends Component {
       listChecked: [],
       isCheckAllItem: false
     };
-
-    // destruct object
-    const { server } = props;
-
-    // list column table
-    this.columnTable = this.getListColumnTable();
-
-    this.deleteAttributeName = ""; // for identifier name attr, from data server
-    if (has(props.server, "http") && has(props.server.http, "delete")) {
-      this.deleteAttributeName = props.server.http.delete.attributeName;
-    }
-
-    this.editAttributeName = ""; // for identifier name attr, from data server
-    if (has(props.server, "http") && has(props.server.http, "update")) {
-      this.editAttributeName = props.server.http.update.attributeName;
-      if (
-        has(props.server.update, "get") &&
-        has(props.server.update, "attributeName")
-      ) {
-        this.editAttributeName = props.server.update.attributeName;
-      }
-    }
-
-    /* get setting configuration server */
-    this.addConfigurationServer = {};
-    this.editConfigurationServer = {};
-
-    /* configuration sorting */
-    this.confSortApi = { enable: false };
-
-    /* checkbox value */
-    this.useCheckbox = false;
-
-    if (has(server, "http") && Object.keys(server.http).length > 0) {
-      if (has(server.http, "create")) {
-        this.addConfigurationServer = { ...server.http.create };
-      }
-      if (has(server.http, "update")) {
-        this.editConfigurationServer = { ...server.http.update };
-      }
-      if (has(server.http, "read")) {
-        if (
-          has(server.http.read, "query") &&
-          has(server.http.read, "query") &&
-          has(server.http.read.query, "sort")
-        ) {
-          this.confSortApi = {
-            enable: true,
-            url: server.http.read.query.sort
-          };
-        }
-      }
-      if (has(server.http, "delete")) {
-        if (
-          has(server.http.delete, "bulk") &&
-          server.http.delete.bulk.enable &&
-          has(props.aclRules[props.aclId], "delete") &&
-          props.aclRules[props.aclId].delete
-        ) {
-          this.useCheckbox = true;
-        }
-      }
-    }
-
-    /* get filter fileds */
-    this.fields = props.fields.map(field => ({
-      ...field,
-      details: field.details.filter(
-        item => !has(item, "mergingColumn") || item.mergingColumn === false
-      )
-    }));
-
+    /* list column table */
+    this.columnTable = columns;
+    /* get filter fields */
+    this.formField = formField;
     /* get list search field */
     this.searchField = searchField;
+    /* get configuration server */
+    this.getConfigurationServer(props.server);
   }
 
   componentDidMount() {
-    this.getDataDependOnConfig();
+    setTimeout(() => {
+      this.getDataDependOnConfig();
+    }, 500);
   }
 
-  /* this function to get all fields who want to show at the table */
-  getListColumnTable = () => {
+  getInitialData = () => {
     const columns = [];
-    const { fields } = this.props;
-    for (let i = 0; i <= fields.length - 1; i++) {
-      if (fields[i].type === "standard") {
-        for (let j = 0; j <= fields[i].details.length - 1; j++) {
-          let field = fields[i].details[j];
-          if (has(field, "showOnTable") && field.showOnTable) {
-            columns.push(field);
-          }
-        }
-      }
-    }
-    return columns;
-  };
-
-  getStateAndFieldSearch = () => {
+    const formField = [];
     const searchField = [];
     const stateSearch = {};
-    const { fields } = this.props;
-    for (let i = 0; i < fields.length; i++) {
-      if (fields[i].type === "standard") {
-        for (let j = 0; j < fields[i].details.length; j++) {
+
+    for (let i = 0; i < this.props.fields.length; i++) {
+      if (this.props.fields[i].type === "standard") {
+        let tmpFormField = { ...this.props.fields[i], details: [] };
+        for (let j = 0; j < this.props.fields[i].details.length; j++) {
+          /* take searching state & input field */
           if (
-            has(fields[i].details[j], "allowSearch") &&
-            fields[i].details[j].allowSearch &&
-            (!has(fields[i].details[j].mergingColumn) ||
-              fields[i].details[j].mergingColumn === false) &&
+            has(this.props.fields[i].details[j], "allowSearch") &&
+            this.props.fields[i].details[j].allowSearch &&
+            (!has(this.props.fields[i].details[j].mergingColumn) ||
+              this.props.fields[i].details[j].mergingColumn === false) &&
             OptionsConf.componentNotAllowedSearch.indexOf(
-              fields[i].details[j].component
-            ) < 0 &&
-            fields[i].details[j].componentAttribute.type !== "hidden"
+              this.props.fields[i].details[j].component
+            ) < 0
           ) {
-            searchField.push(fields[i].details[j]);
-            stateSearch[fields[i].details[j].componentAttribute.name] =
-              libDefaultvalue[fields[i].details[j].component];
+            searchField.push(this.props.fields[i].details[j]);
+            stateSearch[
+              this.props.fields[i].details[j].componentAttribute.name
+            ] = libDefaultvalue[this.props.fields[i].details[j].component];
+          }
+
+          /* take column table field */
+          if (
+            has(this.props.fields[i].details[j], "showOnTable") &&
+            this.props.fields[i].details[j].showOnTable
+          ) {
+            columns.push(this.props.fields);
+          }
+
+          /* form field */
+          if (
+            !has(this.props.fields[i].details[j], "mergingColumn") ||
+            !this.props.fields[i].details["mergingColumn"]
+          ) {
+            tmpFormField.details.push(this.props.fields[i].details[j]);
           }
         }
+        formField.push(tmpFormField);
       }
     }
-    return { stateSearch, searchField };
+    return { stateSearch, searchField, columns, formField };
   };
 
-  /* fetching data depend on configuration using http / firebase / graphql */
+  getConfigurationServer = server => {
+    let defaultConf = "http";
+    if (has(server, "default")) {
+      defaultConf = server.default;
+    }
+
+    /* this configuration will be used at all */
+    this.configurationServer = {
+      type: defaultConf,
+      query: server[defaultConf].query,
+      uniqueId: server[defaultConf].uniqueId,
+      config: {
+        read: {
+          url: server[defaultConf].url,
+          method: "get",
+          config: server[defaultConf].config || {}
+        },
+        create: {
+          url: server[defaultConf].url,
+          method: "post",
+          config: server[defaultConf].config || {}
+        },
+        update: {
+          url: `${server.default.url}/{id}`,
+          method: "patch",
+          config: server[defaultConf].config || {}
+        },
+        delete: {
+          url: `${server[defaultConf].url}/{id}`,
+          method: "delete",
+          config: server[defaultConf].config || {}
+        }
+      },
+      callbackBefore: server[defaultConf].callbackBefore,
+      callbackAfter: server[defaultConf].callbackAfter
+    };
+
+    /* at the below this method to used to get url, method and config */
+    if (
+      has(server[defaultConf], "url") &&
+      typeof server[defaultConf].url === "object"
+    ) {
+      this.configurationServer.config.read.url = server[defaultConf].read.url;
+      this.configurationServer.config.create.url =
+        server[defaultConf].create.url;
+      this.configurationServer.config.update.url = `${
+        server[defaultConf].update.url
+      }/{id}`;
+      this.configurationServer.config.delete.url = `${
+        server[defaultConf].delete.url
+      }/{id}`;
+    }
+
+    /* get method */
+    if (
+      (has(server[defaultConf], "method") &&
+        typeof server[defaultConf].method == "object" &&
+        has(server[defaultConf].method, "create")) ||
+      has(server[defaultConf].method, "update") ||
+      has(server[defaultConf].method, "delete") ||
+      has(server[defaultConf].method, "get")
+    ) {
+      this.configurationServer.config.read.method =
+        server[defaultConf].method.read;
+      this.configurationServer.config.create.method =
+        server[defaultConf].method.create;
+      this.configurationServer.config.update.method =
+        server[defaultConf].method.update;
+      this.configurationServer.config.delete.method =
+        server[defaultConf].method.delete;
+    }
+
+    /* get config */
+    if (
+      (has(server[defaultConf], "config") &&
+        typeof server[defaultConf].config == "object" &&
+        has(server[defaultConf].config, "create")) ||
+      has(server[defaultConf].config, "update") ||
+      has(server[defaultConf].config, "delete") ||
+      has(server[defaultConf].config, "get")
+    ) {
+      this.configurationServer.config.read.config =
+        server[defaultConf].config.read;
+      this.configurationServer.config.create.config =
+        server[defaultConf].config.create;
+      this.configurationServer.config.update.config =
+        server[defaultConf].config.update;
+      this.configurationServer.config.delete.config =
+        server[defaultConf].config.delete;
+    }
+  };
+
   getDataDependOnConfig = (limit = null, offset = null, page = null) => {
-    /* check acl first */
-    const { aclRules, aclId, server } = this.props;
+    const { aclRules, aclId } = this.props;
     if (
       has(aclRules, aclId) &&
       has(aclRules[aclId], "read") &&
       aclRules[aclId].read
     ) {
-      /* check user already using http to get data or not */
-      if (has(server, "http") && has(server.http, "read")) {
+      if (this.configurationServer.type === "http") {
         this.getDataFromHTTPServer(limit, offset, page);
       }
     }
   };
 
   deleteDataDependOnConfig = (isBulk = false, params = {}) => {
-    /* check acl first */
-    const { aclRules, aclId, server } = this.props;
+    const { aclRules, aclId } = this.props;
     if (
       has(aclRules, aclId) &&
       has(aclRules[aclId], "delete") &&
       aclRules[aclId].delete
     ) {
-      /* check user already using http to get data or not */
-      if (has(server, "http") && has(server.http, "delete")) {
-        if (has(server.http.delete, "bulk") && isBulk) {
+      if (this.configurationServer.type === "http") {
+        if (isBulk) {
           this.doDeleteBulkToHTTPServer(params);
         } else {
           this.doDeleteRowToHTTPServer(params);
@@ -279,105 +311,115 @@ class CRUDGenerate extends Component {
     }
   };
 
-  getHTTPUrl = (obj, limit, offset, page, search, sort) => {
-    /*
-    Create url link from configuration in parent component also configuration of limitation per row and current page or offset.
-    */
-    let url = obj.url;
+  getHTTPUrl = (url, query, search, limit, offset, page, sort) => {
+    url += `?`;
     let isSearch = false;
 
-    if (has(obj, "query")) {
-      url = `${obj.url}?`;
-      if (has(obj.query, "limit")) {
-        url += `${obj.query.limit}=${limit}&`;
-      }
-
-      if (has(obj.query, "offset")) {
-        url += `${obj.query.offset}=${offset}&`;
-      } else if (has(obj.query, "page")) {
-        url += `${obj.query.page}=${page}&`;
+    // query limit
+    if (has(query, "limit")) {
+      url += `${query.limit}=${limit}&`;
+    }
+    // query offset
+    if (has(query, "offset")) {
+      url += `${query.offset}=${offset}&`;
+    } else if (has(query, "page")) {
+      url += `${query.page}=${page}&`;
+    }
+    // query search
+    for (let [index, item] of Object.entries(search)) {
+      if (
+        (Array.isArray(item) && item.length > 0) ||
+        (!Array.isArray(item) && item !== "")
+      ) {
+        url += `${index}=${item}&`;
+        isSearch = true;
       }
     }
-
-    if (Object.keys(search).length > 0) {
-      if (url.indexOf("?") < 0) {
-        url += `?`;
-      }
-      for (let [index, item] of Object.entries(search)) {
-        if (
-          (Array.isArray(item) && item.length > 0) ||
-          (!Array.isArray(item) && item !== "")
-        ) {
-          url += `${index}=${item}&`;
-          isSearch = true;
-        }
-      }
-
-      if (sort !== null) {
-        if (url.indexOf("?") < 0) {
-          url += "?";
-        }
-        url += `&${sort}`;
-      }
+    // query sort
+    if (sort !== null) {
+      url += `${sort}&`;
     }
+
     return { url, isSearch };
   };
 
   getDataFromHTTPServer = async (limit, offset, page) => {
     try {
-      /*
-      get data from url has been specify in the configuration of crud generation
-      */
-      const { read } = this.props.server.http;
+      /* get data from url has been specify in the configuration of crud generation */
       const { search, table } = this.state;
+      const {
+        query,
+        config: { read },
+        callbackBefore,
+        callbackAfter
+      } = this.configurationServer;
 
       /* if the parameter null, set to the current value at state */
       if (limit === null) {
         limit = table.limit;
       }
-
       if (offset === null) {
         offset = table.offset;
       }
-
       if (page === null) {
         page = table.page;
       }
 
       let sort = null;
-      if (this.confSortApi.enable && table.orderBy !== "") {
-        sort = this.confSortApi.url;
+      if (has(query, "sort") && table.orderBy !== "") {
+        sort = query.sort;
         sort = sort.replace("{orderName}", table.orderBy);
         sort = sort.replace("{orderBy}", table.sort);
       }
-
       /* required data when get data from server */
-      let configRead = has(read, "config") ? read.config : {};
       let { url: urlRead, isSearch } = this.getHTTPUrl(
-        read,
+        read.url,
+        query,
+        search,
         limit,
         offset,
         page,
-        search,
         sort
       );
 
+      let isContinue = true;
       if (isSearch) {
-        if (has(read, "query") && has(read.query, "callbackBeforeSearch")) {
-          urlRead = await read.query.callbackBeforeSearch(urlRead);
+        if (typeof callbackBefore == "function") {
+          const resultCb = await callbackBefore("read", { url: urlRead });
+          if (has(resultCb, "isContinue")) {
+            urlRead = resultCb.urlRead;
+            isContinue = resultCb.isContinue;
+            if (has(resultCb, "error") && resultCb.error !== "") {
+              throw new Error(resultCb.error);
+            }
+          } else {
+            isContinue = false;
+            if (has(resultCb, "error") && resultCb.error !== "") {
+              throw new Error(resultCb.error);
+            }
+          }
         }
       }
 
-      /* start fetching data */
-      await this.setLoadingProms("loading", true);
-      let { data } = await axios.get(urlRead, configRead);
+      let result = [];
+      if (isContinue) {
+        await this.setLoadingProms("loading", true);
+        result = await axios[read.method](urlRead, read.config);
+        if (!has(result, "data")) {
+          throw new Error(result);
+        }
+        result = result.data;
+      }
+
+      if (typeof callbackAfter === "function") {
+        await callbackAfter("read", { data: result.data });
+      }
 
       /* finish fetch data and set data into state */
       this.setState({
-        ...this.state,
-        data: this.confSortApi.enable
-          ? data
-          : this.orderingData(data, table.orderBy, table.sort),
+        data: has(query, "sort")
+          ? result
+          : this.orderingData(result, table.orderBy, table.sort),
         table: {
           ...this.state.table,
           limit,
@@ -389,7 +431,6 @@ class CRUDGenerate extends Component {
     } catch (e) {
       this.setState(
         {
-          ...this.state,
           loading: false,
           snackbarInfo: {
             type: "error",
@@ -409,15 +450,12 @@ class CRUDGenerate extends Component {
   };
 
   setLoadingProms = (stateName, loading = false) =>
-    new Promise(resolve =>
-      this.setState({ ...this.state, [stateName]: loading }, resolve)
-    );
+    new Promise(resolve => this.setState({ [stateName]: loading }, resolve));
 
   setSnackbarInfo = data => {
     if (this.state.snackbarInfo.visible !== true) {
       this.setState(
         {
-          ...this.state,
           snackbarInfo: {
             ...data,
             visible: true
@@ -431,7 +469,6 @@ class CRUDGenerate extends Component {
   resetSnackbarInfo = () => {
     if (this.state.snackbarInfo.visible === true) {
       this.setState({
-        ...this.state,
         snackbarInfo: {
           ...this.state.snackbarInfo,
           message: "",
@@ -445,9 +482,8 @@ class CRUDGenerate extends Component {
     /*
     This function will be called, if the user want to sort column depend on data in state, maybe for next time i want to make it sort data by query API link.
     */
-    if (!this.confSortApi.enable) {
+    if (!has(this.configurationServer.query, "sort")) {
       this.setState({
-        ...this.state,
         data: this.orderingData(this.state.data, orderByNameColumn, sort),
         table: {
           ...this.state.table,
@@ -458,7 +494,6 @@ class CRUDGenerate extends Component {
     } else {
       this.setState(
         {
-          ...this.state,
           table: {
             ...this.state.table,
             orderBy: orderByNameColumn,
@@ -514,10 +549,10 @@ class CRUDGenerate extends Component {
     });
   };
 
-  /* add item into state list check item */
   onClickCheckbox = id => {
     let { listChecked } = this.state;
 
+    /* check want to delete or add */
     if (listChecked.indexOf(id) > -1) {
       listChecked = listChecked.filter(item => item !== id);
     } else {
@@ -525,29 +560,21 @@ class CRUDGenerate extends Component {
     }
 
     this.setState({
-      ...this.state,
       listChecked
     });
   };
 
-  /* add all item in row, and push it into list check item */
   onCheckAllItem = () => {
-    let attributeName = "";
-    const { server } = this.props;
+    let uniqueId = this.configurationServer.uniqueId;
     let { isCheckAllItem, listChecked, data } = this.state;
 
-    if (has(server, "http") && has(server.http, "delete")) {
-      attributeName = server.http.delete.attributeName;
-    }
-
     if (!isCheckAllItem === true) {
-      listChecked = data.map(item => item[attributeName]);
+      listChecked = data.map(item => item[uniqueId]);
     } else {
       listChecked = [];
     }
 
     this.setState({
-      ...this.state,
       listChecked,
       isCheckAllItem: !isCheckAllItem
     });
@@ -1265,7 +1292,7 @@ class CRUDGenerate extends Component {
           {title}
         </Typography>
         <FormDialog
-          fields={this.fields}
+          fields={this.formField}
           title={`${upperFirst(formTitle)} ${upperFirst(title)}`}
           params={formParams}
           visible={formVisible}
