@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 
 /* material design modules */
 import Dialog from "@material-ui/core/Dialog";
@@ -15,7 +15,6 @@ import PropTypes from "prop-types";
 
 /* my modules */
 import BaseForm from "../../base/base-form";
-import OptionsConf from "../../constants/options-conf";
 
 const styles = theme => ({
   appBar: {
@@ -31,36 +30,22 @@ const styles = theme => ({
   }
 });
 
-class FormDialog extends Component {
+class FormDialog extends PureComponent {
   render() {
-    const {
-      fields,
-      classes,
-      onClose,
-      visible,
-      title,
-      params,
-      onClickButtonClose,
-      createConfigurationServer,
-      updateConfigurationServer,
-      onClickButtonSubmit,
-      setErrorMessage,
-      additionalFieldsAtForm
-    } = this.props;
     return (
-      <Dialog fullScreen open={visible} onClose={onClose}>
-        <AppBar className={classes.appBar}>
-          <Toolbar className={classes.toolbar}>
+      <Dialog fullScreen open={this.props.visible} onClose={this.props.onClose}>
+        <AppBar className={this.props.classes.appBar}>
+          <Toolbar className={this.props.classes.toolbar}>
             <Typography
               variant="title"
               color="inherit"
-              className={classes.flex}
+              className={this.props.classes.flex}
             >
-              {title}
+              {this.props.title}
             </Typography>
             <IconButton
               color="inherit"
-              onClick={onClickButtonClose}
+              onClick={this.props.onClickButtonClose}
               aria-label="Close"
             >
               <CloseIcon />
@@ -69,14 +54,13 @@ class FormDialog extends Component {
           {this.props.loading && <LinearProgress color="secondary" />}
         </AppBar>
         <BaseForm
-          params={params}
-          fields={fields}
-          setErrorMessage={setErrorMessage}
-          onClickButtonSubmit={onClickButtonSubmit}
-          onClickButtonClose={onClickButtonClose}
-          createConfigurationServer={createConfigurationServer}
-          updateConfigurationServer={updateConfigurationServer}
-          additionalFieldsAtForm={additionalFieldsAtForm}
+          params={this.props.params}
+          fields={this.props.fields}
+          onSetErrorMessage={this.props.onSetErrorMessage}
+          onClickButtonSubmit={this.props.onClickButtonSubmit}
+          onClickButtonClose={this.props.onClickButtonClose}
+          configurationServer={this.props.configurationServer}
+          extensionComponentForm={this.props.extensionComponentForm}
         />
       </Dialog>
     );
@@ -89,32 +73,16 @@ FormDialog.propTypes = {
   params: PropTypes.object.isRequired,
   onClose: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  createConfigurationServer: PropTypes.shape({
-    url: PropTypes.string.isRequired,
-    method: PropTypes.oneOf(OptionsConf.methodValue),
-    config: PropTypes.object,
-    callbackBeforeCreate: PropTypes.func,
-    callbackAfterCreate: PropTypes.func
-  }),
-  updateConfigurationServer: PropTypes.shape({
-    url: PropTypes.string.isRequired,
-    get: PropTypes.shape({
-      url: PropTypes.string.isRequired,
-      method: PropTypes.oneOf(OptionsConf.methodValue)
-    }),
-    method: PropTypes.oneOf(OptionsConf.methodValue),
-    config: PropTypes.object,
-    replaceUrl: PropTypes.string,
-    attributeName: PropTypes.string,
-    dataFromProps: PropTypes.bool,
-    callbackBeforeUpdate: PropTypes.func,
-    callbackAfterUpdate: PropTypes.func
+  configurationServer: PropTypes.shape({
+    create: PropTypes.object.isRequired,
+    update: PropTypes.object.isRequired,
+    getDataUpdate: PropTypes.object.isRequired
   }),
   loading: PropTypes.bool.isRequired,
   onClickButtonClose: PropTypes.func.isRequired,
   onClickButtonSubmit: PropTypes.func.isRequired,
-  setErrorMessage: PropTypes.func.isRequired,
-  additionalFieldsAtForm: PropTypes.shape({
+  onSetErrorMessage: PropTypes.func.isRequired,
+  extensionComponentForm: PropTypes.shape({
     top: PropTypes.element,
     bottom: PropTypes.element
   })

@@ -2,28 +2,44 @@ import React, { PureComponent } from "react";
 
 /* material ui */
 import Radio from "@material-ui/core/Radio";
+import red from "@material-ui/core/colors/red";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import InputLabel from "@material-ui/core/InputLabel";
+import { withStyles } from "@material-ui/core/styles";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import red from "@material-ui/core/colors/red";
 
 /* etc modules */
 import has from "lodash/has";
 import axios from "axios";
 import PropTypes from "prop-types";
 import isArray from "lodash/isArray";
-import { FormHelperText } from "@material-ui/core";
+
+const styles = () => ({
+  container: {
+    marginTop: 18,
+    marginBottom: 6
+  },
+  helperText: {
+    color: red[500]
+  }
+});
 
 class FormRadio extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data: has(props.extension, "data") ? props.extension.data : []
+      data: has(props.othersConf, "data")
+        ? props.extension.data.map(item => ({
+            id: item[props.othersConf.idAttributeName],
+            label: item[props.otherConf.labelAttributeName]
+          }))
+        : []
     };
   }
 
   componentDidMount() {
-    if (has(this.props.extension, "customSource")) {
+    if (has(this.props.othersConf, "customSource")) {
       this.getCustomSourceData();
     }
   }
@@ -31,9 +47,13 @@ class FormRadio extends PureComponent {
   /* get data custom source from server */
   getCustomSourceData = async () => {
     try {
-      const { customSource } = this.props.extension;
-      const url = has(customSource, "url") ? customSource.url : "";
-      const config = has(customSource, "config") ? customSource.config : {};
+      const {
+        customSource: url,
+        idAttributeName,
+        labelAttributeName,
+        ...others
+      } = this.props.othersConf;
+      const config = has(others, "config") ? others.config : {};
 
       /* fetch data from server */
       const data = await axios.get(url, config);
@@ -41,7 +61,10 @@ class FormRadio extends PureComponent {
         throw new Error(data);
       }
       this.setState({
-        data: data.data
+        data: data.data.map(item => ({
+          id: item[idAttributeName],
+          label: item[labelAttributeName]
+        }))
       });
     } catch (e) {
       alert(isArray(e) ? JSON.stringify(e) : e.toString());
@@ -49,59 +72,63 @@ class FormRadio extends PureComponent {
   };
 
   onChange = e => {
-    this.props.onChange(e.target.value);
+    this.props.onChangeValue(e.target.value);
   };
 
   render() {
-    const { id, name, value, style, extension, helperText, label } = this.props;
     return (
-      <div style={{ marginTop: 18, marginBottom: 6 }}>
-        <InputLabel>{label}</InputLabel>
+      <div style={this.props.classes.container}>
+        <InputLabel>{this.props.label}</InputLabel>
         <RadioGroup
-          id={id}
-          name={name}
-          style={style}
-          value={value.toString()}
+          id={this.props.id}
+          name={this.props.name}
+          style={this.props.style}
           onChange={this.onChange}
+          value={this.props.value.id.toString()}
         >
           {this.state.data.map(item => (
             <FormControlLabel
               control={<Radio />}
-              key={item[extension.idAttributeName]}
-              value={item[extension.idAttributeName].toString()}
-              label={item[extension.labelAttributeName]}
+              key={item.id}
+              label={item.label}
+              value={item.id.toString()}
+              disabled={!this.props.editable}
+              readonly={!this.props.editable}
             />
           ))}
         </RadioGroup>
-        <FormHelperText style={{ color: red[500] }}>
-          {helperText}
-        </FormHelperText>
+        {this.props.error && (
+          <FormHelperText className={this.props.classes.helperText}>
+            {this.props.helperText}
+          </FormHelperText>
+        )}
       </div>
     );
   }
 }
 
 FormRadio.propTypes = {
-  /* required */
+  error: PropTypes.bool,
+  editable: PropTypes.bool,
+  style: PropTypes.object,
+  helperText: PropTypes.string,
   id: PropTypes.string.isRequired,
   value: PropTypes.any.isRequired,
-  isEdit: PropTypes.bool.isRequired,
-  disabled: PropTypes.bool.isRequired,
-  readonly: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
-  extension: PropTypes.shape({
+  onChangeValue: PropTypes.func.isRequired,
+  othersConf: PropTypes.shape({
     data: PropTypes.array,
-    customSource: PropTypes.shape({
-      url: PropTypes.string.isRequired,
-      method: PropTypes.string,
-      config: PropTypes.object
-    }),
+    customSource: PropTypes.string,
+    config: PropTypes.object,
     idAttributeName: PropTypes.string.isRequired,
     labelAttributeName: PropTypes.string.isRequired
-  }).isRequired,
-  helperText: PropTypes.string.isRequired,
-  /* non required */
-  style: PropTypes.object
+  }).isRequired
 };
 
-export default FormRadio;
+FormRadio.defaultProps = {
+  style: {},
+  error: false,
+  editable: true,
+  helperText: ""
+};
+
+export default withStyles(styles)(FormRadio);

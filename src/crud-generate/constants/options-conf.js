@@ -34,6 +34,16 @@ export default {
     "datetime",
     "longtext"
   ],
+  availableConfMethod: [
+    "read",
+    "update",
+    "delete",
+    "bulkDelete",
+    "create",
+    "getDataUpdate",
+    "export",
+    "import"
+  ],
   typeExportValue: ["csv", "excel"],
   typeFormValue: ["standard", "details"],
   alertValue: ["", "alert", "confirmation"],

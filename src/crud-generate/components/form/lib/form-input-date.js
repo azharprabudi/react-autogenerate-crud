@@ -6,7 +6,7 @@ import TextField from "@material-ui/core/TextField";
 /* etc modules */
 import PropTypes from "prop-types";
 
-class FormInput extends PureComponent {
+class FormInputDate extends PureComponent {
   onChange = e => {
     this.props.onChangeValue(e.target.value);
   };
@@ -15,13 +15,13 @@ class FormInput extends PureComponent {
     return (
       <TextField
         fullWidth
-        type={"text"}
+        type={"date"}
         margin={"normal"}
+        id={this.props.id}
+        name={this.props.name}
         InputProps={{
           readOnly: !this.props.editable
         }}
-        id={this.props.id}
-        name={this.props.name}
         style={this.props.style}
         label={this.props.label}
         error={this.props.error}
@@ -34,23 +34,23 @@ class FormInput extends PureComponent {
   }
 }
 
-FormInput.propTypes = {
+FormInputDate.propTypes = {
   id: PropTypes.string.isRequired,
   value: PropTypes.any.isRequired,
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  onChangeValue: PropTypes.func.isRequired,
   editable: PropTypes.bool,
   error: PropTypes.bool,
-  style: PropTypes.object,
-  helperText: PropTypes.string
+  style: PropTypes.any,
+  helperText: PropTypes.string,
+  onChangeValue: PropTypes.func.isRequired
 };
 
-FormInput.defaultProps = {
+FormInputDate.defaultProps = {
   style: {},
   error: false,
   editable: true,
   helperText: ""
 };
 
-export default FormInput;
+export default FormInputDate;

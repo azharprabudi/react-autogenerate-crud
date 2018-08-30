@@ -9,26 +9,28 @@ import BaseSelect from "./base/base-select";
 const FormSelect = props => <BaseSelect {...props} multi={false} />;
 
 FormSelect.propTypes = {
-  /* required */
   id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  error: PropTypes.bool,
+  editable: PropTypes.bool,
   value: PropTypes.any.isRequired,
-  isEdit: PropTypes.bool.isRequired,
-  disabled: PropTypes.bool.isRequired,
-  readonly: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
-  extension: PropTypes.shape({
+  onChangeValue: PropTypes.func.isRequired,
+  othersConf: PropTypes.shape({
     data: PropTypes.array,
-    customSource: PropTypes.shape({
-      url: PropTypes.string.isRequired,
-      method: PropTypes.string,
-      config: PropTypes.object
-    }),
+    customSource: PropTypes.string,
+    config: PropTypes.object,
     idAttributeName: PropTypes.string.isRequired,
     labelAttributeName: PropTypes.string.isRequired
   }).isRequired,
-  helperText: PropTypes.string.isRequired,
-  /* non required */
-  style: PropTypes.object
+  style: PropTypes.object,
+  helperText: PropTypes.string
+};
+
+FormSelect.defaultProps = {
+  style: {},
+  error: false,
+  editable: true,
+  helperText: ""
 };
 
 export default FormSelect;

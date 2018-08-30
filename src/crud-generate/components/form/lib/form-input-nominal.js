@@ -12,67 +12,59 @@ import NumberFormatCustom from "../../etc/number-format-custom";
 
 class FormInputNominal extends PureComponent {
   onChange = ({ value }) => {
-    this.props.onChange(value);
+    this.props.onChangeValue(value);
   };
 
   render() {
-    const {
-      label,
-      id,
-      name,
-      style,
-      value,
-      extension,
-      readonly,
-      disabled,
-      error,
-      helperText
-    } = this.props;
     return (
       <TextField
-        id={id}
-        name={name}
-        label={label}
         fullWidth
         margin={"normal"}
+        id={this.props.id}
+        name={this.props.name}
+        label={this.props.label}
         InputProps={{
           inputComponent: NumberFormatCustom,
           inputProps: {
-            prefix: has(extension, "prefix") ? extension.prefix : ""
+            prefix:
+              has(this.props, "othersConf") &&
+              has(this.props.othersConf, "prefix")
+                ? this.props.othersConf.prefix
+                : ""
           },
-          readOnly: readonly
+          readOnly: !this.props.editable
         }}
-        value={value}
-        style={style}
-        disabled={disabled}
-        error={error}
-        helperText={helperText}
+        value={this.props.value}
+        style={this.props.style}
+        error={this.props.error}
         onChange={this.onChange}
+        disabled={!this.props.editable}
+        helperText={this.props.helperText}
       />
     );
   }
 }
 
 FormInputNominal.propTypes = {
-  /* required */
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   value: PropTypes.any.isRequired,
-  isEdit: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
-  readonly: PropTypes.bool.isRequired,
-  disabled: PropTypes.bool.isRequired,
-  extension: PropTypes.object.isRequired,
-  /* not required */
+  othersConf: PropTypes.shape({
+    prefix: PropTypes.string.isRequired
+  }),
+  onChangeValue: PropTypes.func.isRequired,
   error: PropTypes.bool,
   style: PropTypes.object,
+  editable: PropTypes.bool,
   helperText: PropTypes.string
 };
 
 FormInputNominal.defaultProps = {
   style: {},
-  helperText: ""
+  error: false,
+  helperText: "",
+  editable: true
 };
 
 export default FormInputNominal;

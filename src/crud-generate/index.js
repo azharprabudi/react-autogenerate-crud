@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { PureComponent } from "react";
 
 /* material ui */
 import Typography from "@material-ui/core/Typography";
@@ -67,7 +67,7 @@ const theme = createMuiTheme({
   }
 });
 
-const styles = theme => ({
+const styles = () => ({
   title: {
     fontWeight: "bold",
     color: "black",
@@ -76,7 +76,7 @@ const styles = theme => ({
   }
 });
 
-class CRUDGenerate extends Component {
+class CRUDGenerate extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -115,10 +115,10 @@ class CRUDGenerate extends Component {
           params: {}
         },
         alert: {
-          visible: false,
           title: "",
           message: "",
           type: "",
+          visible: false,
           params: {}
         }
       },
@@ -138,7 +138,7 @@ class CRUDGenerate extends Component {
   componentDidMount() {
     setTimeout(() => {
       this.getDataDependOnConfig();
-    }, 500);
+    }, 300);
   }
 
   getInitialData = () => {
@@ -194,12 +194,12 @@ class CRUDGenerate extends Component {
     if (has(server, "default")) {
       defaultConf = server.default;
     }
-
     /* this configuration will be used at all */
     this.configurationServer = {
       type: defaultConf,
       query: server[defaultConf].query,
       uniqueId: server[defaultConf].uniqueId,
+      replaceUrlWithUniqueId: server[defaultConf].replaceUrlWithUniqueId || "",
       config: {
         read: {
           url: server[defaultConf].url,
@@ -220,65 +220,92 @@ class CRUDGenerate extends Component {
           url: `${server[defaultConf].url}/{id}`,
           method: "delete",
           config: server[defaultConf].config || {}
+        },
+        import: {
+          url: `${server[defaultConf].url}/{id}`,
+          method: "get",
+          config: server[defaultConf].config || {}
+        },
+        export: {
+          url: `${server[defaultConf].url}/{id}`,
+          method: "post",
+          config: server[defaultConf].config || {}
+        },
+        getDataUpdate: {
+          url: `${server[defaultConf].url}/{id}`,
+          method: "get",
+          config: server[defaultConf].config || {}
+        },
+        bulkDelete: {
+          url: `${server[defaultConf].url}`,
+          method: "post",
+          config: server[defaultConf].config || {}
         }
       },
       callbackBefore: server[defaultConf].callbackBefore,
       callbackAfter: server[defaultConf].callbackAfter
     };
 
-    /* at the below this method to used to get url, method and config */
-    if (
-      has(server[defaultConf], "url") &&
-      typeof server[defaultConf].url === "object"
-    ) {
-      this.configurationServer.config.read.url = server[defaultConf].read.url;
-      this.configurationServer.config.create.url =
-        server[defaultConf].create.url;
-      this.configurationServer.config.update.url = `${
-        server[defaultConf].update.url
-      }/{id}`;
-      this.configurationServer.config.delete.url = `${
-        server[defaultConf].delete.url
-      }/{id}`;
-    }
+    let i = 0;
+    do {
+      if (i == 0) {
+        let status = [];
+        if (
+          has(server[defaultConf], "url") &&
+          typeof server[defaultConf].url === "object"
+        ) {
+          status.push(true);
+        }
 
-    /* get method */
-    if (
-      (has(server[defaultConf], "method") &&
-        typeof server[defaultConf].method == "object" &&
-        has(server[defaultConf].method, "create")) ||
-      has(server[defaultConf].method, "update") ||
-      has(server[defaultConf].method, "delete") ||
-      has(server[defaultConf].method, "get")
-    ) {
-      this.configurationServer.config.read.method =
-        server[defaultConf].method.read;
-      this.configurationServer.config.create.method =
-        server[defaultConf].method.create;
-      this.configurationServer.config.update.method =
-        server[defaultConf].method.update;
-      this.configurationServer.config.delete.method =
-        server[defaultConf].method.delete;
-    }
+        if (
+          has(server[defaultConf], "method") &&
+          typeof server[defaultConf].method === "object"
+        ) {
+          status.push(true);
+        }
 
-    /* get config */
-    if (
-      (has(server[defaultConf], "config") &&
-        typeof server[defaultConf].config == "object" &&
-        has(server[defaultConf].config, "create")) ||
-      has(server[defaultConf].config, "update") ||
-      has(server[defaultConf].config, "delete") ||
-      has(server[defaultConf].config, "get")
-    ) {
-      this.configurationServer.config.read.config =
-        server[defaultConf].config.read;
-      this.configurationServer.config.create.config =
-        server[defaultConf].config.create;
-      this.configurationServer.config.update.config =
-        server[defaultConf].config.update;
-      this.configurationServer.config.delete.config =
-        server[defaultConf].config.delete;
-    }
+        if (
+          has(server[defaultConf], "config") &&
+          typeof server[defaultConf].config === "object"
+        ) {
+          status.push(true);
+        }
+        if (status.length === 0) break;
+      }
+
+      if (
+        has(server[defaultConf], "url") &&
+        typeof server[defaultConf].url === "object" &&
+        has(server[defaultConf].url, OptionsConf.availableConfMethod[i])
+      ) {
+        this.configurationServer.config[
+          OptionsConf.availableConfMethod[i]
+        ].url = server[defaultConf].url[OptionsConf.availableConfMethod[i]];
+      }
+
+      if (
+        has(server[defaultConf], "method") &&
+        typeof server[defaultConf].method === "object" &&
+        has(server[defaultConf].method, OptionsConf.availableConfMethod[i])
+      ) {
+        this.configurationServer.config[
+          OptionsConf.availableConfMethod[i]
+        ].method =
+          server[defaultConf].method[OptionsConf.availableConfMethod[i]];
+      }
+
+      if (
+        has(server[defaultConf], "config") &&
+        typeof server[defaultConf].config === "object" &&
+        has(server[defaultConf].config, OptionsConf.availableConfMethod[i])
+      ) {
+        this.configurationServer.config[
+          OptionsConf.availableConfMethod[i]
+        ].config =
+          server[defaultConf].config[OptionsConf.availableConfMethod[i]];
+      }
+      i++;
+    } while (i < OptionsConf.availableConfMethod.length);
   };
 
   getDataDependOnConfig = (limit = null, offset = null, page = null) => {
@@ -1009,7 +1036,7 @@ class CRUDGenerate extends Component {
   };
 
   /* form submit alert and alert dialog close */
-  onDialogClose = (dialogName, action) => () => {
+  onCloseDialog = (dialogName, action) => () => {
     let { params } = this.state.dialog[dialogName];
     if (this.state.dialog[dialogName].visible === true) {
       this.setState({
@@ -1264,17 +1291,14 @@ class CRUDGenerate extends Component {
       aclRules,
       table,
       loading,
-      title,
       classes,
-      export: exportConf,
-      additionalFieldsAtForm
+      export: exportConf
     } = this.props;
     const {
       data,
       loading: isLoading,
       table: { sort, page, limit, orderBy },
       dialog: {
-        form: { title: formTitle, params: formParams, visible: formVisible },
         alert: {
           type: alertType,
           title: alertTitle,
@@ -1289,21 +1313,29 @@ class CRUDGenerate extends Component {
     return (
       <MuiThemeProvider theme={theme}>
         <Typography className={classes.title} variant={"display1"}>
-          {title}
+          {this.props.title}
         </Typography>
         <FormDialog
           fields={this.formField}
-          title={`${upperFirst(formTitle)} ${upperFirst(title)}`}
-          params={formParams}
-          visible={formVisible}
-          createConfigurationServer={this.addConfigurationServer}
-          updateConfigurationServer={this.editConfigurationServer}
-          onClose={this.onDialogClose("form", "cancel")}
-          onClickButtonClose={this.onDialogClose("form", "cancel")}
-          onClickButtonSubmit={this.doSubmitForm}
+          params={this.state.dialog.form.params}
+          visible={this.state.dialog.form.visible}
+          configurationServer={{
+            replaceUrlWithUniqueId: this.configurationServer
+              .replaceUrlWithUniqueId,
+            read: this.configurationServer.config.read,
+            create: this.configurationServer.config.create,
+            update: this.configurationServer.config.update,
+            getDataUpdate: this.configurationServer.config.getDataUpdate
+          }}
           loading={this.state.loadingForm}
-          setErrorMessage={this.setSnackbarInfo}
-          additionalFieldsAtForm={additionalFieldsAtForm}
+          onClose={this.onCloseDialog("form", "cancel")}
+          onClickButtonClose={this.onCloseDialog("form", "cancel")}
+          onClickButtonSubmit={this.doSubmitForm}
+          onSetErrorMessage={this.setSnackbarInfo}
+          extensionComponentForm={this.props.extensionComponentForm}
+          title={`${upperFirst(this.state.dialog.form.formTitle)} ${upperFirst(
+            this.props.title
+          )}`}
         />
         <BaseSearch
           fields={this.searchField}
@@ -1358,9 +1390,9 @@ class CRUDGenerate extends Component {
           title={alertTitle}
           message={alertMessage}
           visible={alertVisible}
-          onClose={this.onDialogClose("alert", "cancel")}
-          onAggree={this.onDialogClose("alert", "submit")}
-          onDisaggree={this.onDialogClose("alert", "cancel")}
+          onClose={this.onCloseDialog("alert", "cancel")}
+          onAggree={this.onCloseDialog("alert", "submit")}
+          onDisaggree={this.onCloseDialog("alert", "cancel")}
         />
       </MuiThemeProvider>
     );
@@ -1386,55 +1418,47 @@ CRUDGenerate.propTypes = {
   }),
   /* required only */
   server: PropTypes.shape({
+    default: PropTypes.string.isRequired,
     http: PropTypes.shape({
-      create: PropTypes.shape({
-        url: PropTypes.string.isRequired,
-        method: PropTypes.oneOf(OptionsConf.methodValue).isRequired,
-        config: PropTypes.object,
-        callbackBeforeCreate: PropTypes.func,
-        callbackAfterCreate: PropTypes.func
+      url: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.shape({
+          read: PropTypes.string.isRequired,
+          create: PropTypes.string.isRequired,
+          update: PropTypes.string.isRequired,
+          delete: PropTypes.string.isRequired,
+          bulkDelete: PropTypes.string,
+          getUppdate: PropTypes.string
+        })
+      ]),
+      replaceUrlWithUniqueId: PropTypes.string,
+      uniqueId: PropTypes.string.isRequired,
+      query: PropTypes.shape({
+        limit: PropTypes.string.isRequired,
+        page: PropTypes.string.isRequired,
+        sort: PropTypes.string
+      }).isRequired,
+      method: PropTypes.shape({
+        read: PropTypes.string,
+        create: PropTypes.string,
+        update: PropTypes.string,
+        delete: PropTypes.string,
+        bulkDelete: PropTypes.string,
+        getUppdate: PropTypes.string
       }),
-      read: PropTypes.shape({
-        url: PropTypes.string.isRequired,
-        query: PropTypes.shape({
-          limit: PropTypes.string,
-          offset: PropTypes.string,
-          sort: PropTypes.string,
-          callbackBeforeSearch: PropTypes.func
-        }),
-        config: PropTypes.object
-      }),
-      update: PropTypes.shape({
-        url: PropTypes.string.isRequired,
-        get: PropTypes.shape({
-          url: PropTypes.string.isRequired,
-          config: PropTypes.object,
-          replaceUrl: PropTypes.string,
-          attributeName: PropTypes.string
-        }),
-        dataFromProps: PropTypes.bool.isRequired,
-        config: PropTypes.object,
-        method: PropTypes.oneOf(OptionsConf.methodValue).isRequired,
-        replaceUrl: PropTypes.string,
-        attributeName: PropTypes.string,
-        callbackBeforeUpdate: PropTypes.func,
-        callbackAfterUpdate: PropTypes.func
-      }),
-      delete: PropTypes.shape({
-        url: PropTypes.string.isRequired,
-        bulk: PropTypes.shape({
-          url: PropTypes.string.isRequired,
-          method: PropTypes.oneOf(OptionsConf.methodValue).isRequired,
-          callbackBeforeBulkDelete: PropTypes.func,
-          callbackAfterBulkDelete: PropTypes.func
-        }),
-        config: PropTypes.object,
-        method: PropTypes.oneOf(OptionsConf.methodValue).isRequired,
-        replaceUrl: PropTypes.string,
-        attributeName: PropTypes.string,
-        callbackBeforeDelete: PropTypes.func,
-        callbackAfterDelete: PropTypes.func
-      })
+      config: PropTypes.oneOfType([
+        PropTypes.object,
+        PropTypes.shape({
+          read: PropTypes.object,
+          create: PropTypes.object,
+          update: PropTypes.object,
+          delete: PropTypes.object,
+          bulkDelete: PropTypes.object,
+          getUppdate: PropTypes.object
+        })
+      ]),
+      callbackBefore: PropTypes.func,
+      callbackAfter: PropTypes.func
     })
   }).isRequired,
   fields: PropTypes.arrayOf(
@@ -1506,7 +1530,7 @@ CRUDGenerate.propTypes = {
     type: PropTypes.oneOf(OptionsConf.typeExportValue).isRequired
   }),
   classes: PropTypes.object.isRequired,
-  additionalFieldsAtForm: PropTypes.shape({
+  extensionComponentForm: PropTypes.shape({
     top: PropTypes.element,
     bottom: PropTypes.element
   }),
@@ -1548,7 +1572,7 @@ CRUDGenerate.defaultProps = {
     url: "",
     type: "csv"
   },
-  additionalFieldsAtForm: {
+  extensionComponentForm: {
     top: <div />,
     bottom: <div />
   }

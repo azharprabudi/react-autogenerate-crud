@@ -1,5 +1,4 @@
 import React from "react";
-import random from "lodash/random";
 
 const config = {
   aclId: "*",
@@ -18,7 +17,17 @@ const config = {
   server: {
     default: "http", // default value
     http: {
-      url: "http://localhost:3000/article", // required
+      url: {
+        read: "http://localhost:3000/article",
+        create: "http://localhost:3000/article",
+        update: "http://localhost:3000/article/{id}",
+        delete: "http://localhost:3000/article/{id}",
+        bulkDelete: "http://localhost:3000/article",
+        getDataUpdate: "http://localhost:3000/article/{id}",
+        export: "http://localhost:3000/article",
+        import: "http://localhost:3000/article"
+      }, // required
+      replaceUrlWithUniqueId: "{id}",
       uniqueId: "id",
       query: {
         limit: "_limit",
@@ -30,68 +39,6 @@ const config = {
       callbackBefore: () => {},
       callbackAfter: () => {}
     }
-    // create: {
-    //   url: "http://localhost:3000/article",
-    //   method: "post",
-    //   config: {},
-    //   callbackBeforeCreate: ({ data }) => {
-    //     return {
-    //       isContinue: true,
-    //       data: {
-    //         ...data,
-    //         id: random(100, 400),
-    //         comments: data.comments.map(item => ({
-    //           ...item,
-    //           id: random(500, 1000)
-    //         }))
-    //       },
-    //       error: ""
-    //     };
-    //   },
-    //   callbackAfterCreate: () => {}
-    // },
-    // read: {
-    //   url: "http://localhost:3000/article",
-    //   query: {
-    //     limit: "_limit",
-    //     page: "_page",
-    //     sort: "_sort={orderName}&_order={orderBy}",
-    //     callbackBeforeSearch: url => url
-    //   },
-    //   config: {}
-    // },
-    // update: {
-    //   url: "http://localhost:3000/article/{id}",
-    //   get: {
-    //     url: "http://localhost:3000/article/{id}",
-    //     config: {},
-    //     replaceUrl: "{id}",
-    //     attributeName: "id"
-    //   },
-    //   config: {},
-    //   method: "patch",
-    //   replaceUrl: "{id}",
-    //   attributeName: "id",
-    //   dataFromProps: false,
-    //   callbackBeforeUpdate: () => {},
-    //   callbackAfterUpdate: () => {}
-    // },
-    // delete: {
-    //   url: "http://localhost:3000/article/{id}",
-    //   bulk: {
-    //     enable: true,
-    //     method: "get",
-    //     url: "http://localhost:3000/article/{id}",
-    //     callbackBeforeDeleteBulk: () => {},
-    //     callbackAfterDeleteBulk: () => {}
-    //   },
-    //   config: {},
-    //   method: "delete",
-    //   replaceUrl: "{id}",
-    //   attributeName: "id",
-    //   callbackBeforeDelete: () => {},
-    //   callbackAfterDelete: () => {}
-    // }
   },
   table: {
     buttonTopTable: {},
@@ -112,17 +59,34 @@ const config = {
   },
   fields: [
     {
-      title: "General",
-      type: "standard",
-      groupName: "Main",
+      title: "General", // judul
+      type: "standard", // one of "standard|details"
+      groupName: "Main", // must be unique
+      // uniqueDetail: "", //
       details: [
         // {
-        //   uniqueId: "id",
-        //   addEditable: true,
-        //   editEditable: true,
-        //   defaultValue: 0,
-        //   label: "Article Id",
-        //   allowSearch: true
+        //   style: {{}}, optional
+        //   uniqueId: "id", required
+        //   defaultValue: 0, optional
+        //   allowSearch: true, optional
+        //   addEditable: true, optional
+        //   editEditable: true, optional
+        //   label: "Article Id", required
+        //   mergingColumn: false, optional
+        //   othersConf: {
+        //      data: [],
+        //      customSource: '',
+        //      config: {},
+        //      idAttributeName: '',
+        //      labelAttributeName: ''
+        //      rows: '',
+        //      minSize: '',
+        //      maxSize: '',
+        //      allowTypes: '',
+        //      imageUploadUrl: '',
+        //      imageUploadType: '' |base64|formData|binaryString
+        //      imageUploadConfig: {}
+        //   },
         // },
         {
           uniqueId: "categoryArticleId",
@@ -147,6 +111,12 @@ const config = {
               idAttributeName: "id",
               labelAttributeName: "name"
             }
+          },
+          othersConf: {
+            customSource: "http://localhost:3000/category-article",
+            config: {},
+            idAttrbuteName: "id",
+            labelAttributeName: "name"
           },
           validation: "required",
           showOnTable: false,
@@ -502,7 +472,7 @@ const config = {
       ]
     }
   },
-  additionalFieldsAtForm: {
+  extensionComponentForm: {
     top: <h1>This is just example</h1>,
     bottom: <h1>This is just example</h1>
   }

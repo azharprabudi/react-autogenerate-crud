@@ -1,9 +1,10 @@
 import React, { PureComponent } from "react";
 
 /* material ui modules */
+import red from "@material-ui/core/colors/red";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import red from "@material-ui/core/colors/red";
+import { withStyles } from "@material-ui/core/styles";
 
 /* etc modules */
 import has from "lodash/has";
@@ -12,16 +13,28 @@ import PropTypes from "prop-types";
 import isArray from "lodash/isArray";
 import { FormHelperText, InputLabel } from "@material-ui/core";
 
+const styles = () => ({
+  container: {
+    marginTop: 18,
+    marginBottom: 6
+  }
+});
+
 class FormCheckbox extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data: has(props.extension, "data") ? props.extension.data : []
+      data: has(props.othersConf, "data")
+        ? props.othersConf.data.map(item => ({
+            id: item[props.idAttributeName],
+            label: item[props.labelAttributeName]
+          }))
+        : []
     };
   }
 
   componentDidMount() {
-    if (has(this.props.extension, "customSource")) {
+    if (has(this.props.othersConf, "customSource")) {
       this.getCustomSourceData();
     }
   }
@@ -29,17 +42,23 @@ class FormCheckbox extends PureComponent {
   /* get data custom source from server */
   getCustomSourceData = async () => {
     try {
-      const { customSource } = this.props.extension;
-      const url = has(customSource, "url") ? customSource.url : "";
-      const config = has(customSource, "config") ? customSource.config : {};
+      const {
+        customSource: url,
+        idAttributeName,
+        labelAttributeName,
+        ...others
+      } = this.props.othersConf;
+      const config = has(others, "config") ? others.config : {};
 
-      /* fetch data from server */
-      const data = await axios.get(url, config);
-      if (!has(data, "data")) {
-        throw new Error(data);
+      const result = await axios.get(url, config);
+      if (!has(result, "data")) {
+        throw new Error(result);
       }
       this.setState({
-        data: data.data
+        data: result.data.map(item => ({
+          id: item[idAttributeName],
+          label: item[labelAttributeName]
+        }))
       });
     } catch (e) {
       alert(isArray(e) ? JSON.stringify(e) : e.toString());
@@ -47,48 +66,40 @@ class FormCheckbox extends PureComponent {
   };
 
   onChange = e => {
-    let { value } = e.target;
-    if (this.props.value.filter(filtItem => filtItem == value).length > 0) {
-      this.props.onChange(
-        this.props.value.filter(filtItem => filtItem != value)
+    const isExist = this.props.value.some(
+      filtItem => filtItem.id === e.target.value
+    );
+    if (isExist) {
+      this.props.onChangeValue(
+        this.props.value.filter(({ id }) => id != e.target.value)
       );
     } else {
-      this.props.onChange([...this.props.value, value]);
+      this.props.onChangeValue([
+        ...this.props.value,
+        this.state.data.find(({ id }) => id == e.target.value)
+      ]);
     }
   };
 
   render() {
-    const {
-      label,
-      extension,
-      disabled,
-      name,
-      helperText,
-      style,
-      value
-    } = this.props;
     return (
-      <div style={{ marginTop: 18, marginBottom: 6 }}>
-        <InputLabel>{label}</InputLabel>
+      <div style={this.props.classes.container}>
+        <InputLabel>{this.props.label}</InputLabel>
         {this.state.data.map(item => (
-          <div key={item[extension.idAttributeName]}>
+          <div key={item.id}>
             <FormControlLabel
+              label={item.label}
               control={
                 <Checkbox
-                  name={name}
-                  id={item[extension.idAttributeName]}
-                  disabled={disabled}
+                  name={this.props.name}
+                  style={this.props.style}
                   onChange={this.onChange}
-                  value={item[extension.idAttributeName].toString()}
-                  checked={
-                    value.filter(
-                      filtItem => filtItem == item[extension.idAttributeName]
-                    ).length > 0
-                  }
-                  style={style}
+                  value={item.id.toString()}
+                  disabled={!this.props.editable}
+                  id={`${this.props.id}-${item.id}`}
+                  checked={this.props.value.some(({ id }) => id == item.id)}
                 />
               }
-              label={item[extension.labelAttributeName]}
             />
           </div>
         ))}
@@ -101,26 +112,27 @@ class FormCheckbox extends PureComponent {
 }
 
 FormCheckbox.propTypes = {
-  /* required */
+  editable: PropTypes.bool,
   id: PropTypes.string.isRequired,
-  value: PropTypes.any.isRequired,
-  disabled: PropTypes.bool.isRequired,
-  readonly: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
-  extension: PropTypes.shape({
+  value: PropTypes.array.isRequired,
+  onChangeValue: PropTypes.func.isRequired,
+  othersConf: PropTypes.shape({
     data: PropTypes.array,
-    customSource: PropTypes.shape({
-      url: PropTypes.string.isRequired,
-      method: PropTypes.string,
-      config: PropTypes.object
-    }),
+    customSource: PropTypes.string,
+    config: PropTypes.object,
     idAttributeName: PropTypes.string.isRequired,
     labelAttributeName: PropTypes.string.isRequired
   }).isRequired,
-  isEdit: PropTypes.bool.isRequired,
-  helperText: PropTypes.string.isRequired,
-  /* non required */
-  style: PropTypes.object
+  error: PropTypes.bool,
+  style: PropTypes.object,
+  helperText: PropTypes.string
 };
 
-export default FormCheckbox;
+FormCheckbox.defaultProps = {
+  style: {},
+  error: false,
+  helperText: "",
+  editable: true
+};
+
+export default withStyles(styles)(FormCheckbox);

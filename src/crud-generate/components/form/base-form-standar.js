@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 
 /* material modules */
 import Grid from "@material-ui/core/Grid";
@@ -8,6 +8,7 @@ import { withStyles } from "@material-ui/core/styles";
 /* etc modules */
 import has from "lodash/has";
 import PropTypes from "prop-types";
+import upperFirst from "lodash/upperFirst";
 
 /* my modules */
 import lib from "./lib";
@@ -28,67 +29,46 @@ const styles = theme => ({
   }
 });
 
-class BaseFormStandar extends Component {
-  onChange = stateName => value => {
+class BaseFormStandar extends PureComponent {
+  onChangeValue = stateName => value => {
     this.props.onChange(stateName, value);
   };
 
-  renderItemInput = ({
-    component,
-    componentAttribute: { name, id, label, type, ...others }
-  }) => {
-    if (typeof lib[component] !== "undefined" && type !== "hidden") {
-      const SelectedComponent = lib[component];
+  renderItemInput = item => {
+    if (typeof lib[item.component] !== "undefined") {
+      const SelectedComponent = lib[item.component];
       const { value, validationStatus, validationText } = this.props.state[
-        name
+        item.uniqueId
       ];
 
-      let readonly = false;
-      let disabled = false;
-      let extension = {};
-
+      let editable = true;
       /* condition readonly and disabled form */
-      if (this.props.isEdit && has(others, "onEdit")) {
-        if (has(others.onEdit, "readonly")) {
-          readonly = others.onEdit.readonly;
-        }
-
-        if (has(others.onEdit, "disabled")) {
-          disabled = others.onEdit.disabled;
-        }
-      } else if (!this.props.isEdit && has(others, "onAdd")) {
-        if (has(others.onAdd, "readonly")) {
-          readonly = others.onAdd.readonly;
-        }
-
-        if (has(others.onAdd, "disabled")) {
-          disabled = others.onAdd.disabled;
-        }
+      if (this.props.isEdit && has(item, "editEditable")) {
+        editable = item.editEditable;
+      } else if (!this.props.isEdit && has(item, "addEditable")) {
+        editable = item.addEditable;
       }
 
-      /* condition extension */
-      if (has(others, "extension")) {
-        extension = others.extension;
-      }
+      const style = has(item, "style") ? item.style : {};
+      const display =
+        item.component === "InputHidden" ? { display: "none" } : {};
+      const othersConf = has(item, "othersConf") ? item.othersConf : {};
 
-      const style = has(others, "style") ? others.style : {};
       return (
-        <Grid item key={id} sm={6} xs={12}>
+        <Grid item key={id} sm={6} xs={12} style={display}>
           <SelectedComponent
-            id={id}
-            type={type}
-            name={name}
-            label={label}
-            value={value}
             style={style}
-            extension={others}
-            readonly={readonly}
-            disabled={disabled}
-            extension={extension}
+            value={value}
+            id={item.uniqueId}
+            label={item.label}
+            editable={editable}
+            name={item.uniqueId}
+            othersConf={othersConf}
             error={!validationStatus}
             isEdit={this.props.isEdit}
             helperText={validationText}
-            onChange={this.onChange(name)}
+            others={item.propsComponent}
+            onChangeValue={this.onChangeValue(uniqueId)}
           />
         </Grid>
       );
@@ -97,12 +77,11 @@ class BaseFormStandar extends Component {
   };
 
   render() {
-    const { classes } = this.props;
     return (
-      <div className={classes.container}>
-        <div className={classes.wrapperTitle}>
+      <div className={this.props.classes.container}>
+        <div className={this.props.classes.wrapperTitle}>
           <Typography variant="title" color="inherit">
-            {`# ${this.props.title.toUpperCase()}`}
+            {`# ${upperFirst(this.props.title)}`}
           </Typography>
         </div>
         <Grid
@@ -123,9 +102,9 @@ BaseFormStandar.propTypes = {
   title: PropTypes.string.isRequired,
   details: PropTypes.array.isRequired,
   state: PropTypes.object.isRequired,
-  onChange: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired,
-  isEdit: PropTypes.bool.isRequired
+  isEdit: PropTypes.bool.isRequired,
+  onChangeValue: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(BaseFormStandar);

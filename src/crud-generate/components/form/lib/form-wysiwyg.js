@@ -4,6 +4,7 @@ import React, { PureComponent } from "react";
 import red from "@material-ui/core/colors/red";
 import InputLabel from "@material-ui/core/InputLabel";
 import { withStyles } from "@material-ui/core/styles";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 /* editor */
 import { Editor } from "react-draft-wysiwyg";
@@ -19,9 +20,8 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import isArray from "lodash/isArray";
 import isEqual from "lodash/isEqual";
-import { FormHelperText } from "@material-ui/core";
 
-const styles = theme => ({
+const styles = () => ({
   container: {
     width: "90%",
     marginTop: 16,
@@ -41,6 +41,9 @@ const styles = theme => ({
     border: 1,
     borderColor: "rgba(0,0,0,0.2)",
     borderStyle: "solid"
+  },
+  helperText: {
+    color: red[500]
   }
 });
 
@@ -50,49 +53,32 @@ class FormWysiwyg extends PureComponent {
     this.state = {
       editorState: EditorState.createEmpty()
     };
-
-    this.imageConf = {};
-    if (
-      has(props.extension, "editorConf") &&
-      has(props.extension.editorConf, "img") &&
-      has(props.extension.editorConf.img, "uploadUrl")
-    ) {
-      this.imageConf = {
-        image: {
-          uploadCallback: this.uploadImageCallBack,
-          alt: { present: true, mandatory: true }
-        }
-      };
-    }
     this.initialize = true;
   }
 
   uploadImageCallBack = async file => {
     try {
-      const { extension } = this.props;
-      const url = has(extension.editorConf.img, "uploadUrl")
-        ? extension.editorConf.img.uploadUrl
+      const url = has(this.props.othersConf, "imageUploadUrl")
+        ? this.props.othersConf.imageUploadUrl
         : "";
-      const method = has(extension.editorConf.img, "method")
-        ? extension.editorConf.img.method
-        : "post";
-      const config = has(extension.editorConf.img, "config")
-        ? extension.editorConf.img.config
+
+      const config = has(extension.editorConf.img, "imageUploadConfig")
+        ? this.props.othersConf.imageUploadConfig
         : {};
 
-      const type = has(extension.editorConf.img, "type")
-        ? extension.editorConf.img.type
-        : "formData";
+      const type = has(extension.editorConf.img, "imageUploadType")
+        ? this.props.othersConf.imageUploadType
+        : "base64";
 
-      let data = {};
+      let data = null;
       if (type === "formData") {
         data = new FormData();
         data.append("image", file);
       } else {
-        data.image = await this.readImage(file, type);
+        data = { image: await this.readImage(file, type) };
       }
 
-      const result = await axios[method](url, data, config);
+      const result = await axios.post(url, data, config);
       if (!has(result, "data")) {
         throw new Error(result);
       }
@@ -113,10 +99,10 @@ class FormWysiwyg extends PureComponent {
       reader.onabort = e => reject(e);
       reader.onerror = e => reject(e);
 
-      if (type == "base64") {
-        reader.readAsDataURL(file);
-      } else if (type == "binaryString") {
+      if (type == "binaryString") {
         reader.readAsBinaryString(file);
+      } else {
+        reader.readAsDataURL(file);
       }
     });
   };
@@ -151,32 +137,54 @@ class FormWysiwyg extends PureComponent {
   };
 
   render() {
-    const { classes, label, helperText } = this.props;
     return (
-      <div className={classes.container}>
-        <InputLabel>{label}</InputLabel>
+      <div className={this.props.classes.container}>
+        <InputLabel>{this.props.label}</InputLabel>
         <Editor
           editorState={this.state.editorState}
-          editorClassName={classNames("editor-class", classes.wrapperEditor)}
-          wrapperClassName={classNames("wrapper-class", classes.wrapper)}
-          toolbarClassName={classNames("toolbar-class", classes.wrapperToolbar)}
+          editorClassName={classNames(
+            "editor-class",
+            this.props.classes.wrapperEditor
+          )}
+          wrapperClassName={classNames(
+            "wrapper-class",
+            this.props.classes.wrapper
+          )}
+          toolbarClassName={classNames(
+            "toolbar-class",
+            this.props.classes.wrapperToolbar
+          )}
           onEditorStateChange={this.onChange}
           toolbar={{
-            ...this.imageConf
+            uploadCallback: this.uploadImageCallBack,
+            alt: { present: true, mandatory: false }
           }}
         />
-        <FormHelperText style={{ color: red[500] }}>
-          {helperText}
-        </FormHelperText>
+        {this.props.error && (
+          <FormHelperText className={this.props.classes.helperText}>
+            {this.props.helperText}
+          </FormHelperText>
+        )}
       </div>
     );
   }
 }
 
 FormWysiwyg.propTypes = {
+  error: PropTypes.bool,
+  helperText: PropTypes.string,
   label: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired,
-  helperText: PropTypes.string.isRequired
+  othersConf: PropTypes.shape({
+    imageUploadUrl: PropTypes.string.isRequired,
+    imageUploadConfig: PropTypes.object,
+    imageUploadType: PropTypes.oneOf(["base64", "binaryString", "formData"])
+  }).isRequired
+};
+
+FormWysiwyg.defaultProps = {
+  error: false,
+  helperText: ""
 };
 
 export default withStyles(styles)(FormWysiwyg);

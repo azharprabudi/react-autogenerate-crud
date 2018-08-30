@@ -14,14 +14,14 @@ import has from "lodash/has";
 import PropTypes from "prop-types";
 import isArray from "lodash/isArray";
 
-class FormSelect extends PureComponent {
+class BaseSelect extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data: has(props.extension, "data")
-        ? props.extension.data.map(item => ({
-            value: item[props.extension.idAttributeName],
-            label: item[props.extension.labelAttributeName]
+      data: has(props.othersConf, "data")
+        ? props.othersConf.data.map(item => ({
+            id: item[props.othersConf.idAttributeName],
+            label: item[props.othersConf.labelAttributeName]
           }))
         : []
     };
@@ -36,22 +36,22 @@ class FormSelect extends PureComponent {
   /* get the data from server, if the user doest provide the data from props and choose the custom source */
   getCustomSourceData = async () => {
     try {
-      const { isEdit, extension, value } = this.props;
-      const url = has(extension.customSource, "url")
-        ? extension.customSource.url
+      const { othersConf } = this.props;
+
+      const url = has(othersConf, "customSource")
+        ? othersConf.customSource
         : "";
-      const config = has(extension.customSource, "config")
-        ? extension.customSource.config
-        : {};
+      const config = has(othersConf, "config") ? othersConf.config : {};
       const data = await axios.get(url, config);
+
       if (!has(data, "data")) {
         throw new Error(data);
       }
 
       this.setState({
         data: data.data.map(item => ({
-          value: item[extension.idAttributeName],
-          label: item[extension.labelAttributeName]
+          value: item[props.othersConf.idAttributeName],
+          label: item[props.othersConf.labelAttributeName]
         }))
       });
     } catch (e) {
@@ -61,35 +61,42 @@ class FormSelect extends PureComponent {
 
   /* on change listener */
   onChangeSelected = e => {
-    this.props.onChange(e.target.value);
+    let value = null;
+    if (this.props.multi) {
+      value = e.target.value.map(item =>
+        this.state.data.find(({ id }) => id === item)
+      );
+    } else {
+      value = this.state.data.find(({ id }) => id === e.target.value);
+    }
+    this.props.onChangeValue(value);
   };
 
   render() {
-    const {
-      id,
-      name,
-      style,
-      error,
-      label,
-      disabled,
-      readonly,
-      multi,
-      helperText
-    } = this.props;
     return (
       <FormControl
         fullWidth
-        error={error}
         margin={"normal"}
-        disabled={disabled}
+        error={this.props.error}
+        disabled={!this.props.editable}
       >
-        <InputLabel htmlFor={id}>{label}</InputLabel>
+        <InputLabel htmlFor={this.props.id}>{this.props.label}</InputLabel>
         <Select
-          style={style}
-          multiple={multi}
-          value={this.props.value}
+          style={this.props.style}
+          value={
+            this.props.multi
+              ? this.props.value.id
+              : this.props.value.map(({ id }) => id)
+          }
+          multiple={this.props.multi}
           onChange={this.onChangeSelected}
-          input={<Input id={id} name={name} readOnly={readonly} />}
+          input={
+            <Input
+              id={this.props.id}
+              name={this.props.name}
+              readOnly={!this.props.editable}
+            />
+          }
           MenuProps={{
             PaperProps: {
               style: {
@@ -100,45 +107,43 @@ class FormSelect extends PureComponent {
           }}
           placeholder={""}
         >
-          {this.state.data.map(({ label, value }) => (
-            <MenuItem key={value} value={value}>
+          {this.state.data.map(({ id, label }) => (
+            <MenuItem key={id} value={id}>
               {label}
             </MenuItem>
           ))}
         </Select>
-        <FormHelperText>{helperText}</FormHelperText>
+        {this.props.error && (
+          <FormHelperText>{this.props.helperText}</FormHelperText>
+        )}
       </FormControl>
     );
   }
 }
 
-FormSelect.propTypes = {
-  /* required */
+BaseSelect.propTypes = {
   id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  error: PropTypes.bool,
+  editable: PropTypes.bool,
   value: PropTypes.any.isRequired,
-  isEdit: PropTypes.bool.isRequired,
-  disabled: PropTypes.bool.isRequired,
-  readonly: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
-  extension: PropTypes.shape({
+  onChangeValue: PropTypes.func.isRequired,
+  othersConf: PropTypes.shape({
     data: PropTypes.array,
-    customSource: PropTypes.shape({
-      url: PropTypes.string.isRequired,
-      method: PropTypes.string,
-      config: PropTypes.object
-    }),
+    customSource: PropTypes.string,
+    config: PropTypes.object,
     idAttributeName: PropTypes.string.isRequired,
     labelAttributeName: PropTypes.string.isRequired
   }).isRequired,
-  helperText: PropTypes.string.isRequired,
-  /* non required */
   style: PropTypes.object,
-  multi: PropTypes.bool
+  helperText: PropTypes.string
 };
 
-FormSelect.defaultProps = {
+BaseSelect.defaultProps = {
   style: {},
-  multi: false
+  error: false,
+  editable: true,
+  helperText: ""
 };
 
-export default FormSelect;
+export default BaseSelect;

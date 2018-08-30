@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 
 /* material modules */
 import Button from "@material-ui/core/Button";
@@ -17,7 +17,6 @@ import uniqueId from "lodash/uniqueId";
 
 /* my modules */
 import validators from "../helpers/validators";
-import OptionsConf from "../constants/options-conf";
 import AlertDialog from "../components/etc/alert-dialog";
 import { libDefaultvalue } from "../components/form/lib/index";
 import BaseFormStandar from "../components/form/base-form-standar";
@@ -51,14 +50,13 @@ const styles = theme => ({
   }
 });
 
-class BaseForm extends Component {
+class BaseForm extends PureComponent {
   static ID_FORM = "ID_FORM";
   static EXISTING_DATA_FROM_PROPS = "EXISTING_DATA_FROM_PROPS";
 
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
       dialog: {
         alert: {
           visible: false
@@ -68,23 +66,18 @@ class BaseForm extends Component {
       dataExist: {}
     };
 
+    this.mockRowCollectionState = {}; // this is used when user want to add row
     /* flag to show this is on edit mode or not */
     this.isEdit =
       has(props.params, BaseForm.ID_FORM) &&
       props.params[BaseForm.ID_FORM] !== "";
-
-    this.rowObjectData = {}; // this is used when user want to add row
   }
 
   componentDidMount() {
     const { fields, params } = this.props;
-    if (
-      has(params, BaseForm.ID_FORM) &&
-      has(params, BaseForm.EXISTING_DATA_FROM_PROPS)
-    ) {
+    if (this.isEdit) {
       if (Object.keys(params[BaseForm.EXISTING_DATA_FROM_PROPS]).length > 0) {
         this.setState({
-          ...this.state,
           form: this.initialStateForm(
             fields,
             params[BaseForm.EXISTING_DATA_FROM_PROPS]
@@ -97,73 +90,81 @@ class BaseForm extends Component {
   }
 
   getInitialDataFromServer = async id => {
-    let { updateConfigurationServer, fields } = this.props;
-    if (has(updateConfigurationServer, "get")) {
-      updateConfigurationServer = { ...updateConfigurationServer.get };
-    }
-    const config = has(updateConfigurationServer, "config")
-      ? updateConfigurationServer.config
-      : {};
-    let url = has(updateConfigurationServer, "url")
-      ? updateConfigurationServer.url
-      : "";
+    try {
+      let configurationGetData = {};
+      let { configurationServer, fields } = this.props;
 
-    /* if there a replace url exist, just replace it */
-    if (has(updateConfigurationServer, "replaceUrl")) {
-      url = url.replace(updateConfigurationServer.replaceUrl, id);
-    }
+      if (has(configurationServer, "getDataUpdate")) {
+        configurationGetData = { ...configurationServer.getDataUpdate };
+      } else {
+        configurationGetData = { ...configurationServer.read };
+      }
 
-    const data = await axios.get(url, config);
-    if (has(data, "data")) {
-      this.setState({
-        ...this.state,
-        form: this.initialStateForm(fields, data.data),
-        dataExist: data.data
-      });
+      const config = has(configurationGetData, "config")
+        ? configurationGetData.config
+        : {};
+      let url = has(configurationGetData, "url")
+        ? configurationGetData.url
+        : "";
+
+      /* if there a replace url exist, just replace it */
+      if (has(configurationServer, "replaceUrlWithUniqueId")) {
+        url = url.replace(configurationServer.replaceUrlWithUniqueId, id);
+      }
+
+      const data = await axios.get(url, config);
+      if (has(data, "data")) {
+        this.setState({
+          ...this.state,
+          form: this.initialStateForm(fields, data.data),
+          dataExist: data.data
+        });
+      }
+    } catch (e) {
+      this.props.onSetErrorMessage(
+        isArray(e) ? JSON.stringify(e) : e.toString()
+      );
     }
   };
 
   initialStateForm = (fields, data = {}) => {
     let form = {};
-
-    /* loop all the fields available */
     for (let i = 0; i < fields.length; i++) {
       const { groupName, details, type, ...groupField } = fields[i];
-
       /*
-      currently there are two type of form,
-      there are standard and details
+      currently there are two type of form, there are standard and details
       */
-
-      /* standar */
       if (type === "standard") {
         form[groupName] = {};
         for (let j = 0; j < details.length; j++) {
           const field = details[j];
-          if (!has(field, "mergingColumn") || field.mergingColumn === false) {
+          if (!has(field, "mergingColumn") || !field.mergingColumn) {
             /* get value from data */
-            form[groupName][field.componentAttribute.name] = {
-              value: has(data, field.uniqueId)
-                ? data[field.uniqueId]
-                : libDefaultvalue[field.component],
-              validationStatus: true,
-              validationText: ""
+            let value = "";
+            if (has(data, field.uniqueId)) {
+              value = data[field.uniqueId];
+            } else if (has(field, "defaultValue")) {
+              value = field.defaultValue;
+            } else {
+              value = libDefaultvalue[field.component];
+            }
+            form[groupName][field.uniqueId] = {
+              value,
+              validationText: "",
+              validationStatus: true
             };
           }
         }
       }
 
-      /* details */
       if (type === "details") {
-        /* the the value data from attributeDetailsName */
+        /* the the value data from uniqueDetail */
         form[groupName] = [];
-        if (has(groupField, "attributeNameDetails")) {
+        if (has(groupField, "uniqueDetail")) {
           let i = 0;
-
-          const detailsData = has(data, groupField.attributeNameDetails)
-            ? data[groupField.attributeNameDetails]
+          const detailsData = has(data, groupField.uniqueDetail)
+            ? data[groupField.uniqueDetail]
             : [];
-
           do {
             /* give the value object, if the value doesnt exist */
             if (!form[groupName][i]) {
@@ -175,40 +176,38 @@ class BaseForm extends Component {
             /* set details form */
             for (let j = 0; j < details.length; j++) {
               const field = details[j];
-              if (
-                !has(field, "mergingColumn") ||
-                field.mergingColumn === false
-              ) {
-                if (
-                  !form[groupName][i]["state"][field.componentAttribute.name]
-                ) {
-                  form[groupName][i]["state"][
-                    field.componentAttribute.name
-                  ] = {};
+              if (!has(field, "mergingColumn") || !field.mergingColumn) {
+                if (!form[groupName][i]["state"][field.uniqueId]) {
+                  form[groupName][i]["state"][field.uniqueId] = {};
                 }
-                form[groupName][i]["state"][field.componentAttribute.name] = {
-                  value:
-                    detailsData.length > 0 &&
-                    has(detailsData[i], field.uniqueId)
-                      ? detailsData[i][field.uniqueId]
-                      : libDefaultvalue[field.component],
-                  validationStatus: true,
-                  validationText: ""
+
+                let value = "";
+                if (has(detailsData[i], field.uniqueId)) {
+                  value = detailsData[i][field.uniqueId];
+                } else if (has(field, "defaultValue")) {
+                  value = field.defaultValue;
+                } else {
+                  value = libDefaultvalue[field.component];
+                }
+
+                form[groupName][i]["state"][field.uniqueId] = {
+                  value,
+                  validationText: "",
+                  validationStatus: true
                 };
 
-                if (!has(this.rowObjectData, field.componentAttribute.name)) {
-                  this.rowObjectData = {
-                    ...this.rowObjectData,
-                    [field.componentAttribute.name]: {
+                if (!has(this.mockRowCollectionState, field.uniqueId)) {
+                  this.mockRowCollectionState = {
+                    ...this.mockRowCollectionState,
+                    [field.uniqueId]: {
                       value: "",
-                      validationStatus: true,
-                      validationText: ""
+                      validationText: "",
+                      validationStatus: true
                     }
                   };
                 }
               }
             }
-
             i++;
           } while (i < detailsData.length);
         } else {
@@ -232,7 +231,7 @@ class BaseForm extends Component {
       if (fields[i].groupName === groupName) {
         let j = 0;
         while (j < fields[i].details.length) {
-          if (fields[i].details[j].componentAttribute.name === stateName) {
+          if (fields[i].details[j].uniqueId === stateName) {
             selectedInput = fields[i].details[j];
             break;
           }
@@ -333,7 +332,6 @@ class BaseForm extends Component {
     }
 
     this.setState({
-      ...this.state,
       form: {
         ...this.state.form,
         [groupName]: {
@@ -364,7 +362,6 @@ class BaseForm extends Component {
     }
 
     this.setState({
-      ...this.state,
       form: {
         ...this.state.form,
         [groupName]: this.state.form[groupName].map(({ uniqueId, state }) => {
@@ -390,12 +387,14 @@ class BaseForm extends Component {
   /* add row in details */
   onClickAddRow = groupName => () => {
     this.setState({
-      ...this.state,
       form: {
         ...this.state.form,
         [groupName]: [
           ...this.state.form[groupName],
-          { uniqueId: uniqueId("row_"), state: this.rowObjectData }
+          {
+            uniqueId: uniqueId("row_"),
+            state: { ...this.mockRowCollectionState }
+          }
         ]
       }
     });
@@ -404,7 +403,6 @@ class BaseForm extends Component {
   /* remove row in details */
   onClickRemoveRow = groupName => id => {
     this.setState({
-      ...this.state,
       form: {
         ...this.state.form,
         [groupName]: [
@@ -438,25 +436,6 @@ class BaseForm extends Component {
           };
           if (validationStatus == false) {
             isValidate = false;
-            /*
-            cannot using scrolling
-            if (errorElementName == null) {
-              let selectedField = this.props.fields.find(
-                ({ groupName }) => groupName == groupIndex
-              );
-              if (has(selectedField, "details")) {
-                selectedField = selectedField.details.find(
-                  ({ componentAttribute }) =>
-                    componentAttribute.name == stateIndex
-                );
-                if (has(selectedField, "componentAttribute")) {
-                  errorElementName = `${selectedField.componentAttribute.id}-${
-                    selectedField.componentAttribute.name
-                  }`;
-                }
-              }
-            }
-            */
           }
         }
       } else {
@@ -486,7 +465,7 @@ class BaseForm extends Component {
     if (isValidate) {
       this.toggleDialog("alert", true)();
     } else {
-      this.props.setErrorMessage({
+      this.props.onSetErrorMessage({
         type: "error",
         message: "Some input field have a validation error"
       });
@@ -496,7 +475,6 @@ class BaseForm extends Component {
   toggleDialog = (name, visible) => () => {
     if (this.state.dialog[name].visilbe !== visible) {
       this.setState({
-        ...this.state,
         dialog: {
           ...this.state.dialog,
           [name]: {
@@ -513,28 +491,29 @@ class BaseForm extends Component {
       let { groupName, type, details, ...field } = this.props.fields[i];
       if (type === "standard") {
         for (let j = 0; j < details.length; j++) {
-          if (has(details[j], "mergingColumn") && !details[j].mergingColumn) {
-            newData[details[j].componentAttribute.name] =
-              data[groupName][details[j].componentAttribute.name].value;
+          if (!has(details[j], "mergingColumn") || !details[j].mergingColumn) {
+            newData[details[j].uniqueId] =
+              data[groupName][details[j].uniqueId].value;
           }
         }
       } else if (type === "details") {
-        let { attributeNameDetails } = field;
-        if (!newData[attributeNameDetails]) {
-          newData[attributeNameDetails] = [];
-        }
-        for (let j = 0; j < data[groupName].length; j++) {
-          if (!newData[attributeNameDetails][j]) {
-            newData[attributeNameDetails][j] = {};
+        if (has(field, uniqueDetail)) {
+          if (!newData[field.uniqueDetail]) {
+            newData[field.uniqueDetail] = [];
           }
-          for (let k = 0; k < details.length; k++) {
-            newData[attributeNameDetails][j][
-              details[k].componentAttribute.name
-            ] =
-              data[groupName][j]["state"][details[k].componentAttribute.name][
-                "value"
-              ];
+          for (let j = 0; j < data[groupName].length; j++) {
+            if (!newData[field.uniqueDetail][j]) {
+              newData[field.uniqueDetail][j] = {};
+            }
+            for (let k = 0; k < details.length; k++) {
+              newData[field.uniqueDetail][j][details[k].uniqueId] =
+                data[groupName][j]["state"][details[k].uniqueId].value;
+            }
           }
+        } else {
+          alert(
+            "You have to specify attribute details name at this configurations"
+          );
         }
       }
     }
@@ -554,19 +533,13 @@ class BaseForm extends Component {
   };
 
   render() {
-    const {
-      classes,
-      fields,
-      onClickButtonClose,
-      additionalFieldsAtForm: { top: TopAdditional, bottom: BottomAdditional }
-    } = this.props;
     return (
       <form
         method="post"
         encType="multipart/form-data"
-        className={classes.container}
+        className={this.props.classes.container}
       >
-        {TopAdditional}
+        {this.props.extensionComponentForm.top}
         <AlertDialog
           type={"confirmation"}
           title={"Confirmation"}
@@ -580,41 +553,43 @@ class BaseForm extends Component {
           onDisaggree={this.toggleDialog("alert", false)}
           onDialogclose={this.toggleDialog("alert", false)}
         />
-        {fields.map(({ type, title, groupName, details, ...others }) => {
-          if (type === "standard") {
-            return (
-              <BaseFormStandar
-                key={title}
-                title={title}
-                details={details}
-                isEdit={this.isEdit}
-                state={this.state.form[groupName]}
-                onChange={this.onChangeBaseFormStandar(groupName)}
-              />
-            );
-          } else {
-            return (
-              <BaseFormDetails
-                {...others}
-                key={title}
-                title={title}
-                details={details}
-                isEdit={this.isEdit}
-                state={this.state.form[groupName]}
-                onClickAddRow={this.onClickAddRow(groupName)}
-                onChange={this.onChangeBaseFormDetails(groupName)}
-                onClickRemoveRow={this.onClickRemoveRow(groupName)}
-              />
-            );
+        {this.props.fields.map(
+          ({ type, title, groupName, details, ...others }) => {
+            if (type === "standard") {
+              return (
+                <BaseFormStandar
+                  key={title}
+                  title={title}
+                  details={details}
+                  isEdit={this.isEdit}
+                  state={this.state.form[groupName]}
+                  onChangeValue={this.onChangeBaseFormStandar(groupName)}
+                />
+              );
+            } else {
+              return (
+                <BaseFormDetails
+                  key={title}
+                  title={title}
+                  details={details}
+                  isEdit={this.isEdit}
+                  uniqueDetail={others.uniqueDetail}
+                  state={this.state.form[groupName]}
+                  onClickAddRow={this.onClickAddRow(groupName)}
+                  onClickRemoveRow={this.onClickRemoveRow(groupName)}
+                  onChangeValue={this.onChangeBaseFormDetails(groupName)}
+                />
+              );
+            }
           }
-        })}
-        {BottomAdditional}
-        <div className={classes.wrapperFooter}>
+        )}
+        {this.props.extensionComponentForm.bottom}
+        <div className={this.props.classes.wrapperFooter}>
           <Button
             size={"medium"}
             variant={"contained"}
-            onClick={onClickButtonClose}
-            className={classes.btnCancel}
+            className={this.props.classes.btnCancel}
+            onClick={this.props.onClickButtonClose}
           >
             <CloseIcon />
             <Typography color={"inherit"}>Cancel</Typography>
@@ -623,7 +598,7 @@ class BaseForm extends Component {
             size={"medium"}
             variant={"contained"}
             onClick={this.onSubmit}
-            className={classes.btnSave}
+            className={this.props.classes.btnSave}
           >
             <SaveIcon />
             <Typography color={"inherit"}>
@@ -642,31 +617,16 @@ BaseForm.propTypes = {
     [BaseForm.EXISTING_DATA_FROM_PROPS]: PropTypes.object
   }).isRequired,
   fields: PropTypes.array.isRequired,
-  createConfigurationServer: PropTypes.shape({
-    url: PropTypes.string.isRequired,
-    method: PropTypes.oneOf(OptionsConf.methodValue),
-    config: PropTypes.object,
-    callbackBeforeCreate: PropTypes.func,
-    callbackAfterCreate: PropTypes.func
+  configurationServer: PropTypes.shape({
+    replaceUrlWithUniqueId: PropTypes.string.isRequired,
+    create: PropTypes.object.isRequired,
+    update: PropTypes.object.isRequired,
+    getDataUpdate: PropTypes.object.isRequired
   }),
-  updateConfigurationServer: PropTypes.shape({
-    url: PropTypes.string.isRequired,
-    get: PropTypes.shape({
-      url: PropTypes.string.isRequired,
-      method: PropTypes.oneOf(OptionsConf.methodValue)
-    }),
-    method: PropTypes.oneOf(OptionsConf.methodValue),
-    config: PropTypes.object,
-    replaceUrl: PropTypes.string,
-    attributeName: PropTypes.string,
-    dataFromProps: PropTypes.bool,
-    callbackBeforeUpdate: PropTypes.func,
-    callbackAfterUpdate: PropTypes.func
-  }),
-  setErrorMessage: PropTypes.func.isRequired,
+  onSetErrorMessage: PropTypes.func.isRequired,
   onClickButtonClose: PropTypes.func.isRequired,
   onClickButtonSubmit: PropTypes.func.isRequired,
-  additionalFieldsAtForm: PropTypes.shape({
+  extensionComponentForm: PropTypes.shape({
     top: PropTypes.element,
     bottom: PropTypes.element
   })

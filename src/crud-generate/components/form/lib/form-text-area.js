@@ -7,44 +7,32 @@ import TextField from "@material-ui/core/TextField";
 import PropTypes from "prop-types";
 
 class FormTextArea extends PureComponent {
-  /* handler on change value */
   onChange = e => {
-    this.props.onChange(e.target.value);
+    this.props.onChangeValue(e.target.value);
   };
 
   render() {
-    const {
-      label,
-      value,
-      rows,
-      error,
-      helperText,
-      name,
-      id,
-      style,
-      disabled,
-      extension,
-      readonly
-    } = this.props;
+    const rows = has(this.props.othersConf, "rows")
+      ? this.props.othersConf.rows
+      : 4;
     return (
       <TextField
         fullWidth
-        id={id}
         rows={rows}
-        name={name}
-        label={label}
-        value={value}
-        error={error}
-        style={style}
         type={"text"}
+        id={this.props.id}
+        name={this.props.name}
+        label={this.props.label}
+        value={this.props.value}
+        error={this.props.error}
+        style={this.props.style}
         InputProps={{
-          ...extension,
-          readOnly: readonly
+          readOnly: !this.props.editable
         }}
         multiline={true}
         margin={"normal"}
-        disabled={disabled}
-        helperText={helperText}
+        disabled={this.props.editable}
+        helperText={this.props.helperText}
         onChange={this.onChange}
       />
     );
@@ -52,26 +40,24 @@ class FormTextArea extends PureComponent {
 }
 
 FormTextArea.propTypes = {
-  /* required */
+  error: PropTypes.bool,
+  style: PropTypes.object,
+  editable: PropTypes.bool,
+  othersConf: PropTypes.object,
+  helperText: PropTypes.string,
   id: PropTypes.string.isRequired,
+  value: PropTypes.any.isRequired,
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-  readonly: PropTypes.bool.isRequired,
-  disabled: PropTypes.bool.isRequired,
-  extension: PropTypes.object.isRequired,
-  value: PropTypes.any.isRequired,
-  error: PropTypes.bool.isRequired,
-  isEdit: PropTypes.bool.isRequired,
-  helperText: PropTypes.string.isRequired,
-  /* no required */
-  style: PropTypes.object,
-  rows: PropTypes.number
+  onChangeValue: PropTypes.func.isRequired
 };
 
 FormTextArea.defaultProps = {
-  rows: 4,
-  style: {}
+  style: {},
+  error: false,
+  editable: true,
+  helperText: "",
+  othersConf: {}
 };
 
 export default FormTextArea;

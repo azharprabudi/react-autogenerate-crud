@@ -14,6 +14,10 @@ import PropTypes from "prop-types";
 import Dropzone from "react-dropzone";
 
 const styles = theme => ({
+  container: {
+    marginTop: 16,
+    marginBottom: 8
+  },
   wrapperImages: {
     width: 180,
     height: 180,
@@ -39,6 +43,9 @@ const styles = theme => ({
   imageText: {
     fontSize: 12,
     color: "rgba(0,0,0,0.5)"
+  },
+  helperText: {
+    color: red[500]
   }
 });
 
@@ -49,18 +56,20 @@ class FormFileUploader extends PureComponent {
     this.maxSize = 5000000;
     this.allowTypes = "image/jpeg, image/jpg, image/png";
 
-    if (has(props.extension, "uploaderConf")) {
-      if ((props.extension.uploaderConf, "minSize")) {
-        this.minSize = props.extension.uploaderConf.minSize;
+    if (has(props, "uploaderConf")) {
+      if ((props.uploaderConf, "minSize")) {
+        this.minSize = props.uploaderConf.minSize;
       }
 
-      if ((props.extension.uploaderConf, "maxSize")) {
-        this.maxSize = props.extension.uploaderConf.maxSize;
+      if ((props.uploaderConf, "maxSize")) {
+        this.maxSize = props.uploaderConf.maxSize;
       }
 
-      if ((props.extension.uploaderConf, "allowTypes")) {
-        this.allowTypes = props.extension.uploaderConf.allowTypes;
+      if ((props.uploaderConf, "allowTypes")) {
+        this.allowTypes = props.uploaderConf.allowTypes;
       }
+    } else {
+      alert("You have to passing uploderConf at property this component");
     }
   }
 
@@ -72,7 +81,7 @@ class FormFileUploader extends PureComponent {
       const reader = new FileReader();
       reader.onload = () => {
         const fileBase64 = reader.result;
-        this.props.onChange(fileBase64);
+        this.props.onChangeValue(fileBase64);
       };
       reader.onabort = () => alert("Abort upload file");
       reader.onerror = () => alert("Error upload file");
@@ -83,39 +92,32 @@ class FormFileUploader extends PureComponent {
 
   /* listener remove image */
   removeImage = () => {
-    this.props.onChange("");
+    this.props.onChangeValue("");
   };
 
   render() {
-    const {
-      label,
-      id,
-      name,
-      disabled,
-      readonly,
-      classes,
-      helperText
-    } = this.props;
     return (
-      <div style={{ marginTop: 16, marginBottom: 8 }}>
-        <InputLabel>{label}</InputLabel>
+      <div className={this.props.classes.container} style={this.props.style}>
+        <InputLabel>{this.props.label}</InputLabel>
         {this.props.value !== "" ? (
           <Fragment>
             <div className={classes.wrapperImages}>
               <img
                 src={this.props.value}
-                alt={"image preview"}
-                className={classes.img}
+                alt={"Image Preview"}
+                className={this.props.classes.img}
               />
             </div>
-            <Button
-              size={"small"}
-              variant="contained"
-              className={classes.button}
-              onClick={this.removeImage}
-            >
-              <Typography color={"inherit"}>Remove</Typography>
-            </Button>
+            {!this.props.editable && (
+              <Button
+                size={"small"}
+                variant="contained"
+                className={this.props.classes.button}
+                onClick={this.removeImage}
+              >
+                <Typography color={"inherit"}>Remove</Typography>
+              </Button>
+            )}
           </Fragment>
         ) : (
           <Dropzone
@@ -125,41 +127,51 @@ class FormFileUploader extends PureComponent {
             maxSize={this.maxSize}
             accept={this.allowTypes}
             inputProps={{
-              id,
-              name,
-              disabled,
-              readOnly: readonly
+              id: this.props.id,
+              name: this.props.name,
+              readOnly: !this.props.editable,
+              disabled: !this.props.editable
             }}
-            className={classes.wrapperImages}
+            className={this.props.classes.wrapperImages}
           >
-            <p className={classes.imageText}>Click / Drop Here For Add image</p>
+            <p className={this.props.classes.imageText}>
+              Click / Drop Here For Add image
+            </p>
           </Dropzone>
         )}
-        <FormHelperText style={{ color: red[500] }}>
-          {helperText}
-        </FormHelperText>
+        {this.props.error && (
+          <FormHelperText className={this.props.classes.helperText}>
+            {this.props.helperText}
+          </FormHelperText>
+        )}
       </div>
     );
   }
 }
 
 FormFileUploader.propTypes = {
+  error: PropTypes.bool,
+  helperText: PropTypes.string,
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  readonly: PropTypes.bool.isRequired,
-  disabled: PropTypes.bool.isRequired,
-  classes: PropTypes.object.isRequired,
-  onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
-  extension: PropTypes.shape({
-    uploaderConf: PropTypes.shape({
-      minSize: PropTypes.number.isRequired,
-      maxSize: PropTypes.number.isRequired,
-      allowTypes: PropTypes.string.isRequired
-    })
+  label: PropTypes.string.isRequired,
+  editable: PropTypes.bool,
+  classes: PropTypes.object.isRequired,
+  othersConf: PropTypes.shape({
+    minSize: PropTypes.number,
+    maxSize: PropTypes.number,
+    allowTypes: PropTypes.string
   }),
-  helperText: PropTypes.string.isRequired
+  onChangeValue: PropTypes.func.isRequired,
+  style: PropTypes.object
+};
+
+FormFileUploader.defaultProps = {
+  style: {},
+  helperText: "",
+  error: false,
+  editable: true
 };
 
 export default withStyles(styles)(FormFileUploader);
